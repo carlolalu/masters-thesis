@@ -1,0 +1,121 @@
+\documentclass[11pt, a4paper]{scrreprt}
+
+% PACKAGES
+\input{./preamble/packages.sty}
+
+% SETTINGS 
+\graphicspath{ {images/} } % with package graphicx
+\addbibresource{./extras/bibliography.bib}
+
+% MY DEFINITIONS
+\input{./extras/my-environments}
+\input{./extras/my-general-definitions}
+\input{./extras/my-contextual-definitions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% FRONTMATTER INFOS
+\title
+{
+	{
+		Derivation of Effective Equations for a Microscopic Model of Chemotaxis with Creation of Chemotaxin Particles
+	}\\
+	{\large Eberhard Karls Universität Tübingen and Università degli Studi di Trento}\\
+	\begin{figure}[h]
+		\centering
+		{
+		\begin{subfigure}[l]{4cm}
+			\includegraphics[keepaspectratio,width=4cm]{uni-logos/logo-TUE.jpg}
+		\end{subfigure}
+		\begin{subfigure}[r]{5cm}
+			\includegraphics[keepaspectratio,width=5cm]{uni-logos/logo-TN.jpg}
+		\end{subfigure}
+		}
+	\end{figure}
+}
+\author{
+	Carlo Lanzi Luciani
+	\\
+	Advisor in Tübingen: Prof. Dr. Peter Pickl
+	\\
+	Advisor in Trento: Assoc. Prof. Michele Coghi
+}
+\date{May 2026}
+
+
+
+%%%% FRONTMATTER
+\maketitle
+\pagenumbering{roman}
+
+\newpage 
+\thispagestyle{empty} 
+\mbox{} 
+\newpage
+
+\section*{Abstract}
+\input{./chapters/abstract-english}
+
+\vspace*{2cm}
+
+\section*{Zusammenfassung}
+\input{./chapters/abstract-german}
+
+\vspace*{2cm}
+
+\section*{Sommario}
+\input{./chapters/abstract-italian}
+
+\chapter*{Eigenständigkeitserklärung}
+\input{./chapters/anti-plagium}
+
+\chapter*{Acknowledgements}
+\input{./chapters/acknowledgements}
+
+\tableofcontents
+
+%%%% MAIN BODY
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+\input{./chapters/introduction}
+
+\chapter{The Basic model}
+\input{./chapters/chapter02}
+
+\chapter{Macroscopic and Mesoscopic Descriptions}
+\input{./chapters/chapter03}
+
+\chapter{Preliminary: the Dini Derivation}
+\input{./chapters/chapter04}
+
+\chapter{Preliminary: the Law of Large Numbers}
+\input{./chapters/chapter05}
+
+\chapter{The Proof of the Main Result}
+\input{./chapters/chapter06}
+
+\chapter{Generalize: the Pulsing Waves Model}
+\input{./chapters/chapter07}
+
+\chapter{Conclusion}
+\input{./chapters/conclusion}
+%
+
+\printbibliography[heading=bibintoc]
+
+%%%% ENDMATTER
+\appendix
+\chapter{Appendix}
+
+	\section{Notation}
+	\input{./chapters/appendix/notation}
+	
+	\section{Miscellaneous from Stochastics}
+	\input{./chapters/appendix/stochastics}
+	
+	\section{The Solutions for the Basic Model, More Formally}
+	\input{./chapters/appendix/space-of-solutions}
+
+\end{document}

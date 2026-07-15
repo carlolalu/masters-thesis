@@ -1,0 +1,95 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Chemotaxis...}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}...and Dictyostelium Discoideum}{3}{subsection.1.1.1}%
+\contentsline {section}{\numberline {1.2}Previous Models}{3}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}The Classic Approach: Keller-Segel}{3}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}The PhD Thesis of Cañizares García}{4}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Chemotaxin in the Microscopic Description}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Outline}{5}{subsection.1.3.1}%
+\contentsline {paragraph}{\nonumberline Chapter \ref {ch2}}{5}{paragraph*.9}%
+\contentsline {paragraph}{\nonumberline Chapter \ref {ch3}}{5}{paragraph*.11}%
+\contentsline {paragraph}{\nonumberline Chapter \ref {ch4} and \ref {ch5}}{5}{paragraph*.13}%
+\contentsline {paragraph}{\nonumberline Chapter \ref {ch6}}{5}{paragraph*.15}%
+\contentsline {paragraph}{\nonumberline Chapter \ref {ch7}}{6}{paragraph*.17}%
+\contentsline {paragraph}{\nonumberline Conclusion}{6}{paragraph*.19}%
+\contentsline {chapter}{\numberline {2}The Basic model}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Heuristics and the Definition}{7}{section.2.1}%
+\contentsline {paragraph}{\nonumberline Observations}{8}{paragraph*.21}%
+\contentsline {subsection}{\numberline {2.1.1}Alternative Formulation}{8}{subsection.2.1.1}%
+\contentsline {section}{\numberline {2.2}Existence and Uniqueness}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The SDEs Framework}{10}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Reducing the Model to the SDE Framework}{10}{subsection.2.2.2}%
+\contentsline {subsubsection}{\nonumberline Heuristic}{10}{subsubsection*.23}%
+\contentsline {subsubsection}{\nonumberline Local Solutions}{11}{subsubsection*.25}%
+\contentsline {subsubsection}{\nonumberline Global Solutions}{12}{subsubsection*.27}%
+\contentsline {subsection}{\numberline {2.2.3}Existence and Uniqueness for the Model}{14}{subsection.2.2.3}%
+\contentsline {chapter}{\numberline {3}Macroscopic and Mesoscopic Descriptions}{16}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{16}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Convergence of Empirical Measures}{16}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Effective Equations and Mean-Field Particles}{19}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Calculate the Mean-Field}{21}{subsection.3.3.1}%
+\contentsline {paragraph}{\nonumberline The cAMP Spawning Positions}{24}{paragraph*.29}%
+\contentsline {subsection}{\numberline {3.3.2}Solution of the Mean-Field Systems}{24}{subsection.3.3.2}%
+\contentsline {paragraph}{\nonumberline Continuity}{26}{paragraph*.31}%
+\contentsline {section}{\numberline {3.4}The Best Condition to Obtain the Convergence}{26}{section.3.4}%
+\contentsline {section}{\numberline {3.5}A Macroscopic Description for the cAMP Molecules?}{28}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Preliminary: the Dini Derivation}{29}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Dini Derivatives}{29}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Proceed Beyond the $\sup $}{30}{section.4.2}%
+\contentsline {paragraph}{\nonumberline $( { \text {¿}\hskip 1em\relax \xi > 0 \hskip 1em\relax ? } )$}{34}{paragraph*.33}%
+\contentsline {paragraph}{\nonumberline $( { \text {¿}\hskip 1em\relax g(t+\xi ) = g_\star (t+ \xi ) \hskip 1em\relax ? } )$}{35}{paragraph*.35}%
+\contentsline {section}{\numberline {4.3}Get Rid of the Integral Sign}{35}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Assembling the Proof of Lemma \ref {ch4:lemma:del-dini-of-all}}{39}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Preliminary: the Law of Large Numbers}{40}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Necessary premises}{41}{section.5.1}%
+\contentsline {section}{\numberline {5.2}The First Term}{43}{section.5.2}%
+\contentsline {section}{\numberline {5.3}The Second Term}{49}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Proof of the Auxiliary Bound \ref {ch5:proof-of-LLN2:bound-for-phip}}{52}{subsection.5.3.1}%
+\contentsline {section}{\numberline {5.4}Composing All the Pieces Together}{59}{section.5.4}%
+\contentsline {chapter}{\numberline {6}The Proof of the Main Result}{61}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Stochastic Estimate with Groenwall}{61}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Bound for the Average of the Estimate}{64}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Generalize: the Pulsing Waves Model}{68}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Micromodel and Meso- and Macrodescriptions}{68}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Mean-field particles candidate}{71}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Convergence Condition}{74}{subsection.7.1.2}%
+\contentsline {section}{\numberline {7.2}Preliminaries for the Final Proof}{74}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}The Dini Derivation}{74}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Sketch of Proof for the Law of Large Numbers}{76}{subsection.7.2.2}%
+\contentsline {section}{\numberline {7.3}Final Proof}{77}{section.7.3}%
+\contentsline {subsubsection}{\nonumberline Stochastic Estimate with Groenwall}{78}{subsubsection*.39}%
+\contentsline {subsubsection}{\nonumberline Bound for the Average of the Estimate}{78}{subsubsection*.41}%
+\contentsline {chapter}{\numberline {8}Conclusion}{80}{chapter.8}%
+\contentsline {section}{\numberline {8.1}The Revelations of the Pulsing Wave Model}{80}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Comparison with the Equation of Keller-Segel}{81}{subsection.8.1.1}%
+\contentsline {subsubsection}{\nonumberline Slow Release of a Chemoattractant with a High Diffusion}{81}{subsubsection*.43}%
+\contentsline {subsubsection}{\nonumberline Fast Release of a Chemoattractant with a High Diffusion}{81}{subsubsection*.45}%
+\contentsline {subsubsection}{\nonumberline Slow Release of a Chemoattractant with no Diffusion}{82}{subsubsection*.47}%
+\contentsline {section}{\numberline {8.2}Further Research Possibilities}{83}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}The Most Enticing Question}{83}{subsection.8.2.1}%
+\contentsline {paragraph}{\nonumberline Some Ideas on an Hypothetical "Answering Pulses" Model}{83}{paragraph*.49}%
+\contentsline {subsection}{\numberline {8.2.2}"Nice" Technical Properties to Have for the Pulsing Wave Model}{83}{subsection.8.2.2}%
+\contentsline {paragraph}{\nonumberline Assume a Coulomb-like Potential}{83}{paragraph*.51}%
+\contentsline {paragraph}{\nonumberline Prove a Higher Degree of Convergence}{83}{paragraph*.53}%
+\contentsline {subsection}{\numberline {8.2.3}Numerics and Simulations on the Pulsing Wave Model}{84}{subsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.2.4}More Technical and (Probably) less Interesting Questions}{84}{subsection.8.2.4}%
+\contentsline {paragraph}{\nonumberline Higher (Finite) Dimensions}{84}{paragraph*.55}%
+\contentsline {paragraph}{\nonumberline The Solution(s) to the PIDE and its Properties}{84}{paragraph*.57}%
+\contentsline {paragraph}{\nonumberline The Macroscopic Description of the cAMP Molecules}{84}{paragraph*.59}%
+\contentsline {chapter}{\nonumberline Bibliography}{85}{chapter*.60}%
+\contentsline {chapter}{\numberline {A}Appendix}{88}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Notation}{88}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}Common Sets and Measures}{88}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Norms}{88}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Generic Positive Constants and Increasing Continuous Functions}{88}{subsection.A.1.3}%
+\contentsline {subsection}{\numberline {A.1.4}System, Drift and Diffusion}{89}{subsection.A.1.4}%
+\contentsline {subsubsection}{\nonumberline Components}{89}{subsubsection*.62}%
+\contentsline {subsubsection}{\nonumberline Superscript}{90}{subsubsection*.64}%
+\contentsline {subsection}{\numberline {A.1.5}Conditional Expectations and Probabilities}{90}{subsection.A.1.5}%
+\contentsline {subsection}{\numberline {A.1.6}Cyrillic Variables}{90}{subsection.A.1.6}%
+\contentsline {section}{\numberline {A.2}Miscellaneous from Stochastics}{91}{section.A.2}%
+\contentsline {section}{\numberline {A.3}The Solutions for the Basic Model, More Formally}{92}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}The Space of Solutions}{92}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}Can we Obtain Regular Probability Measures by Conditioning $\mathbb {P}$?}{93}{subsection.A.3.2}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

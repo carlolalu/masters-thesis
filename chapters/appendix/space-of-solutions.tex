@@ -1,0 +1,164 @@
+In this section we want to address a bit more formally two closely related questions:
+\begin{enumerate}
+	\item What is the exact space of solutions for the solutions to the basic model? In the definition \ref{ch2:def:solution-model} did not specify the codomain of the \rv involved.
+	\item How can we be sure that the conditioning $\Prb$ we are obtaining \emph{regular} conditional probability measures (\cite[Chapter 10.2,first definition]{dudley}), \ie that we obtain mathematical objects that behave as probability measures?
+	This is an important question because for the definition \ref{ch2:def:solution-model} we need certain objects to be \Bm under $\PrbCondTimes{\cdot}{}$, thus we assume implicitly that $\PrbCondTimes{\cdot}{}$ is a probability measure.
+\end{enumerate}
+
+We will not give a complete answer to the second question, but we will give a direction to search for it, and we expect that with further work one might prove the necessary technicalities required to obtain the desired result.
+
+\subsection{The Space of Solutions}\label{app:formal-def-solution}
+
+We first need to check where the spawning Poisson processes $(\hmactive_t^p)_p$ are taking values for each fixed time $t$.
+This is of course $(\N_0)^N$.
+Now we define the space of configurations for the cAMP molecules $(\camp^{p,g})_g$ spawned by a single amoeba $\amba^p$.
+Here the symbol "$\spadesuit$" means that a particle has not been spawned yet.
+
+\begin{definition}
+Define the space of the positions cAMP particles spawned by a single amoeba as:
+\begin{equation*}
+\confCamp(d):= (\{\spadesuit\} \sqcup \R^d)^\N
+\end{equation*}
+Define the space of configurations for all particles (the $N$ amoebas $\amba^p$ and the cAMP molecules $\camp^{p,g}$) as
+\begin{equation*}
+\Conf:=(\R^d)^N \times\big(\confCamp(d)\big)^N
+\end{equation*}
+For each configuration of particles $x\in \Conf$ sign its $d$-dimensional coordinates as 
+\begin{equation*}
+\begin{aligned}
+x &= (x^1, \ldots, x^N, 
+	&(x^{1,g})_{g\in\N}, \ldots, 
+	&(x^{p,g})_{g\in\N}, \ldots, 
+	&(x^{N,g})_{g\in\N},\ldots)
+\\
+&= (a^1, \ldots, a^N, 
+	&c^{1,1}, c^{1,2}, \ldots, 
+	&c^{p,1},\ldots, 
+	&c^{N,1}, \ldots)
+\end{aligned}
+\end{equation*}
+where the absence of a coordinate in the list means that such coordinate is set to $\spadesuit$.
+\end{definition}
+
+\begin{remark}
+	One might want to define the configuration space of the cAMP as the more precise set
+	\begin{align*}
+		&\{
+		x = (x_g)_{g\in\N}\
+		:\
+		\exists G\in\N_0.\
+		\forall g < G.\
+		x_g \in \R^d\
+		\text{ and }\
+		\forall g\geq G.\
+		x_g =\spadesuit
+		\}\subseteq
+		\\
+		&\subseteq\
+		\bigoplus_{g=1}^\N (\{\spadesuit\} \sqcup \R^d)\
+		:=
+		\{
+		x = (x_g)_{g\in\N}\
+		:\
+		\exists G\in\N_0.\
+		\forall g\geq G.\
+		x_g =\spadesuit
+		\}
+	\end{align*}
+	But such space is very likely not Polish (the topic of the next section), thus we rely on the previous choice.
+\end{remark}
+
+And what about the Brownian motion associated to each particle? That is just a countable amount of independent $d$-dimensional \Bm.
+With these definitions the solution of \ref{ch2:def:solution-model} can be seen as a \emph{random \cadlag} function 
+
+\begin{equation*}
+	((\hmactive^p)_p, \sol = (\amba, \camp), B) (\omega):\
+	\R_+ \longrightarrow 
+	\underbrace{
+		(\N_0)^N
+	}_{\text{Poisson processes}}
+	\times
+	\underbrace{
+		(\R^d\times\confCamp(d))^N 
+	}_{ \text{positions particles}}
+		\times 
+	\underbrace{
+		(\R^d)^N \times (\confCamp(d))^N
+	}_{\Bm}
+\end{equation*}
+
+or, in other words, the \rv $((\hmactive^p)_p, \sol, B)$ takes values in the set
+
+\begin{equation}\label{app:def:space-of-solutions}
+	\left\{
+		f:\R_+ \longrightarrow 
+			(\N_0
+			\times
+			\R^d\times\confCamp(d)
+			\times 
+			\R^d \times \confCamp(d))^N\
+			:\
+			f \text{ is \cadlag}
+	\right\}
+\end{equation}
+
+It is not necessary to redefine the drift $\drift$ and the diffusion $\diffusion$, because they become relevant for the SDE framework only under the conditioning $\PrbCondTimes{}{}$. In any case, if we really wanted to see them in this framework, we would have for absent particle they have no mapping, so one could set them to  $\spadesuit$ for every cAMP molecule not yet spawned and obtain consistent mappings in the appropriate spaces.
+
+\subsection{Can we Obtain Regular Probability Measures by Conditioning $\Prb$?}
+
+For this chapter it is assumed the knowledge of \cite[Section 10.2]{dudley}.
+The main instrument to verify that a measure is regular is \cite[Theorem 10.2.2]{dudley}, namely:
+
+\begin{theorem}
+	Let $T$ be any Polish space, $\Borel$ its $\sigma$-algebra of Borel sets.
+	Let $(\Omega, \sigAlg, \Prb)$ be a probability space, $Y:\Omega\longrightarrow T$ a $(\sigAlg,\Borel)$-measurable function and $\mathcal{C}$ any sub-$\sigma$-algebra of $\sigAlg$.
+	Then there exists a conditional distribution $\Prb_{Y|\mathcal{C}}(\cdot, \cdot \cdot):\Borel \times \Omega \longrightarrow [0,1]$ (see \cite[Chapter 10.2,first definition]{dudley}) and it is unique, meaning that if another $\Prb'(\cdot, \cdot \cdot)$ satisfies the definition of conditional distribution, then
+	\begin{equation*}
+		\forall^\Prb \omega\in\Omega.
+		\quad
+		\Prb_{Y|\mathcal{C}}(\cdot, \omega) = \Prb'(\cdot, \omega)
+	\end{equation*}
+\end{theorem}
+
+In other words, given a sub-$\sigma$-algebra $\mathcal{C}$ of $\sigAlg$ and a \rv $Y:(\Omega, \sigAlg, \Prb) \longrightarrow (T,\Borel)$, a sufficient condition for $\PrbCond{Y \in \cdot}{\mathcal{C}}$ to behave like a measure for $\Prb_{|\mathcal{C}}$-almost every $\omega$ is that the codomain $T$ is a Polish space, \ie
+
+\begin{definition}
+	Let $(T, \tau)$ be a topological space. $T$ is \emph{Polish} iff $\tau$ is metrizable with respect to a metric $d$ such that $(T,d)$ is a complete separable metric space.
+\end{definition}
+
+Then the regularity of our measures is depending not on the $\sigma$-algebra on which we are conditioning, but on the codomain of the process which is being conditioned, which must be Polish.
+Most of the processes we take into account are taking values into some subset of \ref{app:def:space-of-solutions} of the form
+
+\begin{equation*}
+	\left\{
+	f:\R_+ \longrightarrow
+	(\R^d)^n\times(\confCamp(d))^k
+	:\
+	f \text{ is \cadlag}
+	\right\}
+\end{equation*}
+
+for some $n,k \in \N_0$.
+This is an idea of how somebody might try to prove that this space is Polish:
+\begin{enumerate}
+	\item Prove that $\{\spadesuit\} \sqcup \R^d$ is Polish.
+	This can be done by viewing $\{\spadesuit\} \sqcup \R^d$ as a metrized one-point-compactification of $\R^d$ (since $\R^d$ is Polish one can use \cite[Theorem 5.3]{kechris} to obtain the metric), which then is separable (compact and metrizable).
+	Since then $\{\spadesuit\} \sqcup \R^d$ is metrizable and compact, by \cite[Theorem 45.1]{munkres-2000} we obtain that it is complete, and thus a Polish space.
+	\item Prove that $\confCamp(d)$ is Polish. 
+	One might want to generalize the result \cite[Theorem 43.4]{munkres-2000} for $\{\spadesuit\} \sqcup \R^d$ to ensure that the countable product $(\{\spadesuit\} \sqcup \R^d)^\N$ is complete.
+	In such case, since the metric $\rho$ of the latter theorem induces the product topology, we get that by the Tychonoff theorem (\cite[Theorem 37.3]{munkres-2000}) the space $(\{\spadesuit\} \sqcup \R^d)^\N$ is also compact.
+	Being compact and metrizable we obtain that is also separable, and therefore Polish.
+	\item Since both the completeness and the separability remain stable under a finite product we obtain that $(\R^d)^n\times(\confCamp(d))^k$ is Polish.
+	\item Defining $E:=(\R^d)^n\times(\confCamp(d))^k$ we have that the space
+	\begin{equation*}
+		\left\{
+		f:\R_+ \longrightarrow
+		(\R^d)^n\times(\confCamp(d))^k
+		:\
+		f \text{ is \cadlag}
+		\right\}
+	\end{equation*}
+	can be seen as the \emph{Skorokhod space} $\skorokhod{E}$ (see \cite[Chapter 3, Section 5]{kurtz}), which, if $E$ is Polish, is also Polish (\cite[Chapter 3, Theorem 5.6]{kurtz}).
+\end{enumerate}
+
+We expect then that the all conditional probability measures are regular, since we expect that the processes considered have Polish spaces as codomains.

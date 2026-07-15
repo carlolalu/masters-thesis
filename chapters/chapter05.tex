@@ -1,0 +1,3487 @@
+\label{ch5}
+
+The following chapter focuses on showing, in some sense, that the difference between the real and the average drift, namely the quantity
+
+\begin{equation}
+	\normp{\infty}{
+		\drift(t, \mfsol_t)
+		-
+		\mfdrift(t, \mfsol_t)
+	}
+	=
+	\normp{\infty}{
+		\drift^{(N)}(t, \mfsol_t^{(N)})
+		-
+		\mfdrift^{(N)}(t, \mfsol_t^{(N)})
+	}
+\end{equation}
+
+is very unlikely to be big as $N$ (the number of amoebas) grows.
+We prove it in a slightly more general settings than the one that we will use in the result \ref{ch6:final-result}: the attraction taken in consideration has also an added Coulomb-type singularity.
+More formally we would like to prove that, chosen some $t\leq T$ and  some $0<\xi < \frac{1}{2}$ then
+
+\begin{equation}
+	\PrbOf{
+		\normp{\infty}{
+			\drift^{(N)}(t, \mfsol_t^{(N)})
+			-
+			\mfdrift^{(N)}(t, \mfsol_t^{(N)})
+	}
+	\geq
+	N^{-\xi}
+	}
+	\leq
+	\Fup_n(T)\
+	N^{-\const_\xi n + 1}
+\end{equation}
+
+for all $n \in \N$, where $\const_\xi$ is a constant dependent only on $\xi$ and $\Fup_n$ is an increasing continuous function dependent on $n$ and independent from $N$.
+In order to prove it the idea is to notice that for the $k$-th particle
+
+\begin{align*}
+	N^{-\xi}\
+	&\leq
+	\normp{\infty}{
+		\drift_k(t, \mfsol_t)
+		-
+		\mfdrift_k(t, \mfsol_t)
+	}
+	\\
+	&=
+	\normp{\infty}{
+		\drift_k(t, \mfsol_t)
+		-
+		\ECond{\drift_k(t, \mfsol_t)}{ \mfamba_t}
+	}
+	\\
+	&\leq
+	\normp{\infty}{
+		\drift_k(t, \mfsol_t)
+		-
+		\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+	} +
+	\\
+	&\qquad\quad
+	+
+	\normp{\infty}{
+		\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+		-
+		\ECond{\drift_k(t, \mfsol_t)}{ \mfamba_t}
+	}
+\end{align*}
+
+and therefore, using this knowledge together with \ref{app:pA-pB-less-than}, we can obtain
+
+\begin{equation}\label{ch5:sketch-divide-et-impera}
+	\begin{aligned}
+		&
+		\PrbOf{
+			\normp{\infty}{
+				\drift(t, \mfsol_t)
+				-
+				\mfdrift(t, \mfsol_t)
+			}
+			\geq
+			N^{-\xi}
+		}
+		= 
+		\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\drift_k(t, \mfsol_t)
+				-
+				\mfdrift_k(t, \mfsol_t)
+			}
+			\geq
+			N^{-\xi}\
+		}
+		\leq
+		\\
+		&\leq
+		\Prb \Bigg(
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\drift_k(t, \mfsol_t)
+				-
+				\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+			}
+			+
+			\\
+			&\qquad\quad
+			+
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+				-
+				\ECond{\drift_k(t, \mfsol_t)}{ \mfamba_t}
+			}
+			\geq
+			N^{-\xi}\
+			+N^{-\xi}\
+		\Bigg)
+		\\
+		&\leq
+		\overbrace{
+			\PrbOf{
+				\sup_{1\leq k \leq N} 
+				\normp{\infty}{
+					\drift_k(t, \mfsol_t)
+					-
+					\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+				}
+				\geq
+				N^{-\xi}
+		}}^{\text{Term 1}}\ +
+		\\
+		&\qquad\quad
+		+
+		\underbrace{
+			\PrbOf{
+				\sup_{1\leq k \leq N} 
+				\normp{\infty}{
+					\ECondTimes{\drift_k(t, \mfsol_t)}{ \mfamba_t, \:}
+					-
+					\ECond{\drift_k(t, \mfsol_t)}{ \mfamba_t}
+				}
+				\geq
+				N^{-\xi}
+			}
+		}_{\text{Term 2}}
+	\end{aligned}
+\end{equation}
+
+and consequently we can bound separately the two addends.
+This was the "divide" part of the usual strategy "divide et impera".
+The first section is an explains the generalization of the attraction $\attraction$ and shows some estimate about it, the two central sections treat respectively the first and the second term, and the final fourth section composes all the pieces together in a ready-to-use tool.
+
+\section{Necessary premises}
+
+Only for this chapter we will use a more general case for the attraction: we will use an additional term which also admits a cut-off Coulomb-type of singularity.
+
+\begin{definition}[Coulomb-type attraction-potential, generalized attraction and drift]\label{ch5:def:generalized-attr&drift}
+	Let $\alpha \geq 0$.
+	Let $\cutoffSinAttraction = \cutoffSinAttraction (N, \alpha) : \R^d \longrightarrow \R^d$ be a function such that
+	\begin{equation}
+		0
+		\leq 
+		\Normp{2}{\cutoffSinAttraction}
+		\leq 
+		\const_\curlywedge \left( 
+		\frac{1}{\Normp{2}{x}} \wedge N^\alpha
+		\right)
+		=
+		\left\{
+		\begin{aligned}
+			&\frac{\const_\curlywedge}{\Normp{2}{x}}			&& x \in \{ \Normp{2}{x} \geq N^{-\alpha}\}
+			\\
+			&\const_\curlywedge\:N^{\alpha}						&& \text{otherwise}
+		\end{aligned}
+		\right.
+	\end{equation}
+	for some positive constant $\const_\curlywedge$,	\ie such that it is less than a cut-off Coulomb-type singularity, with the cut-off of parameter $N^{\alpha}$.
+	Then we define the generalized attraction with cut-off of parameters $\alpha$ as $\genAttraction := \genAttraction(N, \alpha, \const_\curlywedge) := \attraction + \cutoffSinAttraction(N, \alpha)$, and the generalized drift as the drift of \ref{ch2:def:drift-&-diffusion} with $\attraction$ substituted with $\genAttraction$, \ie
+	\begin{equation}
+		\left\{
+		\begin{aligned}
+			{}^{\genAttraction}\drift_k^{(N)}(t,x, (\hmactive^k_t)_k) &:= \drift_p(t,x) := \frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\hmactive_t^p} \genAttraction(x^k - x^{p,g})
+			&& 1\leq k \leq N
+			\\
+			{}^{\genAttraction}\drift_{p,g}^{(N)}(t,x) &:= 0
+			&& \text{if } \exists (p,g)
+		\end{aligned}
+		\right.
+	\end{equation}
+	Analogous is the case for the generalized mean-field drift:
+		\begin{equation}
+		\left\{
+		\begin{aligned}
+			{}^{\genAttraction}\mfdrift_k^{(N)}(t,x, (\hmactive^k_t)_k) &:= \mfdrift_p(t,x) := 
+			\lambda
+			\int
+				(\genAttraction \star \cdens_t^\tau) (x)
+			d{\:\tau}
+			&& 1\leq k \leq N
+			\\
+			{}^{\genAttraction}\mfdrift_{p,g}^{(N)}(t,x) &:= 0
+			&& \text{if } \exists (p,g)
+		\end{aligned}
+		\right.
+	\end{equation}
+\end{definition}
+
+Therefore with the symbols $\drift,\mfdrift$, in this chapter, we will mean ${}^{\genAttraction}\drift, {}^{\genAttraction}\mfdrift$ respectively.
+
+\begin{remark}
+	The usual attraction can be considered as a generalized attraction of parameter $\alpha = 0$.
+\end{remark}
+
+Before proceeding to the law of large numbers we need to gather some preliminary lemmas.
+The first is a simple result of \autocite{peter-boers}, that we simply report here.
+
+\begin{lemma}\label{ch5:lemma:<-1+infty-norm}
+	For a function $f$ define the eventually infinite quantities
+	\begin{gather*}
+		\Normp{1 \wedge \infty}{f} := 
+		\inf_{f_1 + f_\infty = f} 
+		\left( 
+		\Normp{\Lpspace^1}{f_1} + \Normp{\Lpspace^\infty}{f_\infty}
+		\right),
+		\qquad
+		\qquad
+		\Norm{f}_{1 \vee \infty} := 
+		\Normp{\Lpspace^1}{f} + \Normp{\Lpspace^\infty}{f}
+	\end{gather*}
+	Then for arbitrary functions $f,g$ it is true that
+	\begin{equation}
+		\Norm{f \star g}_\infty
+		\leq
+		\Norm{f}_{1 \wedge \infty} \cdot \Norm{g}_{1 \vee \infty}
+	\end{equation}
+\end{lemma}
+
+\begin{proof}
+	Let us indicate the norms $\Normp{\Lpspace^\infty}{\cdot},\Normp{\Lpspace^1}{\cdot}$ with $ \Normp{\infty}{\cdot}, \Normp{1}{\cdot}$ respectively.
+	Let $g_1 + g_\infty = g$ be a decomposition of $g$.
+	Then
+	\begin{align*}
+		&\Norm{f \star g}_\infty 
+		\leq 
+		\Norm{f \star g_1}_\infty + \Norm{f \star g_1}_1
+		\leq
+		\\
+		&\leq
+		\Norm{f}_\infty \Norm{g_1}_1 + \Norm{f}_1 \Norm{g_\infty}_\infty
+		\\
+		&\leq
+		(\Norm{f}_\infty + \Norm{f}_1) ( \Norm{g_1}_1 + \Norm{g_\infty}_\infty)
+		= \Norm{f}_{1 \vee \infty}	( \Norm{g_1}_1 + \Norm{g_\infty}_\infty)
+	\end{align*}
+	Since this is valid for every decomposition $g_1 + g_\infty = g$, we have our result.
+\end{proof}
+
+The second lemma that we need is a simple evaluation of these quantities for the generalized attraction.
+
+\begin{lemma}\label{ch5:lemma:eval-norm-gen-attr}
+	Let $\genAttraction$ be the generalized attraction, then we have that there exists a constant $\const_{\attraction,\curlywedge}$ depending only on $\attraction, \const_\curlywedge$ such that
+	\begin{align}
+		\Norm{\genAttraction}_{1 \wedge \infty}, \:
+		\Norm{\genAttraction^2}_{1 \wedge \infty} 
+		\leq \const_{\attraction,\curlywedge}
+	\end{align}
+\end{lemma}
+
+\begin{proof}
+	Let us first operate for the power $1$.
+	Choose the decomposition 
+	\begin{equation}
+		\genAttraction = \attraction + \cutoffSinAttraction = 
+		\underbrace{ 
+			\attraction + \cutoffSinAttraction \1_{\norm{x} \leq 1}
+		}_{=:(\genAttraction)_1}
+		+
+		\underbrace{
+			\cutoffSinAttraction \1_{\norm{x} > 1}
+		}_{=:(\genAttraction)_\infty}
+	\end{equation}
+	
+	Let us again sign the norms $\Normp{\Lpspace^\infty}{\cdot},\Normp{\Lpspace^1}{\cdot}$ with $ \Normp{\infty}{\cdot}, \Normp{1}{\cdot}$ respectively.
+	Then we have that
+	
+	\begin{align*}
+		&\Norm{(\genAttraction)_1}_1
+		\leq
+		\Norm{\attraction}_1 + \Norm{\cutoffSinAttraction \1_{\Normp{2}{x} \leq 1}}_1
+		=
+		\\
+		&=
+		\Norm{\attraction}_1 + \Norm{\const_\curlywedge N^\alpha \1_{0 \leq \Normp{2}{x} \leq N^{-\alpha}}}_1 + \Norm{\frac{\const_\curlywedge}{\Normp{2}{x}} \1_{N^{-\alpha} \leq \Normp{2}{x} \leq 1}}_1
+		\\
+		&\footnotemark[1]=
+		\Norm{\attraction}_1 + \const_\curlywedge N^{\alpha} \cdot \lebsge (\Ball^{d-1}[N^{-\alpha}]) + \int_{N^{-\alpha}}^1 \: \frac{\const_\curlywedge}{\Normp{2}{x}} \: dx
+		\\
+		& \leq
+		\Norm{\attraction}_1 
+		+ \const_\curlywedge N^{\alpha} 
+		\max \left\{
+		\pi (N^{-\alpha})^2
+		,\frac{4}{3} \pi (N^{-\alpha})^3
+		\right\}
+		+
+		\\
+		&\qquad
+		+
+		\const_\curlywedge
+		\max \left\{
+		\int_{N^{-\alpha}}^1  \: \frac{1}{r} r\: dr \:2\pi
+		,\int_{N^{-\alpha}}^1  \: \frac{1}{r} r^2\: dr \: 2 \pi \int_0^\pi \sin(\theta) d\theta
+		\right\}
+		\\
+		& \leq 
+		\Norm{\attraction}_1 
+		+ \const_\curlywedge N^{\alpha-2\alpha} 2 \pi
+		+ \const_\curlywedge 2 \pi \cdot 2 \max \left\{
+		\int_0^1 dr
+		,\int_0^1  r\: dr
+		\right\}
+		\\
+		& \leq
+		\Norm{\attraction}_1
+		+ \const_\curlywedge 6\pi 
+	\end{align*}
+	\footnotetext[1]{$\lebsge(\Ball^{d-1}[N^{-\alpha}])$ indicates the Lebesgue measure of the $d-1$-ball of radius $N^{-\alpha}$}
+	
+	And obviously we have that
+	
+	\begin{equation*}
+		\Norm{\cutoffSinAttraction \1_{\Normp{2}{x} > 1}}_\infty 
+		\leq 
+		\Norm{\frac{\const_\curlywedge}{\Normp{2}{x}} \1_{\Normp{2}{x} > 1}}_\infty  = \const_\curlywedge
+	\end{equation*}
+	
+	Then the first inequality is proven.
+	
+	Let us proceed with the power $2$.
+	Choose this decomposition:
+	
+	\begin{align*}
+		\genAttraction^2 
+		&= 
+		\left(
+		\attraction + \cutoffSinAttraction
+		\right)^2
+		= \attraction^2 + 2 \attraction \cutoffSinAttraction + \cutoffSinAttraction^2 
+		\\
+		& = 
+		\underbrace{ 
+			\attraction^2 + 2 \attraction \cutoffSinAttraction \1_{\Normp{2}{x} \leq 1}
+		}_{=:(\genAttraction^2)_1}
+		+
+		\underbrace{
+			\attraction \cutoffSinAttraction \1_{\Normp{2}{x} > 1}
+			+ \cutoffSinAttraction^2 \1_{\Normp{2}{x} > 1}
+		}_{=:(\genAttraction^2)_\infty}
+	\end{align*}
+	
+	Then, proceeding as before, we have that
+	
+	\begin{equation*}
+		\Norm{(\genAttraction^2)_1}_1 
+		\leq
+		\Norm{\attraction^2}_1 + 2 \Norm{\attraction}_\infty \int \norm{\cutoffSinAttraction}  \1_{\norm{x} \leq 1}
+		\leq \Norm{\attraction^2}_1 + 2 \Norm{\attraction}_\infty \const_\curlywedge 6\pi
+	\end{equation*}
+	
+	And regarding the other term:
+	
+	\begin{equation*}
+		\Norm{\attraction \cutoffSinAttraction \1_{\norm{x} > 1}
+			+ \cutoffSinAttraction^2 \1_{\Normp{2}{x} > 1}}_\infty 
+		\leq 
+		\Norm{\frac{\const_\curlywedge \attraction}{\Normp{2}{x}} \1_{\Normp{2}{x} > 1}}_\infty + \Norm{\frac{\const_\curlywedge^2}{\Normp{2}{x}^2} \1_{\Normp{2}{x} > 1}}_\infty  = \const_\curlywedge\Norm{\attraction}_\infty + \const_\curlywedge^2
+	\end{equation*}
+\end{proof}
+
+
+\section{The First Term}
+
+Now we can finally approach the first part of the law of large numbers.
+The proof is classical law of large numbers, following for example \autocite{ana}.
+It uses a notation akin to the relabelled model defined in \ref{ch2:model-reformulation}.
+
+\begin{proposition}[The first part of the law of large numbers]\label{ch5:prop:LLN1}
+	
+	Let $\hmactive_t$ be the spawning Poisson process of \ref{ch2:model-reformulation}. Let $\mfsol^{(N)}$ be a \rv that under $\PrbCondTimes{\cdot}{}$ takes the form
+	\begin{equation}
+		\mfsol^{(N)} = (\mfamba^1, \ldots, \mfamba^N, \mfcamp^1, \ldots, \mfcamp^{\hmactive_t}) \in (\R^d)^{\NumParticles_t} =  (\R^d)^{N + \hmactive_t} 
+	\end{equation}
+	Let $\drift^{(N)}(t, \cdot)$ be the \emph{generalized} drift of parameter $\alpha$ defined in \ref{ch5:def:generalized-attr&drift}.
+	Assume that:
+	\begin{enumerate}
+		\item All the coordinates of $\mfsol^{(N)}$ are $\indep$ under the p. measure $\PrbCondTimes{}{}$.
+		\item All the coordinates $\mfamba^p$ of $\mfsol^{(N)}$ are \iid under the p. measure $\PrbCondTimes{}{}$.
+		\item The densities of all coordinates of $\mfsol^{(N)}$ are uniformly bounded in $\Lpspace^{\infty}$, \ie
+		\begin{equation*}
+			\exists \const_\dens>0.\
+			\forall p,m.\
+			\Norm{\cdens^m}_\infty, \Norm{\adens^p}_\infty < \const_\dens
+		\end{equation*}
+		where $\adens^p$ and $\cdens^m$ represent the laws of $\mfamba^p$ and $\mfcamp^m$ under $\PrbCondTimes{\cdot}{}$ respectively.
+	\end{enumerate}
+	Consider $\xi >0$ be such that $0<\xi + \alpha < \frac{1}{2}$ and define the sets
+	\begin{equation*}
+		\begin{aligned}
+			S^{N,\xi}_\amba
+			&:= \left\{ \sup_{1\leq k \leq N} 
+			\norm{
+				\drift_k^{(N)}(t, \mfsol^{(N)}) 
+				- \ECondTimes{
+					\drift^{(N)}_k(t,\mfsol^{(N)})
+				}{\mfamba^k,}
+			}_\infty \geq N^{-\xi} 
+			\right\}
+			\\
+			S^{N, \xi}
+			&:= \left\{ \sup_{1\leq k \leq N} 
+			\norm{
+				\drift_k^{(N)}(t, \mfsol^{(N)}) 
+				- \ECondTimes{
+					\drift^{(N)}_k(t,\mfsol^{(N)})
+				}{}
+			}_\infty \geq N^{-\xi} 
+			\right\}
+		\end{aligned}
+	\end{equation*}
+	
+	Then, signing as $S_\ast^{N, \xi}$ either of the two sets, for $S_\ast^{N, \xi}$ is valid the laws of large numbers, \ie $\exists \overline{N} = \overline{N}(\alpha, \curlywedge)$ such that for all $\const_\xi$ such that $0 < \const_\xi \leq 1 - 2(\alpha + \xi)$ and for all $n\in\N$ exists $\const_n = \const_{\attraction, \curlywedge, \lambda, n}  >0$ and an increasing positive continuous function $\Fup_n$ (independent from $N, \alpha,\xi$)  so that it is valid:
+	\begin{align}
+		& \forall N> \overline{N}.	&	&\PrbOf{S^{N,\xi}_\ast}{}
+		\leq 
+			\const_n\
+			\Fup_n(\const_\dens)\
+			\Fup_n(t)\
+			N^{-\const_\xi n + 1}
+		&& \label{ch5:LLN1:bound}
+	\end{align}
+\end{proposition}
+
+
+\begin{remark}\label{ch5:assumption-t,lambda>1-proofs}
+	All along the subsequent proof it will be assumed that $t, \lambda \geq 1$.
+	This is because in general for $0 < p <q$ we have that
+	
+	\begin{equation*}
+		t^p \leq (t \vee 1)^q
+	\end{equation*}
+	
+	and this clutters the notation and creates only non-necessary headaches for a function of $t$ which cannot explode (all the powers involved are positive integers).
+\end{remark}
+
+We will now prove such result.
+For the sake of shortness, together with the convention at \ref{app:notation}, we will use the subsequent notation:
+	
+	\begin{equation*}
+		S^{N, \xi}_\ast := \: \text{either of $S^{N, \xi}_\amba$ and $S^{N, \xi}$}
+	\end{equation*}
+	
+	Notice that 
+	
+	\begin{align*}
+		\PrbOf{S^{N,\xi}_\ast}
+		& =\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\norm{
+				\drift_k^{(N)}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_k(t,\mfsol^{(N)})
+				}
+			}_\infty \geq N^{-\xi} 
+		}
+		\\
+		& \leq \sum_{k=1}^{N} \sum_{i=1}^{d}
+		\PrbOf{\norm{
+				\drift^{(N)}_{k;i}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_{k;i}(t,\mfsol^{(N)})
+				}
+			} \geq N^{-\xi} 
+		}
+		\\
+		&\leq
+		N \cdot 3 \cdot
+		\max_{k,i}
+		\:
+		\underbrace{
+			\PrbOf{\norm{
+					\drift^{(N)}_{k;i}(t, \mfsol^{(N)}) 
+					- \ETFoot{\ast}{
+						\drift^{(N)}_{k;i}(t,\mfsol^{(N)})
+					}
+				} \geq N^{-\xi} 
+			}
+		}_{\Ch(k;i)}
+	\end{align*}
+	where recall that $\drift_{k;i}$ indicates the $i$-th coordinate for the $d$-dimensional drift of the $k$-th particle.
+	Since the expression has the same form for each coordinate $(k;i)$, we assume that the maximum of $\Ch(k;i)$ is reached in $(1;1)$, and tame with a bound independent from such assumption.
+	
+	We shall begin by applying Markov inequality with function $f(x):= \norm{x}^{2n}$ for a generic $n \in \N$.
+	\begin{align*}
+		&=
+		3N \cdot
+		\PrbOf{\norm{
+				\drift^{(N)}_{1;1}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_{1;1}(t,\mfsol^{(N)})
+				}
+			} \geq N^{-\xi} 
+		}
+		\\
+		&\leq \frac{3N}{ (N^{-\xi})^{2n} } \E{
+			\norm{
+				\drift^{(N)}_{1;1}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_{1;1}(t,\mfsol^{(N)})
+				}
+			}^{2n}
+		}
+		\\
+		& \footnotemark[1]=
+		3
+		N^{\xi 2n + 1} \E{
+			\norm{
+				\frac{1}{N} 
+				\sum _{m = 1}^{\hmactive_t} 
+				(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+				- \frac{1}{N} \sum _{m = 1}^{\hmactive_t} 
+				\ETFoot{\ast}{
+					(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+				}
+			}^{2n}
+		}
+		\\
+		& = 3 N^{\xi 2 n + 1} \frac{1}{N^{2n}} 
+		\E{
+			\norm{
+				\sum _{m = 1}^{\hmactive_t} 
+				\left[
+				(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+				- \ETFoot{\ast}{ \left( (\genAttraction)_1 \star \cdens^m \right) (\mfamba^1)}
+				\right]
+			}^{2n}
+		}
+		\\
+		&= 3 N^{(\xi -1) 2 n + 1}
+		\E{
+			\norm{
+				\sum _{m = 1}^{\hmactive_t} 
+				\left[
+				\underbrace{
+					(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+				}_{:=\Psi_m}
+				-
+				\underbrace{
+					\ETFoot{\ast}{ \left( (\genAttraction)_1 \star \cdens^m \right) (\mfamba^1)}
+				}_{=\ETFoot{\ast}{\Psi_m}=: \psi_m^\ast}
+				\right]
+			}^{2n}
+		}
+		=
+	\end{align*}
+	\footnotetext[1]{{Here $(\genAttraction)_1$ indicates the first coordinate of $\genAttraction$, and not a first part of any decomposition of $\genAttraction$.}}
+	
+	Setting $\Zhi_m := \norm{\Psi_m - \psi_m^\ast}$, we can apply the multinomial formula:
+	
+	\begin{align}
+		\left( \sum_{m=1}^M \Zhi_m \right)^{2n}
+		&= \sum_{\beta_1 + \ldots + \beta_M =2n} 
+		\:
+		\frac{(2n)!}{\beta_1! \ldots \beta_M!} \prod_{m=1}^M \Zhi_m^{\beta_m}
+		\\
+		&= \sum_{\beta_1 + \cdots + \beta_M =2n} 
+		\:
+		\frac{(2n)!}{(\beta)!} \prod_{m=1}^M \Zhi_m^{\beta_m}
+	\end{align}
+	
+	where $\beta$ is the multi-index $(\beta_1, \ldots, \beta_M)$ and $(\beta)! := \beta_1!\ldots \beta_M!$.
+	Then we obtain
+	
+	\begin{align*}
+		&= 3 N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n} \
+			\frac{(2n)!}{(\beta)!}
+			\prod_{m=1}^{\hmactive_t}
+			\norm{
+				\Psi_m - \psi_m^\ast
+			}^{\beta_m}
+		}
+		\\
+		& = 3 N^{(\xi -1) 2 n + 1}
+		\E{
+			\ETFoot{\ast}{
+				\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n} \
+				\frac{(2n)!}{(\beta)!}
+				\prod_{m=1}^{\hmactive_t}
+				\norm{
+					\Psi_m - \psi_m^\ast
+				}^{\beta_m}
+			}
+		}
+		\\
+		& = 3 N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}
+			\frac{(2n)!}{(\beta)!}
+			\ETFoot{\ast}{
+				\prod_{m=1}^{\hmactive_t}
+				\norm{
+					\Psi_m - \psi_m^\ast
+				}^{\beta_m}
+		}}
+		\\
+		& = 
+		3(2n)!\
+		N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+			\ETFoot{\ast}{
+				\prod_{m=1}^{\hmactive_t}
+				\norm{
+					\Psi_m - \psi_m^\ast
+				}^{\beta_m}
+		}}
+		=
+	\end{align*}
+	
+	Notice now that for each $m$ the \rv
+	
+	\begin{equation}
+		\Psi_m - \psi_m^\ast 
+		\quad
+		= 
+		\quad
+		(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+		- \ETFoot{\ast}{ \left( (\genAttraction)_1 \star \cdens^m \right) (\mfamba^1)}
+	\end{equation}
+	
+	are $\indep$ under $\PrbTFoot{1}{\cdot} = \PrbCondTimes{\cdot}{\mfamba^1,}$, therefore
+	
+	\begin{equation}\label{proof-of-LLN1:calculations-before-claim}
+		\begin{aligned}
+			&=
+			3(2n)!\
+			N^{(\xi -1) 2 n + 1}
+			\E{
+				\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n} \
+				\ETFoot{\ast}{
+					\ETFoot{1}{
+						\prod_{m=1}^{\hmactive_t}
+						\norm{
+							\Psi_m - \psi_m^\ast
+						}^{\beta_m}
+			}} }
+			\\
+			&=
+			3(2n)!\
+			N^{(\xi -1) 2 n + 1}
+			\E{
+				\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+				\prod_{m=1}^{\hmactive_t}
+				\ETFoot{\ast}{
+					\ETFoot{1}{
+						\norm{
+							\Psi_m - \psi_m^\ast
+						}^{\beta_m}
+					}
+				}
+			}
+			\\
+			& =
+			3(2n)!\
+			N^{(\xi -1) 2 n + 1}
+			\E{
+				\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+				\prod_{m=1}^{\hmactive_t}
+				\underbrace{
+					\ETFoot{\ast}{
+						\norm{
+							\Psi_m - \psi_m^\ast
+						}^{\beta_m}
+					}
+				}_{\leq ?}
+			}
+			\\
+		\end{aligned}
+	\end{equation}
+	
+	\begin{claim}\label{ch5:proof-of-LLN1:claim:bound-on-Psi-psi}
+		There exists a constant $\const_{\attraction,\text{dens}, \curlywedge}>0$ depending on $\attraction,\const_{\text{dens}}$,  and there exists $\overline{N}$ depending on $\const_\curlywedge,\attraction, \alpha$ such that
+		\begin{equation}
+			\forall N > \overline{N}.\qquad
+			\ETFoot{\ast}{
+				\norm{
+					\Psi_m - \psi_m^\ast 
+				}^{\beta_m}
+			}
+			\leq 
+			\left\{
+			\begin{aligned}
+				& 1		&&\text{if} \quad \beta_m = 0
+				\\
+				& 0 		&&\text{if} \quad \beta_m = 1
+				\\
+				&(\const_{\attraction, \curlywedge} 
+				\Fup(\const_\dens)
+				N^\alpha)^{\beta_m -2}	\quad		&&\text{otherwise}
+			\end{aligned}
+			\right.
+		\end{equation}
+	\end{claim}
+	
+	\begin{proof}[Proof of the claim]
+		If $\beta_m =0$ we have
+		
+		\begin{equation*}
+			\ETFoot{\ast}{
+				\norm{
+					\Psi_m
+					- \psi_m^\ast
+				}^0
+			} = \ETFoot{\ast}{ \ETFoot{1}{ 1} } = 1
+		\end{equation*}
+		
+		If instead $\beta_m =1$ we have:
+		\begin{equation*}
+			\ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^1 }
+			=
+			\ETFoot{\ast}{
+				\ETFoot{1}{
+					\norm{
+						\Psi_m
+						- \psi_m^\ast
+					}
+			}}
+			= 	\ETFoot{\ast}{
+				\norm{
+					\Psi_m
+					- \ETFoot{\ast}{\Psi_m}
+				}
+			}	= 0
+		\end{equation*}
+		
+		We need then to take care only of the case $\beta_m \geq 2$.
+		Here we have
+		
+		\begin{align*}
+			\ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{\beta_m} }
+			& =
+			\ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{\beta_m - 2} \cdot \norm{\Psi_m - \psi_m^\ast }^{2}}
+			\\
+			&\leq \Norm{\Psi_m - \psi_m^\ast }^{\beta_m - 2}_\infty \cdot \ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{2} }
+		\end{align*}
+		
+		Then we can dominate the two terms separately.
+		
+		\begin{align*}
+			\Norm{\Psi_m - \psi_m^\ast }_\infty 
+			&= \Norm{(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+				-
+				\ETFoot{\ast}{ \left( (\genAttraction)_1 \star \cdens^m \right) (\mfamba^1)}
+			}_\infty
+			\\
+			&=\Norm{\genAttraction}_\infty + \Norm{\genAttraction \star \cdens^m}_\infty
+			\\
+			& \leq \Norm{\genAttraction}_\infty + \Norm{\genAttraction}_\infty \Norm{\cdens^m}_1
+			\\
+			& = 2 \Norm{\genAttraction}_\infty = 2 (\Norm{\attraction}_\infty +  \Norm{\cutoffSinAttraction}_\infty )
+			\\
+			& \leq 2 (2 \Norm{\cutoffSinAttraction}_\infty ) =  \const_\curlywedge 4 N^{\alpha}
+		\end{align*}
+		
+		where the last inequality is valid if $N$ is big enough, \ie $N > \overline{N}(\alpha, \curlywedge, \attraction)$.
+		Then
+		
+		\begin{align*}
+			\Norm{\Psi_m - \psi_m^\ast }_\infty^{\beta_m - 2} 
+			\leq 
+				(\const_\curlywedge 4 )^{\beta_m -2} N^{\alpha (\beta_m -2)}
+			=
+				(\const_\curlywedge 4 N^\alpha)^{\beta_m -2}
+		\end{align*}
+		
+		Let us now check the other term:
+		
+		\begin{align*}
+			&\ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{2} } =
+			\\
+			&= \ETFoot{\ast}{
+				\ETFoot{1}{
+					\norm{
+						(\genAttraction)_1(\mfamba^1 - \mfcamp^m)
+						- \psi_m^\ast }^{2}
+				}
+			}
+			\\
+			&=
+			\ETFoot{\ast}{
+				\int
+				\left(
+				(\genAttraction)_1(\mfamba^1 - x)
+				- \psi_m^\ast \right)^{2}
+				\:
+				\cdens^m(x)
+				\:
+				dx
+			}
+			\\
+			& = \ETFoot{\ast}{
+				\int
+				(\genAttraction)_1^2(\mfamba^1 - x)
+				\cdens^m(x)
+				dx
+				- \int 2
+				(\genAttraction)_1(\mfamba^1 - x)
+				\psi_m^\ast
+				\cdens^m(x)
+				dx
+				+
+				(\psi_m^\ast)^2
+				\int
+				\cdens^m(x)
+				dx
+			}
+			\\
+			&= \ETFoot{\ast}{
+				\left( (\genAttraction)_1^2 \star \cdens^m \right) (\mfamba^1)
+				- 2 \psi_m^\ast \left( (\genAttraction)_1 \star \cdens^m \right) (\mfamba^1)
+				+(\psi_m^\ast)^2
+			}
+			\\
+			& \leq \ETFoot{\ast}{
+				\Norm{(\genAttraction)_1^2 \star \cdens^m}_\infty
+				+ 2 \psi_m^\ast \Norm{(\genAttraction)_1 \star \cdens^m}_\infty
+				+(\psi_m^\ast)^2
+			}
+			\\
+			&= \Norm{(\genAttraction)_1^2 \star \cdens^m}_\infty
+			+ 2 \psi_m^\ast \Norm{(\genAttraction)_1 \star \cdens^m}_\infty
+			+(\psi_m^\ast)^2 
+			\\
+			&\leq 
+			\Norm{(\genAttraction)_1^2 \star \cdens^m}_\infty
+			+ 2\Norm{(\genAttraction)_1 \star \cdens^m}_\infty^2
+			+ \Norm{(\genAttraction)_1 \star \cdens^m}_\infty^2
+			\\
+			& = 
+			\Norm{(\genAttraction)_1^2 \star \cdens^m}_\infty
+			+ 3\Norm{(\genAttraction)_1 \star \cdens^m}_\infty^2
+			\qquad \text{}
+			\\
+			&\footnotemark[1]
+			\leq
+			\Norm{\genAttraction^2}_{1 \wedge \infty}
+			\Norm{\cdens^m}_{1 \vee \infty}
+			+ 3 
+			\left(
+			\Norm{\genAttraction}_{1 \wedge \infty}
+			\Norm{\cdens^m}_{1 \vee \infty}
+			\right)^2
+			\\
+			& =
+			\const_{\curlywedge,\attraction} (1 + \const_{\text{dens}})
+			+ 3 \const_{\curlywedge,\attraction}^2 (1 + \const_{\text{dens}})^2
+			\\
+			&
+			\leq
+				(\const_{\curlywedge,\attraction} + 3 \const_{\curlywedge,\attraction}^2)\
+				[1 + \const_{\text{dens}} + (1 + \const_{\text{dens}})^2 ]
+			\\
+			& = 
+				\const_{\attraction, \curlywedge}\
+				\Fup(\const_\dens)
+			\leq 
+				[
+					\const_{\attraction, \curlywedge}\Fup(\const_\dens)
+				]^{\beta_m -2}
+		\end{align*}
+		\footnotetext[1]{By \ref{ch5:lemma:<-1+infty-norm} and \ref{ch5:lemma:eval-norm-gen-attr}}
+		
+		Then we have
+		
+		\begin{align*}
+			\ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{\beta_m} }
+			&\leq \Norm{\Psi_m - \psi_m^\ast }^{\beta_m - 2}_\infty \cdot \ETFoot{\ast}{\norm{\Psi_m - \psi_m^\ast }^{2} }
+			\\
+			&\leq
+				(\const_\curlywedge 4 N^\alpha)^{\beta_m -2}
+				[
+					\const_{\attraction, \curlywedge}\Fup(\const_\dens)
+				]^{\beta_m -2}
+			&=
+					[
+						\const_{\attraction, \curlywedge} 
+						\Fup(\const_\dens)
+						N^\alpha
+					]^{\beta_m -2}
+		\end{align*}
+		And this concludes the proof of the claim.
+	\end{proof}
+	
+	Now we finally obtained a bound independent from the coordinate $(1,1)$ of the drift, thus, resuming with calculations from \ref{proof-of-LLN1:calculations-before-claim} and exploiting the claim \ref{ch5:proof-of-LLN1:claim:bound-on-Psi-psi}, we have that
+	
+	\begin{align*}
+		\PrbOf{S^{N,\xi}_\ast}
+		& =\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\norm{
+				\drift_k^{(N)}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_k(t,\mfsol^{(N)})
+				}
+			}_\infty \geq N^{-\xi} 
+		}
+		\\
+		&\leq
+		N \cdot 3 \cdot
+		\max_{k,i}
+		\:
+		\PrbOf{\norm{
+				\drift^{(N)}_{k;i}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_{k;i}(t,\mfsol^{(N)})
+				}
+			} \geq N^{-\xi} 
+		}
+		\\
+		&\leq
+		3(2n)!\
+		N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+			\prod_{m=1}^{\hmactive_t}
+			\ETFoot{\ast}{
+				\norm{
+					\Psi_m - \psi_m^\ast
+				}^{\beta_m}
+			}
+		}
+		\\
+		&\leq
+		3(2n)!\
+		N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+			\prod_{m=1}^{\hmactive_t}
+			\left(
+			\1_{\beta_m = 0} + \1_{\beta_m \geq 2}(
+			\underbrace{
+				\const_{\attraction, \curlywedge} 
+				\Fup(\const_\dens)
+				N^\alpha
+			}_{=:\Iu}
+			)^{\beta_m -2} 
+			\right)
+		}
+	\end{align*}
+	
+	We can assume that $\Iu \geq 1$ (eventually modulate the value $\const_{\attraction,\text{dens}, \curlywedge} $ accordingly).
+	
+	\begin{claim}\label{ch5:proof-of-LLN1:sum-prod-Iu-inequality}
+		$\Iu \geq 1$ is independent from the multi-index $\beta$, therefore
+		\begin{equation}
+			\sum_{\beta_1 + \cdots + \beta_M =2n}\
+			\prod_{m=1}^{M}\
+			\left(
+			\1_{\beta_m = 0} + \1_{\beta_m \geq 2}
+			\Iu^{\beta_m -2} 
+			\right)
+			\leq
+			(2n)^n\
+			(M)^n\
+			\Iu^{2n-2}
+		\end{equation}
+	\end{claim}
+	
+	\begin{proof}[Proof of the claim]
+		First of all notice that if the multi-index $\beta$ has an entry $\beta_m =1$, then the whole product under $\prod_{m=1}^{M}$ goes to $0$.
+		Besides, if $\beta_m=0$, then the relative factor is $1$ and therefore does not influence the product.
+		In equations:
+		
+		\begin{align*}
+			&\prod_{m=1}^M
+			\left(
+			\1_{\beta_m = 0} + \1_{\beta_m \geq 2} \Iu^{\beta_m -2} 
+			\right) = 
+			\prod_{
+				\substack{
+					m=1
+					\\
+					\beta_m \neq 0
+				}
+			}^M
+			\left(
+			\1_{\beta_m \geq 2} \Iu^{\beta_m -2} 
+			\right)
+			\
+			= 
+			\
+			\prod_{
+				\substack{
+					m=1
+					\\
+					\beta_m \neq 0
+				}
+			}^M
+			(\1_{\beta_m \neq 1} \Iu^{\beta_m -2} )
+			=
+			\\
+			&\qquad
+			=
+			\1_{\beta_m \neq 1}
+			\prod_{
+				\substack{
+					m=1
+					\\
+					\beta_m \neq 0
+				}
+			}^M
+			\Iu^{\beta_m}
+			\:
+			\cdot
+			\:
+			\prod_{
+				\substack{
+					m=1
+					\\
+					\beta_m \neq 0
+				}
+			}^M
+			\Iu^{-2}\
+			=			
+			\1_{\beta_m \neq 1}
+			\Iu^{\sum_{\beta_m \neq 0} \beta_m}
+			\Iu^{-2\sum_{\beta_m \neq 0} 1} 
+		\end{align*}
+		
+		Therefore:
+		
+		\begin{equation*}
+			\begin{aligned}
+				\sum_{\beta_1 + \cdots + \beta_M =2n}\ \prod_{m=1}^{M}
+				\left(
+				\1_{\beta_m = 0} + \1_{\beta_m \geq 2}
+				\Iu^{\beta_m -2} 
+				\right)
+				&=
+				\sum_{\beta_1 + \cdots + \beta_{M} =2n}\
+				\1_{\beta_m \neq 1}
+				\Iu^{\sum_{\beta_m \neq 0} \beta_m}
+				\Iu^{-2\sum_{\beta_m \neq 0} 1} 
+				\\
+				&= 
+				\sum_{\substack{
+						\beta_1 + \cdots + \beta_{M} =2n
+						\\
+						\forall m. \beta_m \neq 1
+				}}\
+				\Iu^{\sum_{\beta_m \neq 0} \beta_m}
+				\Iu^{-2\sum_{\beta_m \neq 0} 1} 
+				\\
+				&= 
+				\sum_{\substack{
+						\beta_1 + \cdots + \beta_{M} =2n
+						\\
+						\forall m. \beta_m \neq 1
+				}}\
+				\Iu^{2n-2(\sum_{\beta_m \neq 0} 1)}  
+			\end{aligned}
+		\end{equation*}
+		
+		We now need to take a closer look at the multi-index $\beta = (\beta_1, \ldots, \beta_{M})$ and its entries.	
+		For each $\beta_m$ define the quantity
+		
+		\begin{equation*}
+			\# \left\{ \beta_m \neq 0 \right\}  := \# \{ 
+			i 
+			\:
+			:\
+			\:
+			\beta_i  \: \text{ is non-zero entry of } \: \beta
+			\}
+			=
+			\sum_{\beta_m \neq 0} 1
+		\end{equation*}
+		
+		Observe that we are taking into consideration only multi-indices in this set:
+		
+		\begin{equation*}
+			\left\{
+			\beta = \left( \beta_1, \ldots , \beta_{M}  \right)\
+			:\
+			\norm{\beta} = 2n,\
+			\forall m. \beta_m \neq 1
+			\right\}
+		\end{equation*}
+		
+		Therefore, since the minimum value that we allow in an entry $\beta_m$  is $2$, the maximum amount of non-zero entries, for a multi-index $\beta = (\beta_1, \ldots, \beta_{M})$ such that $\norm{\beta} = \beta_1 + \cdots + \beta_{M} = 2n$, will be $n$ ($n$ entries of value $2$).
+		Then we can write
+		
+		\begin{align*}
+			&\sum_{\substack{
+					\beta_1 + \cdots + \beta_M =2n
+					\\
+					\forall m. \beta_m \neq 1
+			}}\
+			\Iu^{2n-2(\sum_{\beta_m \neq 0} 1)} \
+			=\
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_M =2n
+					\\
+					\forall m. \beta_m \neq 1
+			}}\
+			\Iu^{2n-2(\# \left\{ \beta_m \neq 0 \right\} )}
+			=
+			\\
+			\qquad
+			&=
+			\sum_{k =1}^n\
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_M =2n
+					\\
+					\forall m. \beta_m \neq 1
+					\\
+					\# \left\{ \beta_m \neq 0 \right\}  = k
+			}}\
+			\Iu^{2n-2k}\
+			=\
+			\sum_{k =1}^n\
+			\Iu^{2n-2k}\
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_M =2n
+					\\
+					\forall m. \beta_m \neq 1
+					\\
+					\# \left\{ \beta_m \neq 0 \right\}  = k
+			}} 1
+			\quad
+			\footnotemark[1] \leq
+			\Iu^{2n-2}\
+			\sum_{k =1}^n\
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_{M} =2n
+					\\
+					\forall m. \beta_m \neq 1
+					\\
+					\# \left\{ \beta_m \neq 0 \right\}  = k
+			}} 1
+		\end{align*}
+		\footnotetext[1]{$\Iu\geq 1$}
+		
+		We can notice that the last term is simply counting:
+		
+		\begin{equation*}
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_{M} =2n
+					\\
+					\forall m. \beta_m \neq 1
+					\\
+					\# \left\{ \beta_m \neq 0 \right\}  = k
+			}} 1
+			=
+			\# \left\{
+			\beta = (\beta_m)_{m=1}^{M} \ 
+			:\
+			\sum \beta_m = 2n, \
+			\forall m. \beta_m \neq 1, \
+			\#^{\widehat{0}} (\beta ) = k
+			\right\}
+		\end{equation*}
+		
+		It can be evaluated with the classical stars and bars problem, with $k -1$ bars and $n$ stars (technically there are $2n$ stars, but the condition $\beta_m \neq 1$ is equivalent to require that between each bars we have only even quantities):
+		
+		\begin{align*}
+			&\# \left\{
+			\beta = (\beta_m)_{m=1}^{M} \
+			:\
+			\sum \beta_m = 2n, \
+			\forall m. \beta_m \neq 1, \
+			\#^{\widehat{0}} (\beta ) = k
+			\right\} 
+			\\
+			&= \# \left(
+			\text{ways to choose $k$ entries in $\beta = (\beta_1, \ldots, \beta_{M})$}
+			\right) \cdot
+			\\
+			&\qquad
+			\cdot
+			\# \left(
+			\text{ways to arrange $k-1$ bars between $n$ stars}
+			\right)
+			\\
+			& =
+			\left(
+			\begin{gathered}
+				M
+				\\
+				k
+			\end{gathered}
+			\right)
+			\left(
+			\begin{gathered}
+				n + k -1
+				\\
+				k - 1
+			\end{gathered}
+			\right)
+			\\
+			&=
+			\frac{M \cdot (M -1)\cdots  \cdot (M -k +1)}{k!} \cdot \frac{(n +k -1) \cdot (n +k -2)\cdots \cdot (n + 1)}{(k-1)!}
+			\\
+			& \leq
+			\left[ M \cdot (M -1)\cdots  \cdot (M -k +1)\right]
+			\left[ (n +k -1) \cdot (n +k -2)\cdots \cdot (n + 1)\right]
+			\\
+			&= (M)_{(k)} (n +k -1)_{(k-1)}
+			\\
+			&\leq
+			(M)^k  (n +k)^{k-1}
+		\end{align*}
+		
+		Then, resuming, we have
+		
+		\begin{align*}
+			\sum_{\beta_1 + \cdots + \beta_M =2n}\ \prod_{m=1}^{M}&
+			\left(
+			\1_{\beta_m = 0} + \1_{\beta_m \geq 2}
+			\Iu^{\beta_m -2} 
+			\right)\
+			\leq\
+			\Iu^{2n-2}\
+			\sum_{k =1}^n\
+			\sum_{\substack{
+					\beta_1 + \cdots + \beta_{M} =2n
+					\\
+					\forall m. \beta_m \neq 1
+					\\
+					\# \left\{ \beta_m \neq 0 \right\}  = k
+			}} 1
+			\leq
+			\\
+			&\leq
+			\Iu^{2n-2}\
+			\sum_{k =1}^n\
+			(M)^k  (n +k)^{k-1}\
+			\leq\
+			\Iu^{2n-2}\
+			(M)^n\
+			(2n)^{n-1}\
+			\sum_{k =1}^n
+			1
+			=
+			\\
+			&\leq
+			(2n)^n\
+			(M)^n\
+			\Iu^{2n-2}\
+		\end{align*}
+		
+		And this concludes the proof of the claim.
+	\end{proof}
+	
+	Resuming everything and applying the last claim we obtain:
+	
+	\begin{align*}
+		\PrbOf{S^{N,\xi}_\ast}
+		& =\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\norm{
+				\drift_k^{(N)}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_k(t,\mfsol^{(N)})
+				}
+			}_\infty \geq N^{-\xi} 
+		}
+		\\
+		&\leq
+		N \cdot 3 \cdot
+		\max_{k,i}
+		\:
+		\PrbOf{\norm{
+				\drift^{(N)}_{k;i}(t, \mfsol^{(N)}) 
+				- \ETFoot{\ast}{
+					\drift^{(N)}_{k;i}(t,\mfsol^{(N)})
+				}
+			} \geq N^{-\xi} 
+		}
+		\\
+		&\leq
+		3(2n)!\
+		N^{(\xi -1) 2 n + 1}
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_{\hmactive_t} =2n}\
+			\prod_{m=1}^{\hmactive_t}
+			\left(
+			\1_{\beta_m = 0} + \1_{\beta_m \geq 2}(
+				\const_{\attraction, \curlywedge} 
+				\Fup(\const_\dens)
+				N^\alpha
+			)^{\beta_m -2} 
+			\right)
+		}
+		\\
+		&
+		\leq
+		3(2n)!\
+		N^{(\xi -1) 2 n + 1}
+		\E{
+			(2n)^n\
+			(
+				\const_{\attraction, \curlywedge} 
+				\Fup(\const_\dens)
+				N^\alpha
+			)^{2n-2}\
+			(\hmactive_t)^n\
+		}
+		\\
+		&=
+		(\const_{\attraction, \curlywedge})^{2n-2}\
+		[\Fup(\const_\dens)]^{2n-2}\
+		3(2n)!
+		(2n)^n\
+		N^{(\xi + \alpha-1) 2 n + 1 -2\alpha}\
+		\E{
+			(\hmactive_t)^n
+		}\
+		\\
+		&=
+		\const_{\attraction,\curlywedge,n}\
+		\Fup_n(\const_\dens)\
+		N^{(\xi + \alpha-1) 2 n + 1 -2\alpha}\
+		\E{
+			(\hmactive_t)^n
+		}\
+		\leq
+	\end{align*}
+	
+	Now we can use the result \ref{app:Poisson-moments} to evaluate the $n$-momenta of the Poisson process $\hmactive_t \sim \Pois(\lambda N t)$, and recall that by \ref{ch5:assumption-t,lambda>1-proofs} we assume without loss of generality that the Poisson parameter is bigger than $1$:
+		
+	\begin{align*}
+		&\leq
+			\const_{\attraction,\curlywedge,n}\
+			\Fup_n(\const_\dens)\
+			N^{(\xi + \alpha-1) 2 n + 1 -2\alpha}\
+			\Fup(n)\
+			(Nt\lambda)^n
+		\\
+		&=
+		\const_{\attraction,\curlywedge,n,\lambda}\
+		\Fup_n(\const_\dens)\
+		t^n
+			N^{(\xi + \alpha-1) 2 n + 1 -2\alpha}\
+			N^n\
+		\\
+		&\leq
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_n(\const_\dens)\
+			\Fup_n(t)\
+			N^{ [2(\xi + \alpha) - 2 + 1] n + 1 -2\alpha}\
+		\leq
+	\end{align*}
+	
+	Then, for every $K = \const_\xi$ such that $0 < \const_\xi \leq 1 - 2(\alpha + \xi)$ (it is guaranteed to exist because $\alpha + \xi < \frac{1}{2}$), we have
+	
+	\begin{equation*}
+		\leq\
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_n(\const_\dens)\
+			\Fup_n(t)\
+			N^{ -\const_\xi n + 1 -2\cdot 0}\
+		=\
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_n(\const_\dens)\
+			\Fup_n(t)\
+			N^{ -\const_\xi n + 1}
+	\end{equation*}
+	
+	And thus the proof of the proposition is finished.
+
+
+\section{The Second Term}
+
+To prove the second part of the law of large numbers it will be necessary to prove that a specific \rv has finite $q$-moments, but in order to better drive the comprehension and the attention of the reader this will be done after this proposition.
+
+\begin{proposition}[The second part of the law of large numbers]\label{ch5:prop:LLN2}
+	
+	Let $\mfsol_t^{(N)}$ be the solution of the mean field system \ref{ch3:MF-particles} with $N$ amoebas with the attraction $\attraction$ substituted with $\genAttraction$.	
+	Let $t \leq T$ and choose $0  < \xi \leq \frac{1}{2}$ and define the sets
+	
+	\begin{equation*}
+		\begin{aligned}
+			R^{N,\xi}_\amba
+			&:= \left\{ \sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ECondTimes{
+					\drift^{(N)}_k(t,\mfsol_t^{(N)})
+				}{\mfamba^k,}
+				-
+				\ECond{\drift^{(N)}_k(t,\mfsol_t^{(N)})}{\mfamba^k}
+			} 
+			\geq N^{-\xi} 
+			\right\}
+			\\
+			R^{N, \xi}
+			&:= \left\{ \sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ECondTimes{
+					\drift^{(N)}_k(t,\mfsol_t^{(N)})
+				}{}
+				-
+				\E{\drift^{(N)}_k(t,\mfsol_t^{(N)})}
+			} 
+			\geq N^{-\xi} 
+			\right\}
+		\end{aligned}
+	\end{equation*}
+	Then, signing as
+	
+	\begin{equation*}
+		R^{N, \xi}_\ast := \: \text{either of $R^{N, \xi}_\amba$ and $R^{N, \xi}$}, 
+	\end{equation*}
+	
+	for $R^{N,\xi}_\ast$ is valid the law of large numbers, \ie for all $K=\const_\xi$ such that $0< \const_\xi \leq 1 - 2\xi$ and for all $n\in\N$ exists $\const_n = \const_{\attraction,\curlywedge,n,\lambda} > 0$ and a positive increasing continuous function $\Fup_n$ independent from $N,\xi$ such that:
+	
+	\begin{align}
+		& \PrbOf{R^{N,\xi}_\ast}{}\
+		\leq
+			\const_n\
+			\Fup_n(T)\
+			N^{-\const_\xi n + 1}
+		&& \label{ch5:LLN2:cond}
+	\end{align}
+\end{proposition}
+
+Let us prove this result.
+As for the first law of large numbers at the remark \ref{ch5:assumption-t,lambda>1-proofs}, we assume here as well that $t,\lambda\geq1$.
+As for the first part of the law of large numbers, together with $R^{N,\xi}_\ast$ we use the convention at \ref{app:notation}.
+Then we can write, as for the previous proof:
+	\begin{align*}
+		\PrbOf{R^{N, \xi}_\ast}
+		&= \leq
+		\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ETFoot
+				{\ast}
+				{\drift^{(N)}_k(t,\mfsol^{(N)})}
+				-
+				\EFoot{\ast}{\drift^{(N)}_k(t,\mfsol^{(N)})}
+			} 
+			\geq 
+			N^{-\xi} 
+		}
+		\\
+		&\leq
+		\sum_{i=1}^{d}
+		\sum_{k=1}^{N}
+		\max_{k,i}\
+		\PrbOf{
+			\norm{
+				\ETFoot
+				{\ast}
+				{\drift^{(N)}_{k;i}(t,\mfsol^{(N)})}
+				-
+				\EFoot{\ast}{\drift^{(N)}_{k;i}(t,\mfsol^{(N)})}
+			}
+			\geq 
+			N^{-\xi} 
+		}
+		=
+	\end{align*}
+	
+	Suppose, as in the proof of the previous LLN, that the maximum is reached in the coordinate $(k;i)=(1,1)$.
+	Now we will use again the original notation \ref{ch2:model}.
+	
+	\begin{align*}
+		&=
+		d\
+		N\
+		\PrbOf{
+			\norm{
+				\ETFoot
+				{\ast}
+				{\drift^{(N)}_{1;1}(t,\mfsol_t^{(N)})}
+				-
+				\EFoot{\ast}{\drift^{(N)}_{1;1}(t,\mfsol_t^{(N)})}
+			}
+			\geq 
+			N^{-\xi} 
+		}
+		\\
+		& \footnotemark[1]\leq
+		3\
+		N\
+		N^{\xi 2n}\
+		\E{\norm{
+				\ETFoot
+				{\ast}
+				{\drift^{(N)}_{1;1}(t,\mfsol_t^{(N)})}
+				-
+				\EFoot{\ast}{\drift^{(N)}_{1;1}(t,\mfsol_t^{(N)})}
+			}^{2n} }
+		\\
+		&=
+		3\
+		N^{1 +\xi 2n}\
+		\E{
+			\norm{
+				\frac{1}{N}\
+				\sum_{p=1}^{N}\
+				\sum _{g = 1}^{\hmactive_t^p} 
+				\ETFoot
+				{\ast}
+				{
+					(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+				}
+				- 
+				\frac{1}{N}\
+				\sum_{p=1}^{N}\
+				\EFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^p}\
+					(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+				}
+			}^{2n}
+		}
+		\\
+		&=
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\E{
+			\norm{
+				\sum_{p=1}^{N}\
+				\left(
+				\underbrace{
+					\sum _{g = 1}^{\hmactive_t^p} 
+					\ETFoot
+					{\ast}
+					{
+						(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+					}
+				}_{=:\Phi_p^\ast}
+				-
+				\underbrace{
+					\EFoot{\ast}{
+						\sum _{g = 1}^{\hmactive_t^p}\
+						(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+					}
+				}_{=\EFoot{\ast}{\Phi_p^\ast}=: \phi_p^\ast}
+				\right)
+			}^{2n}
+		} = 
+	\end{align*}
+	\footnotetext[1]{Markov inequality with $f(x) = \norm{x}^{2n}$}
+	
+	As for the first part of the law of large numbers, we apply on $\Zhi_p :=\norm{\Phi_p^\ast - \phi_p^\ast}\:$ the multinomial formula
+	
+	\begin{equation*}
+		\left( \sum_{p=1}^N \Zhi_p \right)^{2n}
+		= \sum_{\beta_1 + \cdots + \beta_N =2n} 
+		\:
+		\frac{(2n)!}{(\beta)!}\
+		\prod_{p=1}^N \Zhi_p^{\beta_p}
+	\end{equation*}
+	
+	obtaining
+	
+	\begin{align*}
+		&=
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\E{
+			\sum_{\beta_1 + \cdots + \beta_N =2n}\
+			\frac{(2n)!}{(\beta)!}\
+			\prod_{p=1}^N\
+			\norm{
+				\Phi_p^\ast - \phi_p^\ast
+			}^{\beta_p}
+		}
+		\\
+		&=		
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{\beta_1 + \cdots + \beta_N =2n}\
+		\frac{(2n)!}{(\beta)!}\
+		\E{
+			\prod_{p=1}^N\
+			\norm{
+				\Phi_p^\ast - \phi_p^\ast
+			}^{\beta_p}
+		}	=
+	\end{align*}
+	
+	Now notice that 
+	
+	\begin{equation*}
+		\Phi_p^\ast - \phi_p^\ast
+		= 
+		\sum _{g = 1}^{\hmactive_t^p} 
+		\ETFoot
+		{\ast}
+		{
+			(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+		}
+		-
+		\EFoot{\ast}{
+			\sum _{g = 1}^{\hmactive_t^p}\
+			(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+		}
+	\end{equation*}
+	
+	depends exclusively on $\hmactive_t^p, \mfcamp_t^{p,g}$ for a fixed $p$ (and eventually on $\mfamba_t^1$ if $\ast = 1$).
+	Plus, for different $p$ the quantities above are \iid under $\PrbFoot{\ast}{}$ and thus we can go on with the calculations so:
+	
+	\begin{align*}
+		&=		
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{\beta_1 + \cdots + \beta_N =2n}\
+		\frac{(2n)!}{(\beta)!}\
+		\E{
+			\EFoot{\ast}{
+				\prod_{p=1}^N\
+				\norm{
+					\Phi_p^\ast - \phi_p^\ast
+				}^{\beta_p}
+			}
+		}
+		\\
+		&=
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{\beta_1 + \cdots + \beta_N =2n}\
+		\frac{(2n)!}{(\beta)!}\
+		\prod_{p=1}^N\
+		\E{
+			\EFoot{\ast}{
+				\norm{
+					\Phi_1^\ast - \phi_1^\ast
+				}^{\beta_p}
+			}
+		}
+		\\
+		&=
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{\beta_1 + \cdots + \beta_N =2n}\
+		\frac{(2n)!}{(\beta)!}\
+		\prod_{p=1}^N\
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		}
+		\\
+		&\leq
+		3\
+		(2n)!\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{\beta_1 + \cdots + \beta_N =2n}\
+		\prod_{p=1}^N\
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		}
+		=
+	\end{align*}
+	
+	Now, since $\phi_1^\ast = \EFoot{\ast}{\Phi_1^\ast}$, we can deduce, as for the first part of the law of large numbers:
+	
+	\begin{align*}
+		&=
+		\const_n\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{
+			\substack{
+				\beta_1 + \cdots + \beta_N =2n
+				\\
+				\forall p. \beta_p \neq 1
+			}
+		}\
+		\prod_{p=1}^N\
+		\left(
+		\1_{\beta_p=0}
+		+
+		\1_{\beta_p \geq 2}
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		}
+		\right)
+	\end{align*}
+	
+	Now we need to use the subsequent bound for $\E{
+		\norm{
+			\Phi_1^\ast - \phi_1^\ast
+		}^{\beta_p}
+	}$, which will be proved in this proposition \ref{ch5:prop:bound-for-rv-lln2} (just put $q = \beta_p$):
+	
+	\begin{equation*}\label{ch5:proof-of-LLN2:bound-for-phip}
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		} 
+		\leq 
+		\const_{\attraction,\curlywedge,\beta_p,\lambda}\
+		\Fup(\beta_p,T)
+	\end{equation*}
+	
+	for some positive constant $\const_{\attraction,\curlywedge,q,\lambda}$ and some function $\Fup$ increasing in both arguments and continuous in $T$.
+	Then, supposing without loss of generality that $\rhs(\ref{ch5:proof-of-LLN2:bound-for-phip}) \geq 1$, maximizing on $\beta_p$ and elevating to $\beta_p$ we have
+	
+	\begin{align*}
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		} 
+		&\leq 
+		\const_{\attraction,\curlywedge,\beta_p,\lambda}\
+		\Fup(\beta_p,T)
+		\leq 
+			[
+				\max_{\beta_p}
+				\const_{\attraction,\curlywedge,\beta_p,\lambda}\
+				\Fup(\beta_p,T)
+			]^{\beta_p}
+		\\
+		&
+		=
+			[
+				\max_{\beta_p}
+				\const_{\attraction,\curlywedge,\beta_p,\lambda}\
+				\Fup(2n,T)
+			]^{\beta_p}
+		=
+			[
+				\const_{\attraction,\curlywedge,n,\lambda}\
+				\Fup_{n}(T)
+			]^{\beta_p}
+	\end{align*}
+	
+	loosing the dependence of the constant on $\beta_p$ before elevating to the power.	
+	Applying this to our calculations, and resuming all since the beginning, we obtain that:
+	
+	\begin{align*}
+		&\PrbOf{R^{N, \xi}_\ast}
+		\leq
+		\sum_{i=1}^{d}
+		\sum_{k=1}^{N}
+		\max_{k,i}\
+		\PrbOf{
+			\norm{
+				\ETFoot
+				{\ast}
+				{\drift^{(N)}_{k;i}(t,\mfsol^{(N)})}
+				-
+				\EFoot{\ast}{\drift^{(N)}_{k;i}(t,\mfsol^{(N)})}
+			}
+			\geq 
+			N^{-\xi} 
+		}
+		\\
+		&\leq
+		3\
+		N^{1 +(\xi-1) 2n}\
+		\E{
+			\norm{
+				\sum_{p=1}^{N}\
+				\left(
+				\underbrace{
+					\sum _{g = 1}^{\hmactive_t^p} 
+					\ETFoot
+					{\ast}
+					{
+						(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+					}
+				}_{=:\Phi_p^\ast}
+				-
+				\underbrace{
+					\EFoot{\ast}{
+						\sum _{g = 1}^{\hmactive_t^p}\
+						(\genAttraction)_1(\mfamba_t^1 - \mfcamp_t^{p,g})
+					}
+				}_{=\EFoot{\ast}{\Phi_p^\ast}=: \phi_p^\ast}
+				\right)
+			}^{2n}
+		} 
+		\\
+		&\leq
+		\const_n\
+		N^{1 +(\xi-1) 2n}\
+		\sum_{
+			\substack{
+				\beta_1 + \cdots + \beta_N =2n
+				\\
+				\forall p. \beta_p \neq 1
+			}
+		}\
+		\prod_{p=1}^N\
+		\left(
+		\1_{\beta_p=0}
+		+
+		\1_{\beta_p \geq 2}
+		\E{
+			\norm{
+				\Phi_1^\ast - \phi_1^\ast
+			}^{\beta_p}
+		}
+		\right)
+		\\
+		&\leq
+		\const_n\
+		N^{1 +(\xi-1) 2n}\
+		\underbrace{
+			\sum_{
+				\substack{
+					\beta_1 + \cdots + \beta_N =2n
+					\\
+					\forall p. \beta_p \neq 1
+				}
+			}\
+			\prod_{p=1}^N\
+			\left(
+			\1_{\beta_p=0}
+			+
+			\1_{\beta_p \geq 2}
+			\left(
+				\const_{\attraction,\curlywedge,n,\lambda}\
+				\Fup_{n}(T)
+			\right)^{\beta_p}
+			\right)
+		}_{\Bh}
+		\leq
+	\end{align*}
+	
+	Now apply claim \ref{ch5:proof-of-LLN1:sum-prod-Iu-inequality} from the proof of the first part of the law of large numbers \ref{ch5:prop:LLN1} to bound $\Bh$:
+	
+	\begin{align*}
+		&\leq
+		\const_n\
+		N^{1 +(\xi-1) 2n}\
+		(2n)^n\
+		\left(
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_{n}(T)
+		\right)^{2n-2}\
+		\\
+		&=
+		\const_{\attraction,\curlywedge,n,\lambda}\
+		\Fup_{n}(T)\
+		N^{
+			1 + \left( 2\xi -2 + 1 \right)n
+		}\
+		=
+		\const_{\attraction,\curlywedge,n,\lambda}\
+		\Fup_{n}(T)\
+		N^{
+			1 + ( 2\xi - 1 )n
+		}\
+	\end{align*}
+	
+	Therefore, for every $\const_\xi$ such that $0 < \const_\xi \leq 1 -2\xi$, we have that
+	
+	\begin{equation}
+		1 + ( 2\xi - 1 )n \leq 1 - \const_\xi n
+	\end{equation}
+	
+	and therefore we can conclude the proof:
+	
+	\begin{equation*}
+		\PrbOf{R^{N, \xi}_\ast}
+		\leq
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_{n}(T)\
+			N^{
+				1 + ( 2\xi - 1 )n
+			}\
+		\leq
+			\const_{\attraction,\curlywedge,n,\lambda}\
+			\Fup_{n}(T)\
+			N^{
+				1 - \const_\xi n
+			}\
+	\end{equation*}
+	
+	
+\subsection{Proof of the Auxiliary Bound \ref{ch5:proof-of-LLN2:bound-for-phip}}
+
+Notice that in \ref{ch5:proof-of-LLN2:bound-for-phip} we contained from above the average attraction exercised by the cAMP particles released by a single amoeba.
+Let us show that such bound holds.
+
+\begin{proposition}\label{ch5:prop:bound-for-rv-lln2}
+	Let $t \leq T$ and consider the \rv
+	
+	\begin{equation}
+		\Phi_p^\ast (k,i)\
+		:=\
+		\sum _{g = 1}^{\hmactive_t^p} 
+		\ETFoot
+		{\ast}
+		{
+			(\genAttraction)_i(\mfamba_t^k - \mfcamp_t^{p,g})
+		}
+	\end{equation}
+	
+	and its average $\phi_p^\ast (k,i) := \EFoot{\ast}{\Phi_p^\ast(k,i)}$, where $\ast$ is either $k$ or absent.
+	Then exists $\const_{\attraction,\curlywedge,q,\lambda}>0$ and an positive function $\Fup(q,T)$ increasing in both arguments, continuous in $T$ and bounded in $q$ such that
+	
+	\begin{equation}
+		\forall q \geq 1.\
+		\forall p,k,i.
+		\qquad
+			\E{
+				\norm{
+					\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+				}^q
+			} 
+		\leq 
+			\const_{\attraction,\curlywedge,q,\lambda}\
+			\Fup(q,T)
+	\end{equation}
+\end{proposition}
+
+\begin{remark}
+	The \rv 
+	\begin{equation}
+		\Phi_p^\ast (k,i)\
+		:=\
+		\sum _{g = 1}^{\hmactive_t^p} 
+		\ETFoot
+		{\ast}
+		{
+			(\genAttraction)_i(\mfamba_t^k - \mfcamp_t^{p,g})
+		}
+	\end{equation}
+	represents the attraction that the amoeba $\mfamba_t^k$ feels at its coordinate $i$ due only to the cAMP released by the amoeba $\mfamba_t^p$ till the time $t$.
+\end{remark}
+
+Let us prove this result.
+As for the first part of the law of large numbers at the remark \ref{ch5:assumption-t,lambda>1-proofs}, we assume here also that $t,\lambda\geq1$.
+Observe that since the $(\hmactive_t^p)_p$ are \iid, then we have that also $(\Phi_p^\ast (k,i))_p$ are \iid, and thus we can operate directly with $\Phi_1^\ast (k,i)$.
+Then let us observe closely the object in question.
+	
+	\begin{align*}
+		\Phi_1^\ast (k,i)\
+		&=\
+		\sum _{g = 1}^{\hmactive_t^1} 
+		\ETFoot
+		{\ast}
+		{
+			(\genAttraction)_i(\mfamba_t^k - \mfcamp_t^{1,g})
+		}
+		\\		
+		&=
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot
+		{\ast}
+		{
+			\ETFoot
+			{k}
+			{
+				(\genAttraction)_i(\mfamba_t^k - \mfcamp_t^{1,g})
+			}
+		}\
+		=
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot
+		{\ast}{
+			\int 
+			(\genAttraction)_i(\mfamba_t^k - x)\
+			\cdens_t^{1,g}(x)
+			dx
+		}
+		\\
+		&=
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot
+		{\ast}{
+			\left(
+			(\genAttraction)_i 
+			\star 
+			\cdens_t^{1,g}
+			\right)
+			(\mfamba_t^k)
+		}\
+		= 
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot
+		{\ast}{
+			\int
+			(\genAttraction)_i (y)\
+			\cdens_t^{1,g}
+			(y - \mfamba_t^k)
+			dy
+		}
+		\\
+		\footnotemark[1] & =
+		\sum _{g = 1}^{\hmactive_t^1}
+		\int
+		(\genAttraction)_i (y)\
+		\ETFoot
+		{\ast}{
+			\cdens_t^{1,g}
+			(y - \mfamba_t^k)
+		}
+		dy
+		=
+		\int
+		(\genAttraction)_i (y)\
+		\ETFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^1}
+			\cdens_t^{1,g}
+			(y - \mfamba_t^k)
+		}
+		dy
+	\end{align*}
+	\footnotetext[1]{Fubini}
+	
+	Then in the same way we can observe that
+	
+	\begin{align*}
+		\phi_1^\ast (k,i)\
+		&=\
+		\EFoot
+		{\ast}
+		{
+			\Phi_1^\ast (k,i)
+		}\
+		=
+		\EFoot
+		{\ast}
+		{
+			\int
+			(\genAttraction)_i (y)\
+			\ETFoot
+			{\ast}{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\cdens_t^{1,g}
+				(y - \mfamba_t^k)
+			}
+			dy
+		}
+		\\
+		&=
+		\int
+		(\genAttraction)_i (y)\
+		\EFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^1}
+			\cdens_t^{1,g}
+			(y - \mfamba_t^k)
+		}
+		dy
+	\end{align*}
+	
+	Then we can write
+	
+	\begin{equation}
+		\label{ch5:in-LLN2:norm-of-rv}
+		\begin{aligned}
+			&\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}\
+			=
+			\\
+			& 
+			=\
+			\norm{
+				\int
+				(\genAttraction)_i (y)\
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				dy
+				-
+				\int
+				(\genAttraction)_i (y)\
+				\EFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				dy
+			}
+			\\
+			& =
+			\norm{
+				\int
+				(\genAttraction)_i (y)\
+				\left(
+				\ETFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				\right)\
+				dy
+			}
+			\\
+			&\leq
+			\int
+			\norm{(\genAttraction)_i (y)}\
+			\cdot
+			\norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+			}
+			dy
+		\end{aligned}
+	\end{equation}
+	
+	We want to detach $(\genAttraction)_i$ from the rest of the object.
+	In order to do that we can use an argument very similar to the one illustrated in \ref{ch5:lemma:<-1+infty-norm}.
+	
+	\begin{claim}
+		Let $f,g$ be functions.
+		Then
+		\begin{equation}
+			\Normp{\Lpspace^1}{f\cdot g} \leq \Norm{f}_{1 \wedge \infty} \cdot \Norm{g}_{1 \vee \infty}
+		\end{equation}
+	\end{claim}
+	
+	\begin{proof}
+		Choose a decomposition $f_1 + f_\infty = f$ and proceed with the Hölder-inequality, analogously to \ref{ch5:lemma:<-1+infty-norm}:
+		\begin{equation}
+			\Normp{\Lpspace^1}{f\cdot g} \leq \Normp{\Lpspace^1}{f_1\cdot g} + \Normp{\Lpspace^1}{f_\infty\cdot g} \leq \Normp{\Lpspace^1}{f_1} \Normp{\Lpspace^\infty}{g} + \Normp{\Lpspace^\infty}{f_\infty} \Normp{\Lpspace^1}{g}
+		\end{equation}
+		Since this is valid for every decomposition we have the thesis, and this ends the proof of the claim.
+	\end{proof}
+	
+	Exploiting this for the calculations of \ref{ch5:in-LLN2:norm-of-rv} we have:
+	
+	\begin{equation}
+		\label{ch5:in-LLN2:bound-for-norm-of-rv}
+		\begin{aligned}
+			\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}&\leq
+			\int
+			\norm{(\genAttraction)_i (y)}\
+			\cdot
+			\norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+			}
+			dy
+			\\
+			&\leq
+			\Norm{(\genAttraction)_i }_{1 \wedge \infty}\
+			\cdot
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+			}_{1 \vee \infty}
+			\\
+			\footnotemark[1] &\leq
+			\const_{\attraction,\curlywedge}
+			\cdot
+			\Norm{
+				\underbrace{
+					\ETFoot{\ast}{
+						\sum _{g = 1}^{\hmactive_t^1}
+						\cdens_t^{1,g}
+						(y - \mfamba_t^k)
+					}
+				}_{=:\Theta_1}
+				-
+				\underbrace{
+					\EFoot
+					{\ast}{
+						\sum _{g = 1}^{\hmactive_t^1}
+						\cdens_t^{1,g}
+						(y - \mfamba_t^k)
+					}
+				}_{=:\theta_1^\ast = \EFoot{\ast}{\Theta_1^\ast}}
+			}_{1 \vee \infty}
+		\end{aligned}
+	\end{equation}
+	\footnotetext[1]{\ref{ch5:lemma:eval-norm-gen-attr}}
+	
+	Resuming all this we have that:
+	
+	\begin{align*}
+		\E{
+			\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}^q
+		}
+		&\leq
+		\E{
+			(\const_{\attraction,\curlywedge})^q
+			\Norm{
+				\Theta_1 - \theta_2
+			}_{1 \vee \infty}^q
+		}		
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}
+		\E{
+			\left(
+			\Norm{
+				\Theta_1 - \theta_2
+			}_{\Lpspace^1}
+			+
+			\Norm{
+				\Theta_1 - \theta_2
+			}_{\Lpspace^\infty}
+			\right)^q
+		}
+		\\
+		\footnotemark[2] &=
+		\const_{\attraction,\curlywedge,q}
+		\E{
+			\sum_{j=0}^{q}
+			\left(
+			\begin{gathered}
+				q
+				\\
+				j
+			\end{gathered}
+			\right)\
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^\infty}^{j}
+		}
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\
+		\sum_{j=0}^{q}
+		\left(
+		\begin{gathered}
+			q
+			\\
+			j
+		\end{gathered}
+		\right)\
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^\infty}^{j}
+		}
+	\end{align*}
+	\footnotetext[2]{If the $1$- and $\infty$-norm of $\Theta_1 - \theta_1$ are finite, which will be proved}
+	
+	Let us start to find a bound for the infinity norm of $\Theta_1 - \theta_1$:
+	
+	\begin{align*}
+		\Norm{
+			\Theta_1 - \theta_1
+		}_{\Lpspace^\infty}
+		&=\Norm{
+			\ETFoot{\ast}{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\cdens_t^{1,g}
+				(y - \mfamba_t^k)
+			}
+			-
+			\EFoot
+			{\ast}{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\cdens_t^{1,g}
+				(y - \mfamba_t^k)
+			}
+		}_\infty
+		\\
+		&\leq
+		\Norm{
+			\ETFoot{\ast}{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\cdens_t^{1,g}
+				(y - \mfamba_t^k)
+			}
+		}_\infty
+		+
+		\Norm{
+			\EFoot
+			{\ast}{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\cdens_t^{1,g}
+				(y - \mfamba_t^k)
+			}
+		}_\infty
+		\\
+		&\leq
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot{\ast}{
+			\Norm{
+				\cdens_t^{1,g}
+			}_\infty
+		}
+		+
+		\EFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^1}
+			\Norm{
+				\cdens_t^{1,g}
+			}_\infty
+		}
+	\end{align*}
+	
+	Recall now that by assumption \ref{ch3:conditions-on-eff-equ-solutions}, since $t\leq T$, we have that there exists a positive continuous increasing function $\Fup$ such that:
+	
+	\begin{equation*}
+			\Norm{\cdens_t^{1,g}}_{\Lpspace^\infty(\R^d)}\
+		\leq
+			\sup_{t,\tau \leq T}
+			\Norm{\cdens_t^\tau}_{\Lpspace^\infty(\R^d)}\
+		\leq
+			\Fup(T)
+	\end{equation*}
+	
+	and therefore we have that
+	
+	\begin{align*}
+		\Norm{
+			\Theta_1 - \theta_1
+		}_{\Lpspace^\infty}
+		&\leq
+		\sum _{g = 1}^{\hmactive_t^1}
+		\ETFoot{\ast}{
+			\Norm{
+				\cdens_t^{1,g}
+			}_\infty
+		}
+		+
+		\EFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^1}
+			\Norm{
+				\cdens_t^{1,g}
+			}_\infty
+		}
+		\\
+		&\leq
+		\sum _{g = 1}^{\hmactive_t^1}
+		\Fup(T)
+		+
+		\EFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^1}
+			\Fup(T)
+		}\
+		=\
+		\Fup(T)
+		(\hmactive_t^1 + \lambda t)
+	\end{align*}
+	
+	And thus we can write 
+	
+	\begin{align*}
+		&\E{
+			\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}^q
+		}\leq
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}
+		\sum_{j=0}^{q}
+		\left(
+		\begin{gathered}
+			q
+			\\
+			j
+		\end{gathered}
+		\right)\
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			(\Fup(T))^j\
+			(\hmactive_t^1 + \lambda t)^{j}
+		}
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}
+		\sum_{j=0}^{q}
+		(q!)
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			(\Fup(T))^q\
+			\sum_{u=1}^j
+			\left(
+			\begin{gathered}
+				j
+				\\
+				u
+			\end{gathered}
+			\right)\
+			(\hmactive_t^1)^u (\lambda t)^{j-u}
+		}
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}\
+		(q!)\
+		(\Fup(T))^q\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			\sum_{u=1}^j
+			(j!)\
+			(\hmactive_t^1)^j (\lambda t)^j
+		}
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}\
+		(q!)\
+		(\Fup(T))^q\
+		\sum_{j=0}^{q}\
+		j\
+		(j!)\
+		(\lambda t)^j\
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j 
+		}
+		\\
+		&\leq
+		\underbrace{
+			\const_{\attraction,\curlywedge,q}\
+			(q!)\
+			q\
+			(q!)\
+			\lambda^q\
+		}_{}
+		t^q
+		\Fup(q,T)
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\Theta_1 - \theta_1
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j 
+		}
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j 
+		}  
+	\end{align*}
+	
+	Now we will use the notation $\cdens_t^{1,g} = \cdens_t^{\btime^{1,g}}$, to make explicit the fact that such density depends on the birth time $\btime^{1,g}$.
+	
+	Observe also that the random objects $\hmactive_t^1, \btime^{1,g}$ of $\theta_1$ are completely averaged out \emph{inside} $\theta_1$, and essentially do not have a direct relationship with the correspondent objects $\hmactive_t^1, \btime^{1,g}$ of $\Theta_1$.
+	To avoid such confusion we exploit the fact that $\hmactive_t^1 \sim \hmactive_t^2, \btime^{1,g} \sim \btime^{2,g}$ and then we can write
+	
+	\begin{equation}
+		\theta_1 = \EFoot
+		{\ast}{
+			\sum _{g = 1}^{\hmactive_t^2}
+			\cdens_t^{\btime^{2,g}}
+			(y - \mfamba_t^k)
+		} = \theta_2 =: \theta
+	\end{equation}
+	
+	obtaining thus that
+	
+	\begin{align*}
+		&\E{
+			\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}^q
+		}\leq
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{1,g}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{2,g}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j 
+		}  
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 \neq 0}			
+		} +
+		\\
+		&\qquad
+		+ 
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				0
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 = 0}			
+		}
+	\end{align*}
+	
+	Let us calculate the second term first:
+	
+	\begin{align*}
+		&\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\theta
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 = 0}			
+		} =
+		\\
+		&=\const_{\attraction,\curlywedge,q}
+		\Fup(q,T)\
+		\E{
+			\Norm{
+				\theta
+			}_{\Lpspace^1}^q\
+			(\hmactive_t^1)^0\
+			\1_{\hmactive_t^1 = 0}			
+		} =
+		\\
+		&=\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\Norm{
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^q
+			\1_{\hmactive_t^1 = 0}			
+		} =
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\Norm{
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{+\infty}
+					\underbrace{
+						\cdens_t^{\btime^{2,g}}
+						(y - \mfamba_t^k)
+					}_{\geq 0}
+					\underbrace{
+						\1_{g \leq \hmactive_t^2}
+					}_{
+						\1_{\btime^{2,g} \leq t}
+					}
+				}
+			}_{\Lpspace^1}^q\
+			\1_{\hmactive_t^1 = 0}			
+		}
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\Norm{
+				\sum _{g = 1}^{+\infty}
+				\EFoot
+				{\ast}{
+					\int_0^t
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+					\PrbOf{\btime^{2,g} = d\ \tau}
+				}
+			}_{\Lpspace^1}^q\
+			\1_{\hmactive_t^1 = 0}			
+		}=
+	\end{align*}
+	
+	Since all the functions involved are positive we can move the infinity sum freely in and out of the integral:
+	
+	\begin{align*}
+		&=		
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\Norm{
+				\EFoot
+				{\ast}{
+					\int_0^t
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+					\underbrace{
+						\sum _{g = 1}^{+\infty}\
+						\PrbOf{\btime^{2,g} = d\ \tau}
+					}_{
+						\lambda\:d\tau
+					}
+				}
+			}_{\Lpspace^1}^q\
+			\1_{\hmactive_t^1 = 0}			
+		}
+		\\
+		&=				
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\Norm{
+				\EFoot
+				{\ast}{
+					\int_0^t
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+					\lambda\
+					d\tau
+				}
+			}_{\Lpspace^1}^q\
+			\1_{\hmactive_t^1 = 0}			
+		}
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\left(
+			\int
+			\norm{
+				\EFoot
+				{\ast}{
+					\int_0^t
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+					\lambda\
+					d\tau
+				}
+			}
+			dy\
+			\right)^q
+			\1_{\hmactive_t^1 = 0}			
+		}=
+	\end{align*}
+	
+	Then, since $\cdens_t^\tau$ is non-negative, we can leave out the absolute value and use Fubini directly:
+	
+	\begin{align*}
+		&=
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\left(
+			\EFoot{\ast}{
+				\int_0^t
+				\lambda\
+				\overbrace{
+					\int
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+					dy\
+				}^{ 1 }
+				d\tau\
+			}
+			\right)^q
+			\1_{\hmactive_t^1 = 0}			
+		}
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\Fup(q,T)\
+		\E{
+			\left(
+			t \lambda
+			\right)^q
+			\1_{\hmactive_t^1 = 0}			
+		}
+		=
+		\const_{\attraction,\curlywedge,q}\:\Fup(q,T)\
+		(\lambda\
+		t)^q\
+		\PrbOf{\hmactive_t^1 = 0} =
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q,\lambda}\Fup(q,T)\
+		t^q\
+		\underbrace{e^{-t\lambda}}_{\leq 1}\
+		=
+		\const_{\attraction,\curlywedge,q,\lambda}\Fup(q,T)\
+	\end{align*}
+	
+	The first term will require a bit more effort. Proceeding as before to calculate $\theta$, and using Fubini and the tower property we obtain:
+	
+	\begin{align*}
+		&\const_{\attraction,\curlywedge,q}\:\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 \neq 0}\
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}
+		} =
+		\\
+		&=
+		\const_{\attraction,\curlywedge,q}\:\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\Eonly\
+		\Biggl[\
+		(\hmactive_t^1)^j\
+		\1_{\hmactive_t^1 \neq 0}\
+		\cdot
+		\\
+		&\qquad
+		\cdot
+		\underbrace{
+			\ECond{
+				\Norm{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\ETFoot{\ast}{
+						\cdens_t^{\btime^{1,g}}
+						(y - \mfamba_t^k)
+					}
+					-
+					\lambda
+					\int_0^t
+					\EFoot
+					{\ast}{
+						\cdens_t^{\tau}
+						(y - \mfamba_t^k)\
+					}
+					d\tau
+				}_{\Lpspace^1}^{q-j}			
+			}{
+				\hmactive_t^1}
+		}_{=:\Zhi}\
+		\Biggr] =
+	\end{align*}
+	
+	Let us focus only on the term $\Zhi$.
+	Since such term is being conditioned on the set $\{\hmactive_t^1 \neq 0\}$ we are able to do this:
+	
+	\begin{align*}
+		\Zhi &=
+		\ECond{
+			\Norm{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\ETFoot{\ast}{
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\frac{\hmactive_t^1}{\hmactive_t^1}
+				\lambda
+				\int_0^t
+				\EFoot
+				{\ast}{
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+				}
+				d\tau
+			}_{\Lpspace^1}^{q-j}			
+		}{\hmactive_t^1}
+		\\
+		&=
+		\ECond{
+			\Norm{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\left(
+				\ETFoot{\ast}{
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\frac{\lambda}{\hmactive_t^1}
+				\int_0^t
+				\EFoot
+				{\ast}{
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+				}
+				d\tau
+				\right)
+			}_{\Lpspace^1}^{q-j}			
+		}{\hmactive_t^1}
+		\\
+		&=\ECond{
+			\left(
+			\int
+			\norm{
+				\sum _{g = 1}^{\hmactive_t^1}
+				\left(
+				\ETFoot{\ast}{
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\frac{\lambda}{\hmactive_t^1}
+				\int_0^t
+				\EFoot
+				{\ast}{
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+				}
+				d\tau
+				\right)
+			}
+			dy
+			\right)^{q-j}
+		}{\hmactive_t^1}
+		\\
+		&\leq
+		\ECond{
+			\left(
+			\int
+			\sum _{g = 1}^{\hmactive_t^1}
+			\norm{
+				\ETFoot{\ast}{
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\frac{\lambda}{\hmactive_t^1}
+				\int_0^t
+				\EFoot
+				{\ast}{
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+				}
+				d\tau
+			}
+			dy
+			\right)^{q-j}
+		}{\hmactive_t^1}
+		\\
+		&=
+		\ECond{
+			\left(
+			\sum _{g = 1}^{\hmactive_t^1}
+			\underbrace{
+				\int				
+				\norm{
+					\ETFoot{\ast}{
+						\cdens_t^{\btime^{1,g}}
+						(y - \mfamba_t^k)
+					}
+					\left(
+					\frac{\int_0^t d\tau}{t}
+					\right)
+					-
+					\frac{\lambda}{\hmactive_t^1}
+					\int_0^t
+					\EFoot
+					{\ast}{
+						\cdens_t^{\tau}
+						(y - \mfamba_t^k)\
+					}
+					d\tau
+				}
+				dy
+			}_{}
+			\right)^{q-j}
+		}{\hmactive_t^1}			
+	\end{align*}
+	
+	Let us focus on each single addend:
+	
+	\begin{align*}
+		&
+		\int				
+		\norm{
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+			\left(
+			\frac{\int_0^t d\tau}{t}
+			\right)
+			-
+			\frac{\lambda}{\hmactive_t^1}
+			\int_0^t
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+			d\tau
+		}
+		dy =
+		\\
+		&= \int				
+		\norm{
+			\frac{1}{t}
+			\int_0^t 
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+			d\tau
+			-
+			\frac{\lambda}{\hmactive_t^1}
+			\int_0^t
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+			d\tau
+		}
+		dy
+		\\
+		&=
+		\int				
+		\norm{
+			\int_0^t
+			\frac{1}{t}
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+			-
+			\frac{\lambda}{\hmactive_t^1}
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+			d\tau
+		}
+		dy
+		\\
+		&\leq
+		\int
+		\int_0^t		
+		\norm{
+			\frac{1}{t}
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+			-
+			\frac{\lambda}{\hmactive_t^1}
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+		}
+		d\tau\
+		dy
+		\\
+		&=
+		\int_0^t
+		\int
+		\norm{
+			\frac{1}{t}
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+			-
+			\frac{\lambda}{\hmactive_t^1}
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+		}
+		dy\
+		d\tau
+		\\
+		&\leq
+		\int_0^t
+		\int
+		\norm{
+			\frac{1}{t}
+			\ETFoot{\ast}{
+				\cdens_t^{\btime^{1,g}}
+				(y - \mfamba_t^k)
+			}
+		}
+		+
+		\norm{
+			\frac{\lambda}{\hmactive_t^1}
+			\EFoot
+			{\ast}{
+				\cdens_t^{\tau}
+				(y - \mfamba_t^k)\
+			}
+		}
+		dy\
+		d\tau = 
+	\end{align*}
+	
+	And since the two quantities are already $\geq 0$ we can forget the absolute value and obtain, by the linearity of the integral and Fubini:
+	
+	\begin{align*}
+		&=
+		\int_0^t
+		\int
+		\frac{1}{t}
+		\ETFoot{\ast}{
+			\cdens_t^{\btime^{1,g}}
+			(y - \mfamba_t^k)
+		}
+		dy\
+		d\tau
+		+
+		\int_0^t
+		\int
+		\frac{\lambda}{\hmactive_t^1}
+		\EFoot
+		{\ast}{
+			\cdens_t^{\tau}
+			(y - \mfamba_t^k)\
+		}
+		dy\
+		d\tau
+		\\
+		&=
+		\int_0^t
+		\frac{1}{t}
+		\ETFoot{\ast}{
+			\int
+			\cdens_t^{\btime^{1,g}}
+			(y - \mfamba_t^k)
+			dy\
+		}
+		d\tau
+		+
+		\int_0^t
+		\frac{\lambda}{\hmactive_t^1}
+		\EFoot
+		{\ast}{
+			\int
+			\cdens_t^{\tau}
+			(y - \mfamba_t^k)\
+			dy
+		}
+		d\tau
+		\\
+		&= 
+		\int_0^t
+		\frac{1}{t}
+		d\tau
+		+
+		\int_0^t
+		\frac{\lambda}{\hmactive_t^1}
+		d\tau\
+		=\
+		1
+		+
+		\frac{t\lambda}{\hmactive_t^1}\
+		\leq
+		1 + t\lambda
+	\end{align*}
+	
+	At this point we can write
+	
+	\begin{align*}
+		\Zhi &\leq
+		\ECond{
+			\left(
+			\sum _{g = 1}^{\hmactive_t^1}
+			\int				
+			\norm{
+				\ETFoot{\ast}{
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\frac{\lambda}{\hmactive_t^1}
+				\int_0^t
+				\EFoot
+				{\ast}{
+					\cdens_t^{\tau}
+					(y - \mfamba_t^k)\
+				}
+				d\tau
+			}
+			dy
+			\right)^{q-j}
+		}{\hmactive_t^1}
+		\\
+		&\leq
+		\ECond{
+			\left(
+			\sum _{g = 1}^{\hmactive_t^1}
+			(1 + t\lambda)
+			\right)^{q-j}
+		}{\hmactive_t^1}\
+		=\
+		(\hmactive_t^1)^{q-j}\
+		(1 + t\lambda)^{q-j}\
+		\\
+		&
+		\leq\
+			(\hmactive_t^1)^{q-j}\
+			(q-j)\
+			(q-j)!\
+			(t\lambda)^{q-j}
+		=
+			(\hmactive_t^1)^{q-j}\
+			\const_{q,\lambda}\
+			\Fup(q,t)
+	\end{align*}
+	
+	Resuming everything, we have that 
+	
+	\begin{align*}
+		&\E{
+			\norm{
+				\Phi_p^\ast(k,i) - \phi_p^\ast(k,i)
+			}^q
+		}\leq
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			\Norm{
+				\ETFoot{\ast}{
+					\sum _{g = 1}^{\hmactive_t^1}
+					\cdens_t^{\btime^{1,g}}
+					(y - \mfamba_t^k)
+				}
+				-
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^{q-j}\
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 \neq 0}			
+		}
+		+
+		\\
+		&\qquad
+		+
+		\const_{\attraction,\curlywedge,q}\
+		\Fup(q,T)\
+		\E{
+			\Norm{
+				\EFoot
+				{\ast}{
+					\sum _{g = 1}^{\hmactive_t^2}
+					\cdens_t^{\btime^{2,g}}
+					(y - \mfamba_t^k)
+				}
+			}_{\Lpspace^1}^q\
+			\1_{\hmactive_t^1 = 0}			
+		}
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q,\lambda}\Fup(q,T)\
+		\sum_{j=0}^{q}\
+		\E{
+			(\hmactive_t^1)^{q-j}\
+			\const_{q,\lambda}\
+			\Fup(q,T)
+			(\hmactive_t^1)^j\
+			\1_{\hmactive_t^1 \neq 0}
+		} +		
+		\const_{\attraction,\curlywedge,q,\lambda}\Fup(q,T)\
+		\\
+		&\leq
+			\const_{\attraction,\curlywedge,q,\lambda}\
+			\left(
+				\Fup(q,T)
+				\sum_{j=0}^{q}\
+				\E{
+					(\hmactive_t^1)^q\
+					\1_{\hmactive_t^1 \neq 0}
+				}
+				+
+				\Fup(q,T)\
+			\right)
+		\\
+		&\leq
+		\const_{\attraction,\curlywedge,q,\lambda}\
+		\Fup(q,T)
+			\left(
+				\E{
+					(\hmactive_t^1)^q
+				}
+				+
+				1
+			\right)
+		\leq
+	\end{align*}
+	
+	Again we use the result \ref{app:Poisson-moments}, together with the assumption \ref{ch5:LLN} to ensure that the Poisson parameter is $\geq1$, to obtain that 
+	
+	\begin{align*}
+		\leq
+		\const_{\attraction,\curlywedge,q,\lambda}\
+		\Fup(q,T)
+			\left(
+				\Fup(q)\
+				(t\lambda)^q
+				+
+				1
+			\right)\
+		&
+		\leq\
+		\const_{\attraction,\curlywedge,q,\lambda}\
+		\Fup(q,T)
+		t^q\
+			\left(
+			1
+			+
+			1
+			\right)\
+		\leq\
+			\const_{\attraction,\curlywedge,q,\lambda}\
+			\Fup(q,T)
+		\leq
+	\end{align*}
+	
+	And the proof is finally finished.
+	
+\section{Composing All the Pieces Together}
+
+\begin{proposition}\label{ch5:LLN}[Law of large numbers]
+	
+	Let $\drift(t, \cdot)$ be the generalized drift of parameter $0 \leq \alpha < \frac{1}{2}$ and constant $\const_\curlywedge > 0$ and let $\mfsol_t^{(N)}$ be the solution to the mean-field system with $N$ amoebas, as defined in \ref{ch5:def:generalized-attr&drift}.
+	Let $t\leq T$ and let $\xi >0$ be such that $0 < \alpha + \xi <\frac{1}{2}$.
+	Choose a value $0 < \const_\xi \leq 1 - 2(\alpha + \xi)$.
+	
+	Then it is valid the law of the large numbers, \ie there exists $\overline{N} = \overline{N}(\alpha, \const_\curlywedge) > 0$ such that for all $n \in \N$ exists an increasing positive continuous function $\Fup_n$ (independent from $N, \alpha, \xi$) so that for all $N > \overline{N}$
+	\begin{equation}
+		\PrbOf{
+			\normp{\infty}{
+				\drift^{(N)}(t, \mfsol_t^{(N)})
+				-
+				\mfdrift^{(N)}(t, \mfsol_t^{(N)})
+			}
+			\geq
+			2N^{-\xi}
+		}
+		\leq
+		\Fup_n(T)\
+		N^{-\const_\xi n + 1}
+	\end{equation}
+	
+	In particular, if $\drift(t, \cdot)$ is the usual drift of \ref{ch2:def:drift-&-diffusion}, then $\alpha$ can be chosen equal to $0$.
+\end{proposition}
+
+\begin{proof}
+	Once again we make the assumptions of remark \ref{ch5:assumption-t,lambda>1-proofs}, \ie that $t,\lambda\geq1$.
+	Recall that from \ref{ch5:sketch-divide-et-impera} we want to use the strategy "divide et impera".
+	For the "divide" part we use the simple principle \ref{app:pA-pB-less-than}:
+	
+	\begin{equation} \label{ch5:lln:divide}
+		\begin{aligned}
+		&
+		\PrbOf{
+			\normp{\infty}{
+				\drift^{(N)}(t, \mfsol_t^{(N)})
+				-
+				\mfdrift^{(N)}(t, \mfsol_t^{(N)})
+			}
+			\geq
+			2N^{-\xi}
+		}=
+		\\
+		&
+		= 
+		\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\drift_k^{(N)}(t, \mfsol_t^{(N)})
+				-
+				\mfdrift_k^{(N)}(t, \mfsol_t^{(N)})
+			}
+			\geq
+			2N^{-\xi}
+		}
+		=
+		\\
+		&=
+		\Prb \Bigg(
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\drift_k^{(N)}(t, \mfsol_t^{(N)})
+				-
+				\ECondTimes{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t, \:}
+			}
+		 +
+		\\
+		&\qquad\quad
+		+
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ECondTimes{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t, \:}
+				-
+				\ECond{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t}
+			}
+			\geq
+			N^{-\xi} + N^{-\xi}
+		\Bigg)
+		\\
+		&\leq
+		\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\drift_k^{(N)}(t, \mfsol_t^{(N)})
+				-
+				\ECondTimes{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t, \:}
+			}
+			\geq
+			N^{-\xi}
+		} +
+		\\
+		&\qquad\quad
+		+
+		\PrbOf{
+			\sup_{1\leq k \leq N} 
+			\normp{\infty}{
+				\ECondTimes{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t, \:}
+				-
+				\ECond{\drift_k^{(N)}(t, \mfsol_t^{(N)})}{ \mfamba_t}
+			}
+			\geq
+			N^{-\xi}
+		}
+		\leq
+		\end{aligned}
+	\end{equation}
+	
+	For the "impera" part of the strategy we need to use the bounds \ref{ch5:prop:LLN1} and \ref{ch5:prop:LLN2}.
+	A bit of care is necessary regarding \ref{ch5:prop:LLN1}: we showed a law of large numbers for a general set of particles which had densities uniformly bounded in $\Lpspace^\infty(\R^d)$ by a constant $\const_\dens$
+	
+	\begin{equation*}
+		\Norm{\cdens^m}_\infty, \Norm{\adens^p}_\infty < \const_\dens
+	\end{equation*}
+	
+	This condition is fullfilled by the densities of the mean-field particles $\mfsol_t^{(N)}$ on $[0,T]$ with the lemma \ref{ch3:mfdrift-lips-and-bounded}:
+	
+	\begin{equation*}
+		\forall t, \tau \leq T.\
+		\Norm{\cdens_t^\tau}_\infty, \Norm{\adens_t^p}_\infty < \Fup(T)
+	\end{equation*}
+	
+	Then the \ref{ch5:LLN1:bound} gives us
+	
+	\begin{equation}\label{ch5:lln1-applied-to-mean-field-parts}
+		 \forall N> \overline{N}.	\qquad
+		 \PrbOf{S^{N,\xi}_\ast}{}
+		\leq 
+		\const_n\
+		\Fup_n(\Fup(T))\
+		\Fup_n(t)\
+		N^{-\const_\xi n + 1}\
+		\leq\
+		\Fup_n(T)\
+		N^{-\const_\xi n + 1}\
+	\end{equation}
+	
+	Now we can proceed with the "impera" part of the strategy applying \ref{ch5:lln1-applied-to-mean-field-parts} and \ref{ch5:LLN2:cond} to \ref{ch5:lln:divide}:
+	
+	\begin{equation*}
+		\leq
+		\Fup_n(T)\
+		N^{-\const_\xi n + 1}\
+		+
+		\const_n\
+		\Fup_n(T)\
+		N^{-\const_\xi n + 1}\
+		\leq
+		\Fup_n(T)\
+		N^{-\const_\xi n + 1}
+	\end{equation*}
+	
+	And the result is proved.
+\end{proof}

@@ -1,0 +1,955 @@
+\label{ch4}
+
+In this chapter the objective is to find a good way to handle the Dini-derivative of the distance process
+
+\begin{equation*}
+	\sup_{0 \leq t \leq T} \normp{\infty}{\sol_t-\mfsol_t} = \sup_{0 \leq t \leq T} \normp{\infty}{\sol_t^{(N)}-\mfsol_t^{(N)}}
+\end{equation*}
+
+Such tool will be fundamental for the proof of \ref{ch6:final-result}.
+
+
+\section{Dini Derivatives}
+
+We follow \autocite{dini-derivatives} and \autocite{ana}.
+
+\begin{definition}[Dini derivatives]
+	For any function $f: \R \longrightarrow \R$ we define the \emph{right upper, right lower, left upper \emph{and} left lower Dini derivatives} in $t$ as:
+	\begin{align*}
+		& \diniu^+ f (t) = \limsup_{h\rightarrow 0^+} \frac{f(t+h) - f(t)}{h}
+		& \dinil^+ f (t) = \liminf_{h\rightarrow 0^+} \frac{f(t+h) - f(t)}{h}
+		\\
+		& \diniu^- f (t) = \limsup_{h\rightarrow 0^-} \frac{f(t+h) - f(t)}{h}
+		& \dinil^- f (t) = \liminf_{h\rightarrow 0^-} \frac{f(t+h) - f(t)}{h}		
+	\end{align*}
+	For any function $g: \R^\Ch \longrightarrow \R$ and any direction (\ie unit vector) $v\in \R^\Ch$ we define the \emph{upper \emph{and} lower dini derivative in the direction $v$} as:
+	\begin{align*}
+		& \diniu_v g (x) = \limsup_{h\rightarrow 0^+} \frac{g(x+hv) - g(x)}{h}
+		& \dinil_v g (x) = \liminf_{h\rightarrow 0^+} \frac{g(x+hv) - g(x)}{h}
+	\end{align*}
+\end{definition}
+
+\begin{remark}
+	The right upper Dini derivative $\diniu^+ f (t)$ might be signed also as $\diniu^+_t f (t)$, and analogous for the others.
+	The Dini derivative of the multivariate case has been added for the sake of completeness, but it will never be used in this work.
+\end{remark}
+
+\begin{remark}
+	Notice that the Dini derivatives are always defined if we allow them to take also values in $[-\infty, \infty]$.
+	Furthermore it is easy to see that
+	\begin{itemize}
+		\item If $f$ is locally Lipschitz, then its dini derivatives are all finite.
+		\item If $f$ is right-differentiable $\partial^+ f (t) = \diniu^+ f (t) = \dinil^+ f (t)$.
+			Analogously happens if $f$ is left-differentiable.
+		\item If $f$ is differentiable then $\partial f (t) = \partial^+ f (t) = \partial^- f (t)$ and all the dini derivatives coincide.
+	\end{itemize}
+\end{remark}
+
+The proof of the first two points of the next lemma is easily achieved exploiting the properties of $\limsup$, while the third one is found in the quoted article.
+
+\begin{lemma}[Properties of Dini derivatives]
+	Let $f,h: \R \longrightarrow \R$ be $\Cspace^0$.
+	Then
+	\begin{itemize}
+		\item $\diniu^+ (f + h) \leq \diniu^+ f + \diniu^+h$
+		\item If $f > 0$. then $\diniu^+ (fh) \leq (\diniu^+f) h + f(\diniu^+h)$
+		\item (\autocite[Theorem 11]{dini-derivatives}) If $f$ has \emph{finite} Dini derivative $\diniu^+$ at every point in $t\in\R$, and if $\diniu^+f$ is Lebesgue integrable on $[a,b]$, then
+			\begin{equation}
+				f(b) - f(a) = \int_a^b \diniu^+ f (t) dt.
+			\end{equation}
+	\end{itemize}
+\end{lemma}
+
+With this background in mind, we state the next result, of which the proof will be achieved by the end of the section (\ref{ch4:proof:del-dini-of-all}).
+
+\begin{lemma}\label{ch4:lemma:del-dini-of-all}
+	Let $\sol^{(N)} = \sol$ be the solution to the model \ref{ch2:model} and $\mfsol^{(N)} = \mfsol$ its coupled mean-field particles.
+	Let $\drift^{(N)}=\drift$ and $\mfdrift^{(N)} = \mfdrift$ be the correspondent drifts for the two.
+	Then we have that with probability $1$, for all $T>0$
+	\begin{equation}
+		\diniu_T^+ \sup_{0 \leq t \leq T} \normp{\infty}{\sol_t-\mfsol_t}
+		\leq
+		d \cdot 
+			\normp{\infty}{\drift(T, \sol_T) - \mfdrift(T, \mfsol_T)}
+	\end{equation}
+\end{lemma}
+
+\section{Proceed Beyond the $\sup$}
+
+In this part we want to show this lemma.
+
+\begin{lemma}\label{ch4:lemma:advance-after-sup}
+	For all $T>0$
+	\begin{equation}
+		\diniu_T^+ \sup_{0 \leq t \leq T} \normp{\infty}{\sol_t-\mfsol_t}
+		\leq
+		\max_{ s\in \{0,T\} } \left\{ 
+		\diniu^+_s \normp{\infty}{\sol_s-\mfsol_s}
+		\right\}
+	\end{equation}
+\end{lemma}
+
+Even though the next lemma (\ref{ch4:distance-is-c0}) show that the distance function $\normp{\infty}{\sol_t-\mfsol_t}$ has continuous paths, we will show that the lemma \ref{ch4:lemma:advance-after-sup} is valid also under weaker conditions.
+In fact, defining the random function
+
+\begin{equation}
+	\Ch(t) := \normp{\infty}{\sol_t - \mfsol_t}
+\end{equation}
+
+and considering its paths $\Ch(t)$, we have that these are continuous in between the birth times $(\btime_m)_m$, but the behaviour at such instants depends on the spawning position of the cAMP.
+For a general mesoscopic model $\mfsol_t$ which spawn new molecules $\camp_t^m$ in random position, and not necessarily along the path of other already existing particles $\amba_t^p$, we would have a this more general class of paths:
+
+\begin{definition}
+	Let $\SkoroF$ be the set of functions $g: \R_+ \longrightarrow \R_+$ such that:
+	\begin{itemize}
+		\item $g(0)=0$
+		\item $g$ is \cadlag
+		\item  For each $T>0$, $g$ has finite amount of discontinuity in $[0,T]$
+	\end{itemize}
+	Furthermore, considering $g(t-) := \lim_{s \rightarrow t^-} g(s)$ and $g(t+) := \lim_{s \rightarrow t^+} g(s)$, we define the set $\SkoroFUp$ as the subset of elements $g \in \SkoroF$ such that if $g$ is discontinuous in $t_i$ then $g(t_i-) < g(t_i)$.
+\end{definition}
+
+\begin{remark}
+	Let $g$ be a \cadlag function.
+	Then the condition
+	
+	\begin{equation*}
+		 \text{if $g$ is discontinuous in $t_i$ then } g(t_i-) < g(t_i)
+	\end{equation*}
+	
+	is equivalent to 
+	
+	\begin{equation*}
+		\forall t. g(t-) \leq g(t+) = g(t)
+	\end{equation*}
+	
+	Notice that such property does not necessarily imply that $g$ is increasing, it only means that if it has a jump, it's necessarily a jump up.
+\end{remark}
+
+\begin{lemma}\label{ch4:distance-is-c0}
+	The paths of $\Ch(t)=\normp{\infty}{\sol_t - \mfsol_t}$ are continuous.
+	In particular are elements of $\SkoroFUp$.
+\end{lemma}
+
+\begin{proof}
+Since both $\sol_t = \sol_t^{(N)}$  and $\mfsol_t = \mfsol_t^{(N)}$ are solutions to SDEs on $I_m \smallsetminus \{ \btime_{m+1} \} = [\btime_m, \btime_{m+1})$, they are continuous on such interval.
+This, together with the fact that $\normp{\infty}{\cdot}$ is $\Cspace^0$ and that $\forall \omega$ the number of birth times $\btime_m$ in $[0,T]$ is finite, means that the discontinuouties in $[0,T]$ is finite.
+Furthermore we have that $[\btime_m, \btime_{m+1})$ is closed on the left, thus the paths are right-continuous.
+By definition we have also that 
+\begin{align}
+	& \lim_{t\rightarrow \btime_{m+1}} \sol_t^{(N)} = (\amba_{\btime_{m+1}}^1,\ldots,\amba_{\btime_{m+1}}^N, \camp_{\btime_{m+1}}^1, \ldots, \camp_{\btime_{m+1}}^m )
+\end{align}
+and analogously for $\mfsol_t^{(N)}$. Therefore the paths of $\normp{\infty}{\sol_t - \mfsol_t}$ are \cadlag.
+
+Let us now prove that  $\Ch(\btime_m-) \leq \Ch(\btime_m)$ for every discontinuouty $\btime_m$ in $[0,T]$.
+We have that
+\begin{equation}\label{ch4:distance-paths-inequality}
+	\begin{aligned}
+	\Ch(\btime_m-) &= \lim_{t\rightarrow\btime_{m+1}^-} \Ch(t) = \lim_{t\rightarrow\btime_{m+1}^-} 
+		\normp{\infty}{ \sol_t^{(N)} - \mfsol_t^{(N)}}
+	\\
+	& = \lim_{t\rightarrow\btime_{m+1}^-} \max \left\{ 
+		\max_{p \in \{ 1, \ldots, N\}} \normp{\infty}{
+			\amba_t^p - \mfamba_t^p
+			},
+		\max_{1\leq i \leq m } \normp{\infty}{
+			\camp_t^i - \mfcamp_t^i
+			}
+		\right\}
+	\\
+	& = \max \left\{ 
+	\max_{p \in \{ 1, \ldots, N\}} \normp{\infty}{
+		\amba_{\btime_{m+1}}^p - \mfamba_{\btime_{m+1}}^p
+	},
+	\max_{1\leq i \leq m } \normp{\infty}{
+		\camp_{\btime_{m+1}}^i - \mfcamp_{\btime_{m+1}}^i
+	}
+	\right\}
+	\\
+	& \leq \max \left\{ 
+	\max_{p \in \{ 1, \ldots, N\}} \normp{\infty}{
+		\amba_{\btime_{m+1}}^p - \mfamba_{\btime_{m+1}}^p
+	},
+	\max_{1\leq i \leq m } \normp{\infty}{
+		\camp_{\btime_{m+1}}^i - \mfcamp_{\btime_{m+1}}^i
+	},
+	\normp{\infty}{
+		\camp_{\btime_{m+1}}^{m+1} - \mfcamp_{\btime_{m+1}}^{m+1}
+	}
+	\right\}
+	\\
+	& = \normp{\infty}{ \sol_{\btime_{m+1}}^{(N)} -\mfsol_{\btime_{m+1}}^{(N)}} = \Ch(\btime_{m+1})
+	\end{aligned}
+\end{equation}
+
+In particular, since the cAMP molecules are spawning on the positions of some amooebas, \ie
+
+\begin{equation*}
+	\camp_{\btime_{m+1}}^{m+1} - \mfcamp_{\btime_{m+1}}^{m+1} = \amba_{\btime_{m+1}}^{\Parentof(m+1)} - \mfamba_{\btime_{m+1}}^{\Parentof(m+1)}
+\end{equation*}
+
+then the inequality above becomes an equality, and thus the paths are continuous.
+\end{proof}
+
+\begin{remark}
+	Notice that if the mean-field cAMP would not be born on some mean-field amoeba, \ie there is no bifurcation of paths at birth times, at each birth time $\btime_m$ it would be possible to have that the equation \ref{ch4:distance-paths-inequality} becomes a strict inequality.
+\end{remark}
+
+Now we need to work on how to Dini-derive the $\sup$ operator of functions in $\SkoroFUp$.
+
+\begin{lemma}
+Let $g \in \SkoroFUp$ and consider $g_\star (t) := \sup_{0\leq s \leq t} g(s)$.
+Then
+\begin{equation}
+g_\star (t) = \max_{0\leq s \leq t} g(s)
+\end{equation}
+and $g_\star \in \SkoroFUp$.
+\end{lemma}
+
+\begin{proof}
+	Let $\{\tau_1, \ldots, \tau_m\}$ be the set of discontinuities of $g$ in $[0,t]$, and define $\tau_0:=0, \tau_{m+1} := t$.
+	Define then, for each $i\in\{1,\ldots, m\}$, the function
+	\begin{equation*}
+		g_i (s) := \1_{[\tau_{i-1}, \tau_i)}(s) g(s) + \1_{\{ \tau_i\}}(s) g(\tau_i-)
+		=
+		\left\{ 
+		\begin{aligned}
+			&g(s) 	& s \in [\tau_{i-1}, \tau_i)
+			\\
+			&g(\tau_i - ) 	& s = \tau_i
+		\end{aligned}
+		\right.
+	\end{equation*}
+	The functions $g_i$ are obviously continuous, and since $[\tau_{i-1}, \tau_i]$ is a closed interval, we have that $\sup_s g_i(s) = \max_s g_i(s)$.
+	We have two possible cases: either $\tau_i$ is a maximal point for $g_i$, or it is not.
+	If $\tau_i$ is a maximal point for it we have that 
+	
+	\begin{equation}
+		g_i (s) \leq g_i (\tau_i) = g(\tau_i -) \leq g(\tau_i)
+		\quad \Rightarrow 	\max g_i \leq g (\tau_i)
+	\end{equation}
+	
+	Otherwise if $\tau_i$ is not a maximal point for $g_i$, we have that $\exists s_i \in [\tau_{i-1}, \tau_i)$ such that $\forall s.\; g_i (s) \leq g(s_i) = g_i (s_i) $.
+	Since $g_i =g$ on all points but on $\tau_i$, and since $(g_i)_i$ is a sequence with a finite number of elements, we  can affirm that in all cases
+	\begin{equation}
+		\sup_{s \in [\tau_{i-1}, \tau_i]} g(s) = \max \left\{ \max_{s \in [\tau_{i-1}, \tau_i]} g_i(s), g(\tau_i) \right\} = \max_{s \in [\tau_{i-1}, \tau_i]} g(s)
+	\end{equation}
+	
+	Hence it is obvious that
+	
+	\begin{align}
+		\sup_{s \in [0,t]} g(s) 
+		& = \max_i \left\{ \sup_{s \in [\tau_{i-1}, \tau_i]} g(s) \right\} = \max_i \left\{ \max_{s \in [\tau_{i-1}, \tau_i]} g(s) \right\}
+		\\
+		& = \max_{s \in [0,t]} g(s) 
+	\end{align}
+	
+	Therefore we have that $g_\star(t) = \sup_{[0,t]} g = \max_{[0,t]} g$.
+	Let us now prove that $g_\star$ is an element of $\SkoroFUp$.
+	\begin{claim}
+		The set of discontinuities of $g_\star$ is contained in $\{\tau_1, \ldots, \tau_m\}$, the set of discontinuities of $g$.
+	\end{claim}
+	
+	\begin{proof}
+		Let $t$ be a point where $g$ is continuous.
+		We show that also $g_\star$ is continuous in $t$.
+		
+		We have two possibilities: either $g(t) = g_\star(t)$, or $g(t) < g_\star (t)$.
+		\begin{itemize}
+			\item If $g(t) < g_\star (t)$, since $g$ is $\Cspace^0$ in $t$, there is a neighbourhood $U_t$ of $t$ such that $g|_{U_t} < g_\star(t)$, and since $g_\star(t) = \max_{[0,t]} g$, we have that $(g_\star)|_{U_t} \equiv g_\star(t)$, and thus that $g_\star$ is continuous in $t$.
+			\item If $g(t) = g_\star(t)$, consider an $\epsilon>0$ small enough so that $g$ is monotonous on the left and right intervals $U_\epsilon^-:= (t-\epsilon, t)$ and $U_\epsilon^+:=(t,t+\epsilon)$. 
+			This can be done otherwise the function $g$ would oscillate infinite times in a neighbourhood, and we could construct a sequence $(t_n)_n$ such that $(g(t_n))_n$ does not converge to $g(t)$, contraddicting the continuouity in $t$.
+			Let us show that $g_\star$ is continuous on both left and right neighbourhoods, being thus continuous.
+			\begin{itemize}
+				\item[$\big( U_\epsilon^- \big)$] $g$ can be either constant or strictly increasing on $U_\epsilon^-$ (otherwise if $g$ would be strictly decreasing, we would have a point $s<t$ such that $g(s) > g(t) = g_\star(t) = \max_{[0,t]} g$, contraddiction).
+				If $g$ is constant on this left neighbourhood, then so is $g_\star$ and thus it is left continuous.
+				If $g$ is stricly increasing on $U_\epsilon^-$ we have either that the two functions coincide on such domain, or that $g_\star$ is constant on it, and in both case we have that $g_\star$ is left continuous.
+				\item[$\big( U_\epsilon^+ \big)$] Consider now the case on $U_\epsilon^+=(t,t+\epsilon)$: if $g$ is non-increasing on it, then $(g_\star)|_{U_\epsilon^+} \equiv g_\star (t)$.
+				If instead $g$ is increasing on it, the two functions coincide on it.
+				In either case, $g_\star$ is right-$\Cspace^0$.
+			\end{itemize}
+		\end{itemize}
+		
+		Therefore $g_\star$ is continuous on $t$.
+	\end{proof}
+	
+	\begin{claim}
+		$g_\star$ is right-$\Cspace^0$, \ie $g_\star(t) = g_\star(t+)$.
+	\end{claim}
+	\begin{proof}[Proof of claim]
+		\begin{equation*}
+		\begin{aligned}
+			g_\star(t+) 
+			&= \lim_{h \rightarrow 0^+} g_\star(t+h) = \lim_{h \rightarrow 0^+} \sup_{s \leq t+h} g_\star(s)
+			\\
+			&= \lim_{h \rightarrow 0^+} \max \Big\{ 
+				\underbrace{\sup_{s\in [0,t)} g(s)}_{\leq \sup_{s\in [0,t]} g(s) = g_\star(t)}
+				,\quad
+				\underbrace{\sup_{s \in [t, t+h]} g(s) }_{
+					\sup_{\delta \in [0, h]} g(t+\delta) 
+					}
+			\Big\}			
+			\\
+			& \leq \max \{ g_\star (t), \lim_{h\rightarrow 0^+} \sup_{\delta \in [0, h]} g(t+\delta) \}
+			\\
+			& = \max \{ g_\star (t), \limsup_{s\rightarrow t^+} g(s) \}
+			& = \max \{ g_\star (t), g(t) \} = g_\star(t)
+		\end{aligned}
+		\end{equation*}
+		Thus $g_\star(t+) \leq g_\star(t)$, but since $g_\star$ is increasing by definition we also have that $g_\star(t+) \geq g_\star(t)$, therefore $g_\star(t+) = g_\star(t)$.
+	\end{proof}
+	\begin{claim}
+		For each $t$ we have that $\exists g_\star(t-)$ and $g_\star(t-) \leq g_\star(t)$.
+	\end{claim}
+	\begin{proof}[Proof of claim]
+		If $g_\star$ is $\Cspace^0$ in $t$ the claim is obvious, let us thus assume that $g_\star$ is discontinuous in $t$.
+		Notice that since $g_\star$ is right-continuous and increasing, if the left limit $g_\star (t-)$ exists, then it must necessarily be that $g_\star(t-) < g_\star(t)$.
+		Therefore we need only to show that such left limit exists.
+		
+		Let $(t_n)_n$ be a sequence of points such that $\forall n. \: t_n \leq t_{n+1} <t$ and $t_n \longrightarrow t$.
+		Since the set of discontinuities of $g$ on $[0,T]$ is finite, then it is discrete, thus there is an $\epsilon>0$ such that $g$ (and hence $g_\star$) are $\Cspace^0$ on $U_\epsilon^- := (t-\epsilon, t)$ and on $U_\epsilon^+:= (t,t+\epsilon)$.
+		We then observe, that since $(t_n)$ is a non-decreasing sequence and $g_\star$ is a non-decreasing function, we have that 
+		\begin{equation}
+			g_\star (t_n) \leq g_\star ( t_{n+1} )
+		\end{equation}
+		\ie that the sequence $( g_\star (t_n) )_n$ is non-decreasing.
+		Furthermore we have that $( g_\star (t_n) )_n$ is bounded by $g_\star(t)$ (because of the definition of $g_\star$).
+		Then, being the sequence $( g_\star (t_n) )_n$ bounded and non-decreasing, it has a limit $l$.
+		But being such sequence arbitrary, we have that
+		\begin{equation}
+			l = \lim_n g_\star (t_n) = \lim_{s\rightarrow t^-} g(s) = g(t-)
+		\end{equation}
+	\end{proof}
+	And thus $g_\star \in \SkoroFUp$ and the proof is concluded.
+\end{proof}
+
+\begin{lemma}
+Let $g$ be a function in $\SkoroFUp$.
+Then
+\begin{equation}\label{ch4:eq:sup-dini-exchange}
+\diniu^+_t g_\star(t)
+=
+\diniu^+_t \sup_{0\leq s \leq t} g(s) 
+\leq
+	\left(
+	\diniu^+_0 g(0)
+	\right)
+	\vee 
+	\left(
+	\diniu^+_t g(t)
+	\right) 
+=
+	\max_{s\in\{0,T\}}
+	\diniu^+_s g(s)
+\end{equation}
+
+with $s_t \in \{ 0, t\}$
+\end{lemma}
+
+\begin{proof}
+Observe that since $g \geq 0$ and since $g_\star$ is non-decreasing, we have that
+
+\begin{equation}
+	\lhs (\ref{ch4:eq:sup-dini-exchange}) = \lim_{h\rightarrow 0^+} \sup_{\delta \in (0,h]} \frac{g_\star(t+\delta) - g_\star(t)}{\delta} \geq 0
+\end{equation}
+Thus we have only two possibilities:
+\begin{equation}
+	\lhs (\ref{ch4:eq:sup-dini-exchange}) = 0 
+	\qquad \text{or} \qquad
+	\lhs (\ref{ch4:eq:sup-dini-exchange}) > 0 
+\end{equation}
+
+Consider the case $\lhs (\ref{ch4:eq:sup-dini-exchange}) = 0$.
+Then it is sufficient to show that $\rhs (\ref{ch4:eq:sup-dini-exchange}) \geq 0$ to obtain the result.
+Since $g \geq 0$, we trivially have that $g(t) \geq g(0)$, and thus
+
+\begin{equation}
+	\forall \delta >0 \quad \frac{g(\delta) - g(0)}{\delta} \geq 0
+	\qquad
+	\diniu_0^+g(0) \geq 0	
+\end{equation}
+
+And thus in such case we have that
+
+\begin{equation}
+	\lhs (\ref{ch4:eq:sup-dini-exchange}) = 0 
+	\leq
+	\diniu_0^+g(0)
+	\leq
+		\left(
+		\diniu^+_0 g(0)
+		\right)
+		\vee 
+		\left(
+		\diniu^+_t g(t)
+		\right) 
+	=
+	\rhs (\ref{ch4:eq:sup-dini-exchange})
+\end{equation}
+
+And so this case is covered.
+
+Let us then assume that $\lhs (\ref{ch4:eq:sup-dini-exchange}) > 0 $.
+We have that
+
+\begin{equation}
+\begin{aligned}
+	\lhs (\ref{ch4:eq:sup-dini-exchange}) > 0 
+	& \Longleftrightarrow 
+		\forall h \geq 0. \exists 0< \delta \leq h. 
+		\quad
+		\frac{g(t + \delta) - g(t)}{\delta} > 0
+	\\
+	& \Longleftrightarrow 
+		\forall h \geq 0. \exists 0< \delta \leq h. 
+		\quad
+		g(t + \delta) - g(t)> 0
+	\\
+	& \Longleftrightarrow 
+		\forall n \in \N. \exists 0< \delta_n \leq \frac{1}{n}. 
+		\quad
+		g(t + \delta_n) - g(t)> 0
+		\label{ch4:cond:proof-dini-T1}
+\end{aligned}
+\end{equation}
+
+The strategy is to show that under the condition \ref{ch4:cond:proof-dini-T1} in $t$, we can approximate the Dini derivative of $g_\star$ with the one of $g$, obtaining thus:
+
+\begin{equation*}
+\lhs = \diniu_t^+g_\star(t)
+\simeq \diniu_t^+g(t)
+\leq \sup_{s\in [0,t]} \diniu_s^+g(s)
+= \rhs
+\end{equation*}
+
+This will require some preliminary claims to be proved.
+
+\begin{claim}\label{ch4:claim:g=gstar}
+	Under the condition \ref{ch4:cond:proof-dini-T1} we have that $g(t) = g_\star(t)$.
+\end{claim}
+\begin{proof}
+	By \ref{ch4:cond:proof-dini-T1} we have that $\forall n. \exists 0 < \delta_n \leq \frac{1}{n}$ such that
+	\begin{equation}
+		\max_{[0, t + \delta_n]} g = g_\star (t + \delta_n) 
+		>^{\ref{ch4:cond:proof-dini-T1}}
+		g_\star (t) = \max_{[0, t]} g
+	\end{equation}
+	Then $\forall n . \exists r_n \in (0, \delta_n] \subseteq (0, \frac{1}{n})$ such that $g(t + r_n ) = g_\star (t + \delta_n) > g_\star (t)$.
+	This, together with the fact that $r_n \xrightarrow{n} 0$ and that the functions involved are right-continuous, let us infer that
+	\begin{equation}
+		g(t) \leq g_\star (t) \leq \lim_n g(t + r_n) = g(t+) = g(t)
+	\end{equation}
+	And then $g(t) = g_\star (t)$.
+\end{proof}
+
+\begin{claim}\label{ch4:claim:exploit-xi-of-delta}
+	Under the condition \ref{ch4:cond:proof-dini-T1} in $t$ consider $\delta >0$ such that $g,g_\star$ are $\Cspace^0$ on $U_\delta^+:= [t,t+\delta)$.
+	Define
+	\begin{equation}
+		\xi_{t,\delta} := \xi_\delta := \xi := \inf \left\{ \nu \geq 0 \ : \  g_\star(t + \nu) = g_\star (t + \delta) \right\}
+	\end{equation}
+	Then $\xi$ is strictly positive, is $\leq \delta$ and is such that $g(t+\xi) = g_\star (t+ \xi) = g_\star(t + \delta)$.
+\end{claim}
+
+\begin{proof} We have that $\xi \leq \delta$ is trivially true by definition.
+	
+	\paragraph{$(\logQuest{ \xi > 0 })$} Since $g_\star$ is $\Cspace^0$ on $[t,t+\delta)$, we have that
+	\begin{align*}
+		A :&= \left\{ \nu \geq 0 \ : \  g_\star(t + \nu) = g_\star (t + \delta) \right\} 
+		= (g_\star)|_{[t,t+\delta)}^{-1} \left( g_\star (t + \delta) \right) - t
+		\\
+		&= \Big( 
+		\underbrace{(g_\star)|_{[t,t+\delta)}^{-1} -t}_{\Cspace^0 \text{function}}
+		\Big) 
+		\Big( 
+		\underbrace{\{g_\star (t + \delta) \} }_{\text{closed set}}
+		\Big)
+	\end{align*}
+	and thus $A$ is closed.
+	Therefore we have $\xi:= \inf A = \min A$.
+	Furthermore, because of \ref{ch4:cond:proof-dini-T1}, we have that $g_\star(t) < g_\star (t + \delta)$, and thus $0 \notin A$.
+	Hence $\xi > 0$.
+	
+	\paragraph{$(\logQuest{ g(t+\xi) = g_\star (t+ \xi) })$} Suppose ad absurdum that $g(t+\xi) < g_\star (t + \xi)$.
+	Because of \ref{ch4:cond:proof-dini-T1}, and since $\xi > 0$, we have that $g_\star(t) < g_\star (t + \xi)$.
+	Then $\exists 0 < \nu < \xi$ such that
+	\begin{equation}
+		g(t + \nu) = g_\star (t+ \xi) = \max_{[0, t+ \nu]} g = g_\star (t + \nu)
+	\end{equation}
+	And this is a contraddiction, because $\nu < \xi = \min A$, but $\nu \in A$.
+	
+	Finally, it is true by definition that $g_\star (t+ \xi)  = g_\star (t+ \delta)$.
+\end{proof}
+Now we have finally all the instrument to prove the final result.
+
+	\begin{align*}
+	\lhs(\ref{ch4:eq:sup-dini-exchange}) 
+	&= \diniu^+_t g_\star(t) 
+	\\
+	&= \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]} \frac{
+		g_\star(t + \delta) - g_\star (t)
+		}{\delta}
+	\\
+	&= \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]} \frac{
+		g_\star(t + \delta) - g (t)
+	}{\delta}
+	&& \text{by }\ref{ch4:claim:g=gstar}
+	\\
+	&= \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]} \frac{
+		g(t + \xi_\delta) - g (t)
+	}{\delta}
+	&& \text{by }\ref{ch4:claim:exploit-xi-of-delta}
+	\end{align*}
+	
+Then, since $0 < \xi_\delta \leq \delta$ (by \ref{ch4:claim:exploit-xi-of-delta}), we have that $\frac{1}{\delta} \leq \frac{1}{\xi_\delta}$ and thus 
+	\begin{align*}
+	&\leq \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]} \frac{
+			g(t + \xi_\delta) - g (t)
+		}{\xi_\delta}
+		&& \text{by }\ref{ch4:claim:exploit-xi-of-delta}
+	\\
+		&\leq \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]} \sup_{\nu \in (0, \delta]}
+			\frac{
+			g(t + \nu) - g (t)
+			}{\nu}
+	\\
+	& = \lim_{h \rightarrow 0^+} \sup_{\delta \in (0, h]}
+		\frac{
+			g(t + \delta) - g (t)
+		}{\delta}
+	\\
+	&= \diniu^+_t g(t) 
+	\leq
+			\left(
+	\diniu^+_0 g(0)
+	\right)
+	\vee 
+	\left(
+	\diniu^+_t g(t)
+	\right) 
+	=
+	\rhs (\ref{ch4:eq:sup-dini-exchange})
+	\end{align*}
+	And thus the result stated above is valid.
+\end{proof}
+
+Thus we proved the statement \ref{ch4:lemma:advance-after-sup}:
+
+\begin{equation}
+	\diniu_T^+ \sup_{0 \leq t \leq T} \normp{\infty}{\sol_t-\mfsol_t}
+	\leq
+	\max_{ s\in \{0,T\} } \left\{ 
+		\diniu^+_s 
+			\normp{\infty}{\sol_s-\mfsol_s}
+	\right\}
+\end{equation}
+
+\section{Get Rid of the Integral Sign}
+
+Here the result we need to show is this:
+
+\begin{lemma}\label{ch4:lemma:get-rid-of-integral}
+	\begin{equation*}
+		\diniu^+_t \normp{\infty}{\sol_t-\mfsol_t}
+		 \leq 
+		 d \normp{\infty}{\drift(t, \sol_t) - \mfdrift(t, \mfsol_t)}
+	\end{equation*}
+\end{lemma}
+
+Notice that the mean-field particles are coupled with the system \ref{ch2:model}, and the initial conditions $\adens_0$ are the same for all the amoebas. Then we have
+
+\begin{align*}
+	\normp{\infty}{\sol_t^{(N)}-\mfsol_t^{(N)}} 
+	&= \max \left\{
+	\normp{\infty}{\amba_t^{(N)} - \mfamba_t^{(N)}},
+	\normp{\infty}{\camp_t^{(N)}  - \mfcamp_t^{(N)}}
+	\right\}
+	\\
+	&= \max \Bigg\{
+	\normp{\infty}{
+		\amba_0^{(N)} 
+		+ \int_0^t \drift^{(N)} (s, \sol_s^{(N)}) d s
+		+ 
+		\sigma B_t^N
+	-
+	\left(
+		\mfamba_0^{(N)} 
+		+ \int_0^t \drift^{(N)}(s, \mfsol_s^{(N)}) d s
+		+ 
+		\sigma B_t^N
+	\right)
+	},
+	\\
+	&\qquad
+	\max_{1\leq m \leq \hmactive_t}
+\normp{\infty}{
+				\amba_{\btime_{m}}^{(N),\Parentof(m)}  + \quasibm_t^m
+				-
+				(\mfamba_{\btime_{m}}^{(N),\Parentof(m)}  + \quasibm_t^m)
+		}
+	\Bigg\}
+	\\
+	&=
+	\max \Bigg\{
+	\normp{\infty}{
+		\int_0^t \drift(s, \sol_s) - \mfdrift(s, \mfsol_s) d s
+	},	
+	\max_{1\leq m \leq \hmactive_t}
+	\normp{\infty}{
+		\amba_{\btime_{m}}^{(N),\Parentof(m)} 
+		-
+		\mfamba_{\btime_{m}}^{(N),\Parentof(m)} 
+	}
+	\Bigg\}
+\end{align*}
+
+Notice that $\amba_{\btime_{m}}^{(N)} 
+-
+\mfamba_{\btime_{m}}^{(N)} $ is not dependent on $t$ and it is therefore removed with the derivation $\diniu^+_t$, unless $t = \btime_m$. Since the latter case happens with probability $0$ we simply remove the paths for which this manifests, \ie we assume that $t \neq \btime_m$.
+Therefore, if we try to Dini-derive such quantity we might sketch this:
+
+\begin{align*}
+	\diniu^+_t 
+	\;
+	\normp{\infty}{\sol_t-\mfsol_t} 
+	&=
+		\diniu^+_t 
+		\;
+		\normp{\infty}{
+			\underbrace{ \int_0^t \drift(s, \sol_s) - \mfdrift(s, \mfsol_s) d s}
+				_{:= I_t = (I_t^{p;i})_{p,i}}
+		}
+	\\
+	& \quad \left( \text{if $\forall p,i.\; I_t^{p;i}$ is right-differentiable} \right)
+	\\
+	& =
+		\partial^+_t
+		\;
+		\normp{\infty}{
+			\int_0^t \drift(s, \sol_s) - \mfdrift(s, \mfsol_s) d s
+		}
+	\\
+	& =
+		\underbrace{
+			\left[ \nabla_x \normp{\infty}{x} \right]_{x = I_t}
+		}_{?}
+		\Big(
+			\underbrace{
+				\partial^+_t
+				\int_0^t \drift_{p;i}(s, \sol_s) - \mfdrift_{p;i}(s, \mfsol_s) d s
+			}_{\logQuest{ = \drift_{p;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t) }}
+		\Big)_{p,i}
+\end{align*}
+
+The first is an easy computation.
+
+\begin{lemma}\label{ch4:lemma:derive-infinity-norm}
+	Almost everywhere we have that
+	\begin{equation}
+		\partial_i \normp{\infty}{x} = sgn(x_i)\1_{\abs{x_i} = \normp{\infty}{x}}
+	\end{equation}
+\end{lemma}
+\begin{proof}
+	Let us suppose that $\normp{\infty}{x} = \abs{x_i}$.
+	Then
+	\begin{align*}
+		\partial_i \normp{\infty}{x} = \partial_i \abs{x_i} = sgn(x_i)
+	\end{align*}
+	If instead there is $j \neq i$ such that $\normp{\infty}{x} = \abs{x_j} > \abs{x_i}$, then
+	\begin{align*}
+		\partial_i \normp{\infty}{x} = \partial_i \abs{x_j} = 0
+	\end{align*}
+	Hence $\partial_i \normp{\infty}{x} = sgn(x_i)\1_{\abs{x_i} = max_j \abs{x_j}}$.
+\end{proof}
+
+The second one is a confirmation of an intuitive fact:
+
+\begin{lemma}\label{ch4:lemma:right-diff-of-integral}
+	The quantity 
+	\begin{equation}\label{ch4:derivation-of-lebesgue}
+		\int_0^t \drift(s, \sol_s) - \mfdrift(s, \mfsol_s) d s
+	\end{equation}
+	is right-differentiable in each of its coordinates and is such that
+	\begin{equation}
+		\partial_t^+ \int_0^t \drift_{p;i}(s, \sol_s) - \mfdrift_{p;i}(s, \mfsol_s) d s = \drift_{p;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t)
+	\end{equation}
+	almost everywhere.
+\end{lemma}
+
+\begin{proof}
+	Just apply the Lebesgue differentiation theorem (see \autocite[Theorem 3.21]{folland}).
+\end{proof}
+
+Then we can write
+
+\begin{align*}
+	\diniu^+_t 
+	\;
+	\normp{\infty}{\sol_t-\mfsol_t} 
+	&=
+	\partial^+_t
+	\;
+	\normp{\infty}{
+		\Bigg(
+			\underbrace{ 
+				\int_0^t \drift_{p;i}(s, \sol_s) - \mfdrift_{p;i}(s, \mfsol_s) d s
+			}_{:= I_t^{p;i} }
+		\Bigg)_{p,i}
+	}
+	\\
+	& =
+	\sum_{p=1}^{N}
+	\sum_{i=1}^d
+		\left( \partial_{p;i} \normp{\infty}{x} \right)_{x_{p;i} = I_t^{p;i}}
+	\Big(
+		\partial^+_t
+		\int_0^t \drift_{p;i}(s, \sol_s) - \mfdrift_{p;i}(s, \mfsol_s) d s
+	\Big)
+	\\
+	& =
+	\sum_{p=1}^{N}
+	\sum_{i=1}^d
+	\left( \sgn(I_t^{p;i})\1_{\abs{I_t^{p;i}} = \normp{\infty}{I_t} } \right)
+	\Big(
+	\drift_{p;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t)
+	\Big)
+	\\
+	& \leq
+	\sum_{p=1}^{N}
+	\sum_{i=1}^d
+	\left( \1_{\abs{I_t^{p;i}} = \normp{\infty}{I_t} } \right)
+	\abs{
+		\drift_{p;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t)
+	}
+\end{align*}
+
+We want to get rid of the sum in $N$, and in order to do that we need to prove that $\abs{I_t^{p;i}}$ reaches $\normp{\infty}{I_t}$ only for one $p$ at a time.
+Or more weakly, that for two different amoebas $p\neq q$, the probability that $\abs{I_t^{p;i}}= \abs{I_t^{q;j}}= \normp{\infty}{I_t}$ for some coordinate $i,j$ is $0$.
+This might seem obvious, because corresponds roughly to the statement that different particles will happen to be in the same point with probability $0$, but it is still not obvious from a mathematical point of view.
+
+\begin{lemma}\label{ch4:only-one-amoeba-will-survive}
+	For all $t>0$ and for all $p \neq q$ we have that $\PrbOf{\exists i,j.\:\abs{I_t^{p;i}}= \abs{I_t^{q;j}}} = 0$
+\end{lemma}
+
+\begin{proof}
+	
+	We just need to prove that this happens conditionally with respect to the birth times.
+	\begin{align*}
+		&\PrbCondTimes{\exists i,j.\:\abs{I_t^{p;i}} - \abs{I_t^{q;j}} = 0}{} \leq
+			\sum_{i=1,j=1}^{d,d} \PrbCondTimes{\abs{I_t^{p;i}}- \abs{I_t^{q;j}} = 0}{} =
+			\\
+			&=
+			\sum_{i=1,j=1}^{d,d}
+			\ECondTimes{
+			\1_{0}( \abs{I_t^{p;i}}- \abs{I_t^{q;j}} )
+		}{} =
+		\\
+		&= 
+		\sum_{i=1,j=1}^{d,d}
+		\int
+		 \1_{\{0\}}
+		 \Bigg(
+		\underbrace{
+				\abs{\int_0^t \drift_{p;i}(s, x) - \mfdrift_{p;i}(s, y)ds} - \abs{\int_0^t \drift_{q;j}(s, x) - \mfdrift_{q;j}(s,y)ds}
+		}_{=: \Zhi_t(x,y)}
+		\Bigg)\cdot
+		\\
+		&\qquad\qquad\qquad
+		\cdot d(\sol_s,  \mfsol_s)_\star \PrbCondTimes{x,y}{}
+	\end{align*}
+	
+	where in the last inequality we treat all the birth times as deterministic.	
+	If we we prove that the set $\{(x,y)\::\:\Zhi_t(x,y) = 0\}$ is such that
+	
+	\begin{equation*}
+		\lebsge(\{(x,y)	\in	\R^{d \NumParticles_t} \times \R^{d \NumParticles_t}	\::\:\Zhi_t(x,y) = 0\})=0
+	\end{equation*}
+	
+	then the integral above is $0$ (since the laws of the stochastic processes involved are absolutely continuous with respect to the Lebesgue measure), yielding the thesis.
+	We will show this exploiting the implicit function theorem, proving that the set above is locally the graph of a function $f:\R^{d \NumParticles_t} \times \R^{d \NumParticles_t - 1} \longrightarrow \R$ and has thus Lebesgue measure $0$ in $\R^{d \NumParticles_t} \times \R^{d \NumParticles_t}$.
+	First we can write
+	
+	\begin{align*}
+		\Zhi_t(x,y) &= \abs{\int_0^t \drift_{p;i}(s, x) - \mfdrift_{p;i}(s, y)ds} - \abs{\int_0^t \drift_{q;j}(s, x) - \mfdrift_{q;j}(s,y)ds}
+		\\
+		&= \abs{\int_0^t \drift_{p;i}(s, x) - \lambda \left(\attraction_i \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{p})  ds} 
+		- \abs{\int_0^t \drift_{q;j}(s, x) - \lambda \left(\attraction_j \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{q})   ds}
+	\end{align*}
+	
+	where $y^p,y^q \in \R^d$. 
+	
+	Let us see that at least one of its derivatives is always different from $0$, in order to fullfill the conditions of the implicit function theorem.
+	Since all functions involved are integrable and their derivative are integrable and dominated, we can derive under the integral with respect to the coordinates $y^{p;i}$ and obtain almost everywhere:
+	
+	\begin{align*}
+		\partial_{y^{p;i}} \Zhi_t(x,y) 
+		&=\sgn(I_t^{p;i})\
+		\int_0^t \partial_{y^{p;i}} \drift_{p;i}(s, x) - \lambda \partial_{y^{p;i}} \left(\attraction_i \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{p})  ds
+		\\
+		&\qquad
+		- \partial_{y^{p;i}}\
+		\abs{\int_0^t \drift_{q;j}(s, x) - \lambda \left(\attraction_j \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{q})   ds}
+		\\
+		&=\sgn(I_t^{p;i})\
+		\int_0^t \lambda \partial_{y^{p;i}} \left(\attraction_i \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{p})  ds =
+	\end{align*}
+	
+	Now notice that both $\attraction_i$ and $\partial_i \attraction_i$ are bounded and integrable, and that by hypothesis also $\cdens_s^\tau $ is bounded and integrable, therefore we can transport the derivative $\partial_{y^{p;i}}$ inside the convolution (see \eg \cite[Theorem 2.27]{folland}) and obtain:
+	
+	\begin{align*}
+		&= \sgn(I_t^{p;i})\
+		\int_0^t \lambda \left(\partial_i\attraction_i \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{p})  ds
+		\\
+		&= 
+		\sgn(I_t^{p;i})\
+		\lambda\
+		\left( \partial_i\attraction_i \star \int_0^t \int_0^s \cdens_s^\tau  d\tau  ds \right) (y^{p})
+	\end{align*}
+	
+	Define now $g_t(x):=\left( \int_0^t \int_0^s \cdens_s^\tau  d\tau  ds \right) (x)$ and observe that since $ \cdens_s^\tau(x)$ has a constant mass when $s \geq \tau $ (after the correspondent birth time), then for all $t>0$ we have that $g_t(x)$ is a positive function with positive mass.
+	Since also $\partial_i\attraction_i$ is a function always $\neq 0$, we have necessarily, whenever $ \sgn(I_t^{p;i}) \neq 0$, that $\partial_{y^{p;i}} \Zhi_t(x,y) \neq 0$, and thus that the correspondent set can be described locally as the graph of some function $f_\Zhi$.
+		
+	If instead $ \sgn(I_t^{p;i}) = 0$, \ie $ I_t^{p;i} = 0$, we can act in a similar fashion, but with a different function:
+	
+	\begin{equation*}
+		\Ch_t(x,y) := I_t^{p;i} = \int_0^t \drift_{p;i}(s, x) - \lambda \left(\attraction_i \star \int_0^s \cdens_s^\tau 	d \tau \right) (y^{p})  ds
+	\end{equation*}
+	
+	And now we can show that the set $\left\{
+	(x,y)\
+	:\
+	I_t^{p;i} = 0
+	\right\} = \left\{
+	\Ch_t(x,y) = 0
+	\right\} $ is locally the graph of some function with the implicit function theorem, obtaining the same result.
+	In fact, proceeding as before, we have that
+	
+	\begin{equation*}
+		\partial_{y^{p;i}} \Ch_t(x,y) 
+		=
+		\lambda\
+		\left( \partial_i\attraction_i \star \int_0^t \int_0^s \cdens_s^\tau  d\tau  ds \right) (y^{p}) > 0
+	\end{equation*}
+	
+	And thus also in this case we have an implicit function $f_\Ch$ which locally represents the set $\left\{
+	\Ch_t(x,y) = 0
+	\right\} $.
+	Resuming, we can write:
+	
+	\begin{align*}
+		\lebsge
+		\left(
+			\left\{
+			\Zhi_t(x,y) = 0
+			\right\}
+				\right)
+		&=\
+		\lebsge
+		\left(
+		\left\{
+			\Zhi_t(x,y) = 0,\
+			I_t^{p;i} \neq 0
+		\right\}\
+		\cup\
+		\left\{
+			\Ch_t(x,y) = 0
+		\right\}\
+		\right)
+		\\
+		&=\
+		\lebsge
+		\Big(
+			\left\{
+				\text{Graph of } f_\Zhi:\R^{d \NumParticles_t} \times \R^{d \NumParticles_t - 1} \longrightarrow \R
+			\right\}\
+			\cup
+			\\
+			&\qquad\qquad
+			\cup\
+			\left\{
+				\text{Graph of } f_\Ch:\R^{d \NumParticles_t} \times \R^{d \NumParticles_t - 1} \longrightarrow \R
+			\right\}\
+			\Big)
+		 = 0
+	\end{align*}
+	And thus the thesis is reached.
+\end{proof}
+
+This statement allows as to say that with probability $1$ there exist some index $k \in \{1, \ldots, N\}$ such that 
+
+\begin{align*}
+	\diniu^+_t 
+	\;
+	\normp{\infty}{\sol_t-\mfsol_t} 
+	& \leq
+	\sum_{p=1}^{N}
+	\sum_{i=1}^d
+	\left( \1_{\abs{I_t^{p;i}} = \normp{\infty}{I_t} } \right)
+	\abs{
+		\drift_{p;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t)
+	}
+	\\
+	&= \sum_{i=1}^d
+	\left( \1_{\abs{I_t^{k;i}} = \normp{\infty}{I_t} } \right)
+	\abs{
+		\drift_{k;i}(t, \sol_t) - \mfdrift_{p;i}(t, \mfsol_t)
+	}
+	\\
+	&\leq 
+	 \sum_{i=1}^d
+	 1
+	 \cdot
+	 \normp{\infty}{\drift(t, \sol_t) - \mfdrift(t, \mfsol_t)}
+	\leq d \normp{\infty}{\drift(t, \sol_t) - \mfdrift(t, \mfsol_t)}
+\end{align*}
+
+And thus the result \ref{ch4:lemma:get-rid-of-integral} is proved.
+
+\section{Assembling the Proof of Lemma \ref{ch4:lemma:del-dini-of-all}}\label{ch4:proof:del-dini-of-all}
+
+For $T >0$ we have that
+
+\begin{align*}
+	\diniu_T^+ \sup_{0 \leq t \leq T} \normp{\infty}{\sol_t-\mfsol_t}
+	&\leq
+	\max_{ s\in \{0,T\} } 
+	\left\{ 
+		\diniu^+_s \normp{\infty}{\sol_s-\mfsol_s}
+	\right\}
+	&& \ref{ch4:lemma:advance-after-sup}
+	\\
+	&\leq \max_{ s\in \{0,T\} } 
+	\left\{ 
+		d \normp{\infty}{\drift(s, \sol_s) - \mfdrift(s, \mfsol_s)}
+	\right\}
+	&& \ref{ch4:lemma:get-rid-of-integral}
+\end{align*}
+
+Now notice that since for every amoeba $p$ $\hmactive_0^p =0$ with probability $1$, then we have that
+
+\begin{equation*}
+	\drift_p(0, \sol_0)
+	= \frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_0^q} \attraction(\amba_s^p - \camp_s^{q,g}) 
+	= 0
+\end{equation*}
+
+and the same is valid for the mean-field drift:
+
+\begin{equation*}
+\mfdrift(0, \mfsol_0)_\infty
+= \lambda \left(\attraction \star \int_0^0 \cdens_0^\tau 	d \tau \right) (y^{p;i})  
+= 0
+\end{equation*}
+
+Then we have that
+
+\begin{equation*}
+	\max_{ s\in \{0,T\} } 
+	\left\{ 
+	d \normp{\infty}{\drift(s, \sol_s) - \mfdrift(s, \mfsol_s)}
+	\right\}
+	= d \normp{\infty}{\drift(T, \sol_T) - \mfdrift(T, \mfsol_T)} 
+\end{equation*}
+
+And the proof is concluded.
+

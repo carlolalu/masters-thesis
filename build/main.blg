@@ -1,0 +1,21 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[0] Config.pm:331> INFO - Logfile is 'build/main.blg'
+[43] biber:342> INFO - === Sun May 17, 2026, 21:20:59
+[52] Biber.pm:421> INFO - Reading 'build/main.bcf'
+[96] Biber.pm:1002> INFO - Found 42 citekeys in bib section 0
+[104] Biber.pm:4487> INFO - Processing section 0
+[110] Biber.pm:4678> INFO - Looking for bibtex file './extras/bibliography.bib' for section 0
+[111] bibtex.pm:1713> INFO - LaTeX decoding ...
+[143] bibtex.pm:1519> INFO - Found BibTeX data source './extras/bibliography.bib'
+[316] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[316] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[316] Biber.pm:4307> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[316] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[341] bbl.pm:676> INFO - Writing 'build/main.bbl' with encoding 'UTF-8'
+[352] bbl.pm:779> INFO - Output to build/main.bbl
+[352] Biber.pm:132> WARN - legacy month field 'Jun' in entry 'dd-bioinfo-lj' is not an integer - this will probably not sort properly.
+[352] Biber.pm:132> WARN - legacy month field 'Jan' in entry 'guide-pdes-chemotaxis' is not an integer - this will probably not sort properly.
+[352] Biber.pm:132> WARN - legacy month field 'Apr' in entry 'numerics-keller-segel' is not an integer - this will probably not sort properly.
+[352] Biber.pm:132> WARN - ISBN '0-521-00754-2; 0-521-80972-X' in entry 'dudley' is invalid - run biber with '--validate_datamodel' for details.
+[352] Biber.pm:132> WARN - BibTeX subsystem: /tmp/biber_tmp_g_fJ/f4d088b3f9f145b5c3058da33afd57d4_35142.utf8, line 352, warning: 2 characters of junk seen at toplevel
+[352] Biber.pm:134> INFO - WARNINGS: 5

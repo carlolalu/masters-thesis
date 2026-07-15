@@ -1,0 +1,140 @@
+\begin{lemma}[Estimates of the moments of a Poisson \rv]
+	\label{app:Poisson-moments}
+	Let $P$ be a Poisson \rv of parameter $\mu$.
+	Then there is an increasing function $\Fup: \N \longrightarrow \N$ independent from $\mu$ such that 
+	\begin{equation*}
+		\E{\abs{P}^n} \leq  \Fup(n)\: (\mu^n \vee 1)
+	\end{equation*}
+\end{lemma}
+
+\begin{proof}
+	In \cite[Equation (1.3-14)]{handbook-poisson} we have that for each $P \sim \Pois(\mu)$
+	
+	\begin{equation*}
+		\E{
+			\abs{P}^n
+		}
+		=
+		\sum_{k=1}^{n}
+		\mu^k
+		\left\{
+		\begin{gathered}
+			n
+			\\
+			k
+		\end{gathered}
+		\right\}\
+	\end{equation*}
+	
+	where 
+	
+	\begin{equation*}
+		\left\{
+		\begin{gathered}
+			n
+			\\
+			k
+		\end{gathered}
+		\right\}\ := \left(
+		\frac{1}{k!}\
+		\sum_{i=0}^{k}\
+		(-1)^{k-i}\
+		\left(
+		\begin{gathered}
+			k
+			\\
+			i
+		\end{gathered}
+		\right)\
+		i^n
+		\right)
+	\end{equation*}
+	
+	are the Stirling number of the second kind.
+	Then it is sufficient to observe that
+	
+	\begin{equation*}
+		\E{
+			\abs{P}^n
+		}
+		=
+		\sum_{k=1}^{n}
+		\mu^k
+		\left\{
+		\begin{gathered}
+			n
+			\\
+			k
+		\end{gathered}
+		\right\}\
+		\leq
+		\sum_{k=1}^{n}
+		(\mu \vee 1)^k
+		\left\{
+		\begin{gathered}
+			n
+			\\
+			k
+		\end{gathered}
+		\right\}\
+		\leq
+		(\mu \vee 1)^n
+		\sum_{k=1}^{n}
+		\left\{
+		\begin{gathered}
+			n
+			\\
+			k
+		\end{gathered}
+		\right\}\		
+		=
+		(\mu^n \vee 1)
+		\underbrace{
+			\sum_{k=1}^{n}
+			\left\{
+			\begin{gathered}
+				n
+				\\
+				k
+			\end{gathered}
+			\right\}\
+		}_{=:\Fup(n)}
+	\end{equation*}
+	
+	to obtain the thesis.
+\end{proof}
+
+We have also this useful result from \cite[Equation (1.6-9)]{handbook-poisson}.
+
+\begin{lemma}[The moment generating function of a Poisson \rv]
+	\label{app:Poisson-generating-function}
+	Let $P$ be a Poisson \rv of parameter $\mu$.
+	Then its moment generating function is given by:
+	\begin{equation*}
+		\E{\exp(sP)} =  \exp[\mu(e^s-1)]
+	\end{equation*}
+\end{lemma}
+
+The next one is a one line proof that looks absolutely trivial here. 
+Yet in some very cumbersome calculations, where the \rv involved are particularly nasty, we might miss that some inequalities happen because of this very obvious fact.
+
+\begin{lemma}\label{app:pA-pB-less-than}
+	Let $A,B$ be non-negative \rv and let $a,b > 0$.
+	Then we have that
+	\begin{equation*}
+		\PrbOf{A+B \geq a +b} \leq \PrbOf{A \geq a} + \PrbOf{B \geq b}
+	\end{equation*}	
+\end{lemma}
+
+\begin{proof}
+	\begin{align*}
+		\PrbOf{A+B \geq a +b} &= 
+		\PrbOf{A \geq a, A+B \geq a +b} + \PrbOf{A < a, A+B \geq a +b} 
+		\\
+		&=
+		\PrbOf{A \geq a, A+B \geq a +b} + \PrbOf{B \geq b, A+B \geq a +b} 
+		\\
+		&\leq
+		\PrbOf{A \geq a} + \PrbOf{B \geq b}
+	\end{align*}	
+\end{proof}

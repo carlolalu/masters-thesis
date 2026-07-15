@@ -1,0 +1,1121 @@
+\label{ch6}
+
+\begin{proposition}\label{ch6:final-result}
+	Let $\sol_t^{(N)}$ be the solution to the model \ref{ch2:model} and let $\mfsol_t^{(N)}$ be the solution to the mean-field model \ref{ch3:MF-particles}, each with $N$ amoebas.
+	Let $T > 0$ and let $0< \delta <\xi <\frac{1}{2}$.
+	Then there exists an $\overline{N}>0$ and an increasing continuous function $\Fup: \R_+ \longrightarrow \R_+$ independent from $\overline{N},N$ such that for every $N > \overline{N}$ we have that
+	\begin{equation}
+		\PrbOf{  
+			\sup_{0 \leq t \leq T}
+			\normp{\infty}{
+				\sol_t^{(N)} - \mfsol_t^{(N)}
+			} 
+			\geq
+			N^{-\cutparameter}
+		}
+		\leq\
+		\Fup(T)\
+		N^{-(\xi-\delta)}
+	\end{equation}
+\end{proposition}
+
+The proof is based on the usage of the Groenwall argument on the auxiliary process 
+
+\begin{equation}
+	\auxProc_T^N := 1 \wedge \left( 
+	N^{\cutparameter}
+	\sup_{0 \leq t \leq T}
+	\normp{\infty}{
+		\sol_t^{(N)} - \mfsol_t^{(N)}
+	} \right)
+\end{equation}
+
+In fact we have that
+
+	\begin{align*}
+	\PrbOf{  
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t^{(N)} - \mfsol_t^{(N)}
+		} 
+		\geq
+		N^{-\cutparameter}
+	}
+	&=
+	\PrbOf{  
+		N^{\cutparameter}\:
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t^{(N)} - \mfsol_t^{(N)}
+		} 
+		\geq
+		1
+	}
+	\\
+	&=
+	\PrbOf{  
+		\Big(
+		N^{\cutparameter}\:
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t^{(N)} - \mfsol_t^{(N)}
+		} 
+		\Big)
+		\wedge
+		1
+		\geq
+		1
+	}
+	\\
+	&=
+	\PrbOf{  
+		\auxProc_T^N
+		\geq
+		1
+	}\
+	\leq\
+	\E{ 
+		\auxProc_T^N
+	} 
+\end{align*}
+
+where in the latter inequality we applied Markov with $f(x) = \norm{x}$.
+Then we need to find a bound for $\E{\auxProc_T^N} $.
+
+\begin{remark}
+	From now on we will omit the superscript $(N)$ for $\sol_t^{(N)},\mfsol_t^{(N)}, \drift^{(N)}, \mfdrift^{(N)}$ whenever possible, since the dependence on $N$ is now clear.
+\end{remark}
+
+\section{Stochastic Estimate with Groenwall}
+
+Bear in mind that the functions involved are not continuous but \cadlag, thus neither the classic Groenwall argument nor the one generalised for dini derivatives \cite[Theorem 1.4.1]{groenwall-with-dini-derivatives} can be applied.
+We will instead of that use the subsequent result from \cite[Chapter 1, Theorem 8.1]{groenwall-non-continuous-functions}:
+
+\begin{lemma}	\label{ch6:lemma-groenwall-generalized}
+	Let $T >0, c>0$. Let $u(\cdot)$ be a Borel-measurable bounded non-negative function on $[0,S]$ and let $v(\cdot)$ be a non-negative integrable function in $[0,S]$.
+	If for all $T \in [0,S]$
+		\begin{equation*}
+			u(T) \leq \int_0^T u(t) v(t) dt + c
+		\end{equation*}
+	then for all $T \in [0,S]$
+			\begin{equation*}
+				u(T) \leq c\int_0^T \exp(v(t) )dt
+			\end{equation*}
+\end{lemma}
+
+Consider $0 < t \leq T$ and calculate then:
+
+\begin{align*}
+	\diniu^+_t \auxProc_t^N 
+	&= 
+	\left( \1_{\{\diniu^+_t \auxProc_t^N >0 \}} + \1_{\{\diniu^+_t \auxProc_t^N \leq 0\}}\right) \cdot \diniu^+_t \auxProc_t^N 
+	\leq
+	 \1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	\diniu_t^+  
+	\left(	
+	1 \wedge \big( 
+	N^{\cutparameter}
+	\sup_{0 \leq s \leq t}
+	\normp{\infty}{
+		\sol_s - \mfsol_s
+	} \big)
+	\right)
+	\leq
+	\\
+	&\leq
+	\1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	\left(	
+	\diniu_t^+ 1 \wedge \diniu_t^+ \big( 
+	N^{\cutparameter}
+	\sup_{0 \leq s \leq t}
+	\normp{\infty}{
+		\sol_s - \mfsol_s
+	} \big)
+	\right)
+	\\
+	&\footnotemark[1]\leq
+	\1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	\left[
+	0 \vee 
+	\Big(
+	N^{\cutparameter}d  
+	\norm{\drift(t, \sol_t) - \mfdrift(t, \mfsol_t)}_\infty
+	\Big)
+	\right]	
+	\\
+	&\leq
+	\1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	  N^{\cutparameter}d  \norm{\drift(t, \sol_t) - \drift(t, \mfsol_t)}_\infty 
+	  +  
+	  \1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	  N^{\cutparameter}d  \norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq
+\end{align*}
+\footnotetext[1]{by \ref{ch4:lemma:del-dini-of-all}}
+
+Recall that $\drift$ is Lipschitz (\ref{ch2:lemma:lipsch-of-drift}), therefore:
+
+\begin{align*}
+	\leq
+	  d\
+	  \const_\attraction\
+	  \frac{\hmactive_t}{N}\
+	  \underbrace{
+		  \1_{\diniu^+_t \auxProc_t^N >0 }\
+		   \cdot 
+		   N^{\cutparameter}\
+		   \norm{\sol_t - \mfsol_t}_\infty
+	   }_{}
+	     + N^{\cutparameter}\
+	     d\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq
+\end{align*}
+
+Now observe that if $N^{\cutparameter}\norm{\sol_t - \mfsol_t}_\infty \geq 1$ then $\auxProc_t^N =1$, which is the maximum value that $\auxProc_t^N$ can reach.
+This means that in such case we have $\diniu^+_t\auxProc_t^N \leq 0$, because the function, in the near future either remains constant or decreases.
+This means that
+
+\begin{equation*}
+	\left\{
+		\diniu^+_t \auxProc_t^N >0 
+	\right\} 
+	\subseteq 
+	\left\{
+		N^{\cutparameter}\norm{\sol_t - \mfsol_t}_\infty < 1
+	\right\} 
+\end{equation*}
+
+and consequently 
+
+\begin{equation*}
+		\1_{\diniu^+_t \auxProc_t^N >0 }\
+		\cdot 
+		N^{\cutparameter}\
+		\norm{\sol_t - \mfsol_t}_\infty
+	\leq
+		\left(
+			1
+			\vee
+			\big(
+			N^{\cutparameter}\
+			\norm{\sol_t - \mfsol_t}_\infty
+			\big)
+		\right)
+	\leq
+		1
+		\vee
+		\big(
+		N^{\cutparameter}\
+		\sup_{s\in[0,t]} \norm{\sol_s - \mfsol_s}_\infty
+		\big)
+	=
+		\auxProc_t^N 
+\end{equation*}
+
+Therefore we can write
+
+\begin{align*}
+	\diniu^+_t \auxProc_t^N 
+	&\leq
+	d\
+	\const_\attraction\
+	\frac{\hmactive_t}{N}\
+		\1_{\diniu^+_t \auxProc_t^N >0 }\
+		\cdot 
+		N^{\cutparameter}\
+		\norm{\sol_t - \mfsol_t}_\infty
+	+ N^{\cutparameter}\
+	d\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+	\\
+	&\leq
+	d\
+	\const_\attraction\
+	\frac{\hmactive_t}{N}\
+	\auxProc_t^N 
+	+N^{\cutparameter}\
+	d\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+\end{align*}
+
+Integrating over $[0,T]$ we then obtain:
+
+\begin{align*}
+	 \auxProc_T^N - \auxProc_0^N &= \auxProc_T^N = \int_0^T \diniu^+_t \auxProc_t^N dt
+	 \\
+	 &= \int_0^T 
+	 	d\
+	 	\const_\attraction\
+	 	\frac{\hmactive_t}{N}\
+	 	\auxProc_t^N 
+	 	+N^{\cutparameter}\
+	 	 d\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+	 	dt
+	 	\\
+	 	& \leq
+	\int_0^T 
+	\const_{\attraction,d}\
+	\frac{\hmactive_T}{N}\
+	\auxProc_t^N dt
+	+ 
+	N^{\cutparameter}\
+	\const_d
+		\int_0^T 
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+	\leq
+\end{align*}
+
+Choose now some $S >T$ to obtain
+
+\begin{equation*}
+	\leq
+	\int_0^T 
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\auxProc_t^N dt
+	+ 
+	N^{\cutparameter}\
+	\const_d
+	\underbrace{
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+	}_{=:\Iu}
+\end{equation*}
+
+Notice now that if $\Iu$ is positive almost surely, then we can proceed to apply \ref{ch6:lemma-groenwall-generalized}.
+
+\begin{lemma}
+	$\PrbOf{\int_0^S 
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt = 0} = 0 $
+\end{lemma}
+
+\begin{proof}
+	Again we proceed similarly to \ref{ch4:only-one-amoeba-will-survive}: we just need to prove that the result holds with respect to $\PrbCondTimes{}{}$.
+	First notice that
+	
+	\begin{align*}
+		&\PrbCondTimes{\int_0^S
+			\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+			dt = 0}{}=
+			\\
+		&= \PrbCondTimes{
+			\forall p,i.\
+			\int_0^S
+			\norm{\drift_{p;i}(t, \mfsol_t) - \mfdrift_{p;i}(t, \mfsol_t)}
+			dt
+			= 0
+			}{}
+		\\
+		&\leq
+		\sum_{p,i}\
+		\PrbCondTimes{ \int_0^S
+			\norm{\drift_{p;i}(t, \mfsol_t) - \mfdrift_{p;i}(t, \mfsol_t)}
+			dt
+			}{}
+		\\
+		&=
+		\sum_{p,i}\
+		\int
+		\1_{\{0\}}
+		\Big(
+		\underbrace{
+			\int_0^S
+				\norm{\drift_{p;i}(t, x) - \mfdrift_{p;i}(t, x)}
+			dt
+		}_{\Zhi_S(x,y)}
+		\Big)
+		\cdot
+		\PrbCondTimes{\mfsol_t =dx}{}
+	\end{align*}
+	
+	Let us show that $\left\{
+	\Zhi_S = 0
+	\right\}$ has measure $0$.
+	Here we will write "$\forall^\lebsge t \in [0,S]$" with the meaning of "for almost every $t \in [0,S]$ with respect to the measure $\lebsge$".
+	
+	\begin{align*}
+		x \in \left\{		\Zhi_S = 0		\right\} \quad 
+		&\Longleftrightarrow\
+		\forall^\lebsge t \in [0,S].\quad
+			\norm{\drift_{p;i}(t, x) - \mfdrift_{p;i}(t, x)}
+			= 0
+			\\
+		&\Longleftrightarrow\
+		\forall^\lebsge t \in [0,S].\quad
+			\frac{1}{N} \sum _{m = 1}^{\hmactive_t} \attraction(x^p - x^{N+m}) 
+			 - \lambda \left(\attraction_i \star \int_0^t \cdens_t^\tau 	d \tau \right) (x^{p})
+		= 0
+		\\
+		&\Longleftrightarrow\
+		\forall^\lebsge t \in [0,S].\quad
+					\frac{1}{N} \sum _{m = 1}^{\hmactive_t} \left(\attraction \star \delta_{x^{N+m}}\right) (x^p ) 
+			- \left(\attraction_i \star \lambda \int_0^t \cdens_t^\tau 	d \tau \right) (x^{p})
+		= 0
+		\\
+		&\Longleftrightarrow\
+		\forall^\lebsge t \in [0,S].\quad
+		\left[\attraction \star 
+		\left(
+		\frac{1}{N} \sum _{m = 1}^{\hmactive_t} \delta_{x^{N+m}}
+		- \lambda \int_0^t \cdens_t^\tau 	d \tau \right) 
+		\right]
+		(x^{p})
+		= 0
+		\\
+		&\Longleftrightarrow\
+		\forall^\lebsge t \in [0,S].\quad
+		\frac{1}{N} \sum _{m = 1}^{\hmactive_t} \delta_{x^{N+m}}
+		= \lambda \int_0^t \cdens_t^\tau 	d \tau
+	\end{align*}
+	
+	Now observe that if $\hmactive_t = 0$, the last equality is trivially not satisfied because its \lhs is $0$ while its \rhs is positive.
+	If instead $\hmactive_t \neq 0$ we would have a pure distribution on the \lhs and $\Lpspace^1$ function on the \rhs, which is of course also not attainable.
+	Then $ \left\{	\Zhi_S = 0	\right\}$ is the empty set, and the thesis is proved.	
+\end{proof}
+
+With this lemma we have that the conditions of \ref{ch6:lemma-groenwall-generalized} are fullfilled for the inequality
+
+\begin{equation*}
+	\auxProc_T^N \leq 
+	\int_0^T 
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\auxProc_t^N dt
+	+ 
+	N^{\cutparameter}\
+	\const_d
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+\end{equation*}
+
+Therefore we obtain that 
+
+\begin{equation*}\label{ch6:just-applied-Groenwall}
+	\begin{aligned}
+		\auxProc_T^N 
+		&\leq 
+		N^{\cutparameter}\
+		\const_{d}
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+		\cdot
+		\exp \left(
+		\int_0^T 
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}dt
+		\right)
+		\\
+		&\leq 
+		N^{\cutparameter}\
+		\const_{d}
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+		\cdot
+		\exp \left(
+		T
+\const_{\attraction,d}
+		\frac{\hmactive_T}{N}
+		\right)
+	\end{aligned}
+\end{equation*}
+
+\section{Bound for the Average of the Estimate}\label{ch6:2nd-part-of-the-proof}
+
+Define the set
+
+\begin{equation*}
+	\setB_t := \left\{
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq 2N^{-\xi}
+	\right\}
+\end{equation*}
+
+for some $0 < \xi < \frac{1}{2}$.
+Exploiting the definition of such set and the bounds \ref{ch2:lemma:lipsch-of-drift} and \ref{ch3:mfdrift-lips-and-bounded} for the drift and the mesoscopic drift we obtain
+\begin{align*}
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+	&=
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty\
+		\1_{\setB_t
+		}
+		+
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty\
+		\1_{\setB_t^c
+		}
+		\\
+		&\leq
+			2N^{-\xi}
+			+
+			\left(
+				\Norm{\drift(t, \cdot)}_\infty\
+				+
+				\Norm{\mfdrift(t, \cdot)}_\infty\
+			\right)
+			\1_{\setB_t^c}
+		\\
+		&\leq
+		2N^{-\xi}
+		+
+		\left(
+			\const_{\attraction}\
+			\frac{\hmactive_t}{N}
+			+
+			\const_{\attraction, \lambda} t
+		\right)\
+		\1_{\setB_t^c}
+		\\
+		&\leq
+		2N^{-\xi}
+		+
+		\const_{\attraction, \lambda} 
+		\left(
+		\frac{\hmactive_t}{N}
+		+
+		t
+		\right)\
+		\1_{\setB_t^c}\quad
+		\leq\
+		2N^{-\xi}
+		+
+		\const_{\attraction, \lambda} 
+		\left(
+		\frac{\hmactive_S}{N}
+		+
+		S
+		\right)\
+		\1_{\setB_t^c}\quad
+\end{align*}
+
+where the probability of $\setB_t^c$ is described by the law of large numbers \ref{ch5:LLN}.
+Then, averaging on the inequality \ref{ch6:just-applied-Groenwall} we can calculate
+
+\begin{equation}\label{ch6:3-terms before-estimates}
+	\begin{aligned}
+	\E{\auxProc_T^N}
+	&\leq 
+	\E{
+		N^{\cutparameter}
+		\const_d\
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+		\cdot
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}
+		\right)
+	}
+	\\
+	&\leq
+	N^{\cutparameter}
+	\const_d\
+	\E{
+		\int_0^S
+		\left[
+			2N^{-\xi}
+			+
+			\const_{\attraction, \lambda} 
+			\left(
+			\frac{\hmactive_S}{N}
+			+
+			S
+			\right)\
+			\1_{\setB_t^c}\quad
+		\right]
+		dt
+		\cdot
+		\exp \left(
+		T\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+	}
+	\\
+	&= 
+	\overbrace{
+		N^{-(\xi-\cutparameter)}\
+		\const_d\
+		\E{
+			\exp \left(
+				T
+				\const_{\attraction,d}
+				\frac{\hmactive_T}{N}
+			\right)
+		}
+	}^{\text{Term }1}
+		+ 
+		\overbrace{
+		N^{\cutparameter}\
+		\const_{\attraction, \lambda,d} 
+		\E{
+			\frac{\hmactive_S}{N} 
+			\int_0^S
+			\1_{\setB_t^c}\
+			dt
+			\cdot
+			\exp \left(
+			T
+			\const_{\attraction,d}
+			\frac{\hmactive_T}{N}\
+			\right)
+		}
+	}^{\text{Term }2}
+	\\
+	&\qquad
+		+ 
+		\underbrace{
+		N^{\cutparameter}\
+		\const_{\attraction, \lambda,d}
+		S\
+			\E{
+				\int_0^S
+				\1_{\setB_t^c}\
+				dt
+				\cdot
+				\exp \left(
+				T
+				\const_{\attraction,d}
+				\frac{\hmactive_T}{N}\
+				\right)
+			}
+		}_{\text{Term }3}
+	\end{aligned}
+\end{equation}
+
+Now observe: the first term has a negative power of $N$, which means that if the expectation value of the only random element present in it does not depend on $N$, then the whole term is tamed (\ie it tends to $0$ as $N$ grows).
+The other two terms instead have a positive power of $N$, thus will need that the \rv present in $\E{}$, when evaluated, will yields some estimate with a sufficiently strong negative power of $N$ to contrast $N^{\cutparameter}$. 
+Luckily inside $\E{}$ appears $\1_{\setB_t^c}$ which, with the law of large numbers, serves exactly this purpose.
+Let us see this strategy in action.
+Use Fubini on the last two terms to get to:
+
+\begin{align*}
+&=
+N^{\cutparameter-\xi}\
+\const_d\
+\E{
+	\exp \left(
+	T
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\right)
+}
++ N^{\cutparameter}\
+\const_{\attraction, \lambda,d}
+\int_0^S\
+\E{
+	\frac{\hmactive_S}{N}\
+	\1_{\setB_t^c}\
+	\exp \left(
+	T
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\right)
+}\
+dt +
+\\
+&\qquad
++ N^{\cutparameter}\
+\const_{\attraction, \lambda,d}
+S\
+\int_0^S
+\E{
+	\1_{\setB_t^c}\
+	\exp \left(
+	T
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\right)
+}
+dt
+\end{align*}
+
+At this point we do need to separate the stochastic variables in pieces of which are able to calculate the average.
+Choose $p,q,u,v \in (1, +\infty)$ such that $\frac{1}{u} + \frac{1}{v} = \frac{1}{p} + \frac{1}{q} = 1 $ and apply Hoelder twice to the second addend's expectation:
+
+\begin{align*}
+	&\E{
+		\frac{\hmactive_S}{N}\
+		\1_{\setB_t^c}\
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+	}\
+	\leq 
+	\E{
+		\left(
+		\frac{\hmactive_S}{N}\
+		\right)^p
+	}^{\frac{1}{p}}
+	\cdot
+	\E{
+		(\1_{\setB_t^c})^q\
+		\left(
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+		\right)^q
+	}^{\frac{1}{q}} \leq
+	\\
+	&\qquad
+	\leq
+	N^{-1}
+	\E{
+		\left(\hmactive_S
+		\right)^p
+	}^{\frac{1}{p}}
+	\cdot
+	\E{
+		(\1_{\setB_t^c})^{qu}\
+	}^{\frac{1}{qu}}
+	\cdot
+	\E{
+		\left(
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+		\right)^{qv}
+	}^{\frac{1}{qv}}
+	\\
+	& \qquad =
+	N^{-1}
+	\E{
+		\left(\hmactive_S
+		\right)^p
+	}^{\frac{1}{p}}
+	\cdot
+	\PrbOf{\setB_t^c
+	}^{\frac{1}{qu}}
+	\cdot
+	\E{
+		\exp \left(
+		\frac{
+			qvT
+			\const_{\attraction,d}
+			}{N}\
+		\hmactive_T
+		\right)
+	}^\frac{1}{qv}
+\end{align*}
+
+and analogously, the last expectation value yields:
+
+\begin{align*}
+\E{
+	\1_{\setB_t^c}\
+	\exp \left(
+	T
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\right)
+} 
+&\leq 
+\E{
+	(\1_{\setB_t^c})^{u}\
+}^{\frac{1}{u}}
+\cdot
+\E{
+	\left(
+	\exp \left(
+	T
+	\const_{\attraction,d}
+	\frac{\hmactive_T}{N}\
+	\right)
+	\right)^{v}
+}^{\frac{1}{v}}
+\\
+&=
+\PrbOf{\setB_t^c}^{\frac{1}{u}}
+\cdot
+\E{
+	\exp \left(
+	\frac{
+		vT
+		\const_{\attraction,d}
+		}{N}\
+	\hmactive_T
+	\right)
+}^{\frac{1}{v}}
+\end{align*}
+
+Then we can write:
+
+\begin{equation}\label{ch6:pre-final-evaluation-on-avg-J}
+	\begin{aligned}
+	\E{\auxProc_T^N} 
+	&\leq
+	N^{\cutparameter-\xi}\
+	\const_{d}
+	\E{
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+	}
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	\int_0^S\
+	\E{
+		\frac{\hmactive_S}{N}\
+		\1_{\setB_t^c}\
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+	}\
+	dt +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	S\
+	\int_0^S
+	\E{
+		\1_{\setB_t^c}\
+		\exp \left(
+		T
+		\const_{\attraction,d}
+		\frac{\hmactive_T}{N}\
+		\right)
+	}
+	dt
+	\\
+	&\leq
+	N^{\cutparameter-\xi}\
+	\const_{d}
+	\E{
+		\exp \left(
+		\frac{T
+			\const_{\attraction,d}
+			}{N}\
+		\hmactive_T
+		\right)
+	} +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	\int_0^S\
+	N^{-1}
+\E{
+	\left(\hmactive_S
+	\right)^p
+}^{\frac{1}{p}}
+\cdot
+\PrbOf{\setB_t^c}\
+\E{
+	\exp \left(
+	\frac{qvT
+		\const_{\attraction,d}
+		}{N}\
+	\hmactive_T
+	\right)
+}^\frac{1}{qv}
+	dt +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	S\
+	\int_0^S
+\PrbOf{\setB_t^c}\
+\E{
+	\exp \left(
+	\frac{vT
+		\const_{\attraction,d}
+		}{N}\
+	\hmactive_T
+	\right)
+}^{\frac{1}{v}}
+	dt
+\end{aligned}
+\end{equation}
+
+Now we can evaluate the probability of $\setB_t^c$ with the law of large numbers (\ref{ch5:LLN}): for all $t\leq S$ and for each $n\in \N$ there is some $\overline{N}$ such that for every $N \geq \overline{N}$ we have that
+
+\begin{equation*}
+	\PrbOf{\setB_t^c}\ 
+	\leq 
+	\Fup_n(S)\
+	N^{-\const_\xi n + 1}
+\end{equation*}
+
+for some constant $\const_\xi$.
+Regarding the higher moments of $\hmactive_T$, they can be evaluated with \ref{app:Poisson-moments} obtaining (assume $N$ big enough, so that the Poisson parameter is $\geq 1$ and the notation is smoother)
+
+\begin{equation*}
+	\E{
+		\left(\hmactive_S
+		\right)^p
+	} \leq
+	\Fup(p) (\lambda N S)^p
+\end{equation*}
+
+There is only one \rv of which we still need to evaluate the expectation value:
+	
+\begin{lemma}\label{ch6:evaluate-moment-generating-func-in-lim-N}
+	Consider, for $a>0$, the quantity
+	\begin{equation*}
+		\E{
+			\exp \left(
+			\frac{a}{N}\
+			\hmactive_T
+			\right) 
+		}
+	\end{equation*}
+	where $\hmactive_T \sim \Pois(\lambda N t)$.
+	Then $\forall\epsilon > 0$ there exists $\overline{N}= \overline{N}_{a, \epsilon} >0$ such that, if $N > \overline{N}$
+	
+	\begin{equation*}
+		\E{
+			\exp \left(
+			\frac{a}{N}\
+			\hmactive_T
+			\right) } \leq e^{a\lambda T} + \epsilon\
+			=\
+			\Fup_{a,\lambda,\epsilon}(T)
+	\end{equation*}
+\end{lemma}
+
+\begin{proof}
+	The expectation
+	\begin{equation*}
+		\E{
+			\exp \left(
+			\frac{a}{N}\
+			\hmactive_T
+			\right) 
+		}
+	\end{equation*}
+	is nothing else than an evaluation in $\frac{a}{N}$ of the moment generating function of the Poisson random variable $\hmactive_t$. 
+	By the result of \ref{app:Poisson-generating-function} such quantities are:
+	
+	\begin{align*}
+		\E{
+			\exp \left(
+			\frac{a}{N}\
+			\hmactive_T
+			\right) }
+		= \exp\left[\lambda N T (e^{\frac{a}{N}}-1)\right]
+	\end{align*}
+	
+	Then we can use De l'Hopital to see that:
+	
+	\begin{align*}
+		\lim_N\
+		\exp\left[\lambda N T (e^{\frac{a}{N}}-1)\right]
+		&=
+		\exp\left[
+		\lim_N\
+		\frac{e^{\frac{a}{N}}-1}{
+			\left(\frac{1}{\lambda N T } \right)}
+		\right]
+		&
+		=
+		\exp\left[
+		\lim_N\
+		\frac{e^{\frac{a}{N}}(-1)\frac{a}{N^2}}{
+			\left(\frac{-1}{\lambda TN^2 } \right)}
+		\right]	
+		= \exp\left[
+		a\lambda T e^0
+		\right]	=e^{a\lambda T}
+	\end{align*}
+	
+	This means that if we choose $\epsilon >0$ than there exists $\overline{N}= \overline{N}_{a, \epsilon} >0$ such that, if $N > \overline{N}$, then 
+	
+	\begin{equation*}
+		\E{
+			\exp \left(
+			\frac{a}{N}\
+			\hmactive_T
+			\right) } \leq e^{a\lambda T} + \epsilon\
+			=\
+			\Fup_{a,\lambda,\epsilon}(T)
+	\end{equation*}
+\end{proof}
+
+Fix $\epsilon>0$. Then, continuing from \ref{ch6:pre-final-evaluation-on-avg-J}, for $N$ big enough we have that
+
+\begin{align*}
+	\E{\auxProc_T^N} 
+	&\leq
+	N^{\cutparameter-\xi}\
+	\const_{d}
+	\E{
+		\exp \left(
+		\frac{T
+			\const_{\attraction,d}
+			}{N}\
+		\hmactive_T
+		\right)
+	} +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	\int_0^S\
+	N^{-1}
+	\E{
+		\left(\hmactive_S
+		\right)^p
+	}^{\frac{1}{p}}
+	\cdot
+	\PrbOf{\setB_t^c}\
+	\E{
+		\exp \left(
+		\frac{qvT
+			\const_{\attraction,d}
+			}{N}\
+		\hmactive_T
+		\right)
+	}^\frac{1}{qv}
+	dt +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction, \lambda,d}
+	S\
+	\int_0^S
+	\PrbOf{\setB_t^c}\
+	\E{
+		\exp \left(
+		\frac{vT
+			\const_{\attraction,d}
+			}{N}\
+		\hmactive_T
+		\right)
+	}^{\frac{1}{v}}
+	dt
+	\\
+	&\leq
+	N^{\cutparameter-\xi}\
+	\const_{d}
+	(e^{
+		\const_{\attraction,d}
+		\lambda T^2} + \epsilon)+
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction,\lambda,d}\
+	\int_0^S\
+	N^{-1}
+	\left[\Fup(p) (\lambda N S)^p\right]^{\frac{1}{p}}\
+		\Fup_n(S)\
+		N^{-\const_\xi n + 1}
+		(e^{qv
+			\const_{\attraction,d}
+			\lambda T^2} + \epsilon)^\frac{1}{qv}
+	dt +
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction,\lambda,d}
+	S\
+	\int_0^S
+		\Fup_n(S)\
+		N^{-\const_\xi n + 1}
+		(e^{v
+			\const_{\attraction,d}
+			\lambda T^2} + \epsilon)^\frac{1}{v}
+	dt
+	=
+\end{align*}
+
+Now there are no factors dependent on $S$ anymore, thus the integral on $[0,S]$ is just a multiplication for a factor $S$.
+Besides, taking generic increasing continuous functions in $t$ we can simplify everything to
+
+\begin{align*}
+	& =
+		N^{\cutparameter-\xi}\
+		\const_{d}
+		\Fup_{\attraction,d,\epsilon,\lambda}(T)\
+		+
+	\\
+	&\qquad
+		+
+		N^{\cutparameter}\
+		\const_{\attraction,\lambda}
+		N^{-1}N\
+		\const_{p,\lambda}\
+		S\
+		\Fup_n(S)\
+		N^{-\const_\xi n + 1}
+		\Fup_{q,v,\attraction,d,\epsilon,\lambda}(T)\
+		S+
+	\\
+	&\qquad
+	+ N^{\cutparameter}\
+	\const_{\attraction,n,\lambda}\
+	S\
+	\Fup_n(T)\
+	N^{-\const_\xi n+ 1}\
+	\Fup_{v,\attraction,d,\epsilon,\lambda}(T)\
+	S
+	\\
+	&
+	\leq\
+		N^{\cutparameter-\xi}\
+		\Fup_{\attraction,d,\epsilon,\lambda}(S)\
+		\\
+		&\qquad
+		+\
+		N^{\cutparameter}\
+		N^{-\const_\xi n + 1}
+		\Fup_{n,p,q,v,\attraction,d,\epsilon,\lambda, \epsilon}(S)\
+		+
+	\\
+	&\qquad
+	+\
+	N^{\cutparameter}\
+	N^{-\const_\xi n+ 1}\
+	\Fup_{n,v,\attraction,d,\epsilon,\lambda}(S)\
+	\leq
+\end{align*}
+
+Choose now $n$ so that $N^{\cutparameter-\const_\xi n+ 1} < N^{\cutparameter-\xi}$. Then
+
+\begin{equation*}
+	\leq
+	N^{\cutparameter-\xi}\
+	\left[
+		\Fup_{\attraction,d,\epsilon,\lambda}(S)\
+		+
+		\Fup_{n,p,q,v,\attraction,d,\epsilon,\lambda}(S)\
+		+
+		\Fup_{n,v,\attraction,d,\epsilon,\lambda}(S)\
+	\right]	
+	=
+	N^{\cutparameter-\xi}\
+	\Fup_{n,p,q,v,\attraction,d,\epsilon,\lambda}(S)\
+\end{equation*}
+
+Resuming we get
+
+\begin{equation*}
+	\E{\auxProc_T^N}
+	\leq
+	N^{\cutparameter-\xi}\
+	\Fup_{n,p,q,v,\attraction,d,\epsilon,\lambda}(S)\
+\end{equation*}
+
+Since the \rhs is $\Cspace^0$ and is valid for all $S >T$ we also have that 
+
+\begin{equation*}
+	\E{\auxProc_T^N}
+	\leq
+	N^{\cutparameter-\xi}\
+	\Fup_{n,p,q,v,\attraction,d,\epsilon,\lambda}(T)\
+\end{equation*}
+
+And thus the main result has been proven.

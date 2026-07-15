@@ -1,0 +1,97 @@
+%%%%%% COMMON TEXT CONVENTIONS %%%%%%
+
+\newcommand{\abbr}[1]{\mbox{#1}}			% abbreviation or acronym WITHOUT SPACE
+
+\newcommand{\ie}{\mbox{i.e.}, }
+\newcommand{\eg}{\mbox{e.g.}, }
+\newcommand{\etc}{\mbox{etc...}\ }
+\newcommand{\Bm}{\mbox{B.m.}\ }
+\newcommand{\rv}{\mbox{r.v.}\ }
+\newcommand{\iid}{\mbox{i.i.d.}\ }
+\newcommand{\cadlag}{càdlàg}
+
+\newcommand{\PIDE}{\mbox{P.I.D.E.\ }}
+\newcommand{\SDE}{\mbox{S.D.E.\ }}
+
+%%%%%% COMMON MATH SYMBOLS %%%%%%
+
+%% Usual sets
+\newcommand{\R}{\mathbb{R}}							% real numbers
+\newcommand{\N}{\mathbb{N}}							% natural numbers without the 0 (do \N_0 to include the 0)
+\newcommand{\Parts}{\mathcal{P}}						% set of the parts of a set
+\newcommand{\Lpspace}{\mathcal{L}}					% L of the L^p spaces
+\newcommand{\Cspace}{\mathcal{C}}					% C of the C^p spaces
+\newcommand{\Lip}{{\text{Lip}}}					% Lipschitz script
+\newcommand{\BL}{{\text{BL}}}					% Bounded Lipschitz script (both for the space and its norm, see dudley chapter 11)
+\newcommand{\Borel}{\mathcal{B}}
+\newcommand{\sigAlg}{\mathcal{A}}		% generic sigma-algebra
+\newcommand{\Ball}{\mathbb{B}}
+\newcommand{\Sphere}{\mathbb{S}}
+\newcommand{\skorokhod}[1]{
+	D_{#1} [0,\infty)
+}			% general space of cadlag functions
+
+%% Measure & probability general concepts
+\newcommand{\Prb}{\mathbb{P}}						% probability measure
+\newcommand{\PrbOf}[1]
+	{\mathbb{P} \left( \; #1 \; \right)}				% probability measure of smt
+\newcommand{\PrbCond}[2]
+	{\PrbOf{\left. \; #1 \; \right| \; #2 }}			% Conditional probability
+\newcommand{\PrbFoot}[2]
+	{\mathbb{P}_{#1} \left( \; #2 \; \right)}				% probability measure of smt with a space for a subscript condition
+\newcommand{\Eonly}[1]
+	{\mathbb{E}}				% expectation value
+\newcommand{\E}[1]
+	{\mathbb{E} \left[ \; #1 \; \right]}				% expectation value
+\newcommand{\ECond}[2]
+	{\E{\left. \; #1 \; \right| \; #2}}				% conditional expectation
+\newcommand{\EFoot}[2]
+	{\mathbb{E}_{#1} \left[ \; #2 \; \right]}				% expectation value
+
+\newcommand{\indep}{\perp \!\!\! \perp}				% symbol of indipendence
+\newcommand{\1}{\mathds{1}}							% indicator function
+\newcommand{\PrbMeas}{\mathcal{P}}					% The set of probability measures
+\newcommand{\BorelPrbMeas}{\mathcal{BP}}					% The set of Borel probability measures
+\newcommand{\lebsge}{\text{Leb}}				% lebesgue measure
+\newcommand{\Flt}{\mathcal{F}}						% filtrations
+\newcommand{\drift}{b}								% drift term of an SDE
+\newcommand{\diffusion}{\sigma}						% diffusion term of an SDE
+\newcommand{\law}{\Lpspace}						% law of a RV
+
+%% Distributions
+\newcommand{\Normal}{\mathcal{N}}					% normal distribution measure
+\newcommand{\Pois}{\text{Poisson}}								% poisson distribution
+\newcommand{\Gma}{\text{Gamma}}								% gamma distribution
+\newcommand{\Unf}{\text{Unif}}								% uniform distribution
+
+
+%% Others
+\newcommand{\norm}[1]{\left| #1 \right|}				% norm
+\newcommand{\Norm}[1]
+	{\left|\left| #1 \right|\right|}					% double '|' norm
+	
+\newcommand{\abs}[1]{\left| #1 \right|}				% absolute value
+\newcommand{\normp}[2]{
+	{	\abs{#2}_{#1}	}
+}		% norm with subscript (pedice)
+\newcommand{\Normp}[2]{
+	{	\left| \abs{#2} \right|_{#1}	}
+}	% double norm with subscript (pedice)
+	
+\newcommand{\lhs}{\mbox{L.H.S.\ }}										% Left hand side
+\newcommand{\rhs}{\mbox{R.H.S.\ }}										% Right hand side
+\newcommand{\sgn}{\text{sgn}}							% sign function
+\newcommand{\id}{\text{id}}
+
+%%%%%% CUSTOM VARIABLES/SYMBOLS FOR MATH MODE %%%%%%
+
+\newcommand{\invquest}{\text{¿}}	
+\newcommand{\logQuest}[1]{ { \invquest \quad #1 \quad ? } }						% logical question operator
+\newcommand{\Zhi}{\text{Ж}}
+\newcommand{\Bh}{\text{Б}}
+\newcommand{\Ch}{\text{Ч}}
+\newcommand{\Iu}{\text{Ю}}
+
+\newcommand{\const}{\text{K}}							% generic constant
+\newcommand{\Fup}{f^\uparrow}							% generic increasing function
+

@@ -1,0 +1,1414 @@
+\label{ch7}
+
+Till now we treated the simplest model, where at the moment of spawning the cAMP was a lonely molecule simply roaming around of \Bm.
+This is though very far from reality, where the chemoattractant is released in waves expanding radially around the amoeba.
+In fact, marking the molecules radioactively, one is able to see clearly these cAMP circles expanding around the amoebas.
+In this chapter we build a generalized version of the previous simple system with the purpose of describing more accurately this phenomenon, and we sketch how one should be able to derive effective equations which are only the scaled version of the ones in \ref{ch3:EFFECTIVE-EQS}.
+
+\section{Micromodel and Meso- and Macrodescriptions}
+
+%[[here put maybe a picture of the cAMP waves from some paper with precise reference]]
+
+Consider the same Poisson process $(\hmactive_t^p)_p$ and their correspondent $\hmactive_t$, with the respective birth times.
+Let $\NumCampRelease \in \N$ be the (deterministic) number of cAMP molecules being spawned at each birth time $\btime^{p,g}=\btime_m$ and let $\frac{\cdrift}{N} \in \R_+$ be the modulus of their drift velocity at each of these instants.
+Notice that such speed is chosen to be deterministic and constant, and that the factor $\frac{1}{N}$ is the necessary coupling constant.
+Then, at each $\btime^{p,g}=\btime_m$ we would release the particles
+
+\begin{equation*}
+	\{ \camp^{p,g,1}, \ldots, \camp^{p,g,l}, \ldots, \camp^{p,g,\NumCampRelease}\} = \{ \camp^{m,1}, \ldots, \camp^{m,l},\ldots, \camp^{m,\NumCampRelease}\} 
+\end{equation*}
+
+While the dynamic equation for the $N$ amoebas remains the same, at this point the dynamic for the cAMP changes.
+First, each of them will have its quasi-\Bm.
+Besides that, at each fixed birth time $\btime_m$ the molecules $(\camp^{p,g,l})_{l=1}^\NumCampRelease = (\camp^{m,l})_{l=1}^\NumCampRelease$ should expand radially with respect to the position $\amba_{\btime_m}^p$.
+A solution to this would be that each $\camp^{p,g,l} = \camp^{m,l}$ expands in a constant random direction $\cgonia_{p,g,l}=\cgonia^{m,l} \sim \Unf(\Sphere^d)$, \ie uniformly-distributed on the $d$-dimensional sphere, as in the figure \ref{ch7:fig:chaotic-waves}.
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[scale=0.6]
+			\coordinate (center) at (0,0);
+			\draw[thin] (center) circle (3.8cm);
+			\foreach \index in {1,...,6} {
+				\tikzmath{\gonia=20*\index;}
+				\coordinate (A) at (canvas polar cs:radius=3.8cm,angle=\gonia);
+				\draw[violet,->] (center) -- (A);
+				\coordinate (B) at (canvas polar cs:radius=4.5cm,angle=\gonia);
+				\node at (B) {\tiny $\camp^{p,g,\index}$};
+			}
+			
+			\coordinate (A) at (canvas polar cs:radius=3.8cm,angle=-120);
+			\draw[violet,->] (center) -- (A);
+			\coordinate (B) at (canvas polar cs:radius=4.5cm,angle=-120);
+			\node at (B) {\tiny $\camp^{p,g,7}$};
+			
+			\node[anchor=north west] at (center) {$\amba^i$};
+		\end{tikzpicture}
+	\end{center}
+\caption{The molecules expanding, each at a random direction, with $d=2, \NumCampRelease=7$ ($7$ children). Notice the not uniform wave front.}
+\label{ch7:fig:chaotic-waves}
+\end{figure}
+
+This might seem to allow also configurations which are too chaotic, with a not uniform wave front (meaning that we could have $\NumCampRelease-1$ particles all running in approximately the same direction and just $1$ in the opposite one), contrary to what happens in nature.
+The solution is to fix the relative position of the drifting velocities and require that the they are, at least approximately, uniformly arranged on the unit sphere (see Fig. \ref{ch7:fig:waves} for the case $d=2$).
+
+\begin{figure}[h]
+\begin{center}
+	\begin{tikzpicture}[scale=0.6]
+		\coordinate (center) at (0,0);
+		\draw[thin] (center) circle (3.8cm);
+		\foreach \index in {1,...,12} {
+			\coordinate (A) at (canvas polar cs:radius=3.8cm,angle=30*\index);
+			\draw[violet,->] (center) -- (A);
+			\coordinate (B) at (canvas polar cs:radius=4.5cm,angle=30*\index);
+			\node at (B) {\tiny $\camp^{k,\index}$};
+		}		
+		
+		\node[anchor=north west] at (center) {$\amba^p$};
+	\end{tikzpicture}
+\end{center}
+	\caption{The molecules expanding with equidistant directions on the unit sphere in dimension $d=2, \NumCampRelease=10$.}
+	\label{ch7:fig:waves}
+\end{figure}
+
+The stochasticity is then given, at each birth time, by rotating randomly the whole directions all together in the same way.
+With $d=2$ the solution of arranging $\NumCampRelease$ points evenly on the circle is trivial: just leave a point on the circle every $\frac{2\pi}{\NumCampRelease}$ radiants.
+With $d=3$ there is considerable literature about distributing $\NumCampRelease$ points evenly on a sphere, depending also on the definition of "uniformly arranged" (see for example \cite{spherical-codes-and-designs}), but as we will see the particular arrangement does not influence the final solution, so fix a set of points on the sphere which are at least approximately evenly spaced, for the sake of reproducing nature (\eg take inspiration from the spherical Fibonnaci points set in \cite{spherical-fibonacci-example}).
+Let these points be
+
+\begin{equation*}
+	(e_1, \theta_2, \ldots, \theta_\NumCampRelease) \in \Sphere^d
+\end{equation*}
+
+where $e_1$ is the unit vector $(1, 0, 0)$ or $(1,0)$ depending on the dimension.
+For each $l$ fix a rotation $\rotation_l$ such that $\rotation_l(e_1) = \theta_l$ (then $\rotation_1 = \id$) and notice then that:
+
+\begin{equation*}
+	(e_1, \theta_2, \ldots, \theta_\NumCampRelease) = (\rotation_1, \rotation_2, \ldots, \rotation_\NumCampRelease)\: (e_1, e_1, \ldots, e_1)
+\end{equation*}
+
+\ie we can identify the arrangement with the rotation of the unit vector $e_1$ that are needed to find the other $\theta_l$.
+Then let $\cgonia_{p,g,1} = \cgonia_{m,1} \sim \Unf(\Sphere^d)$ and for each $l \neq 1$ let $\cgonia_{p,g,l}:= \rotation_l (\cgonia_{p,g,1})$, \ie the whole arrangement of direction at the time $\btime^{p,g} = \btime_m$ is given by
+
+\begin{equation*}
+	(\cgonia_{p,g,1}, \cgonia_{p,g,2}, \ldots, \cgonia_{p,g,\NumCampRelease}) = (\rotation_1, \rotation_2, \ldots, \rotation_\NumCampRelease)\: (\cgonia_{p,g,1}, \cgonia_{p,g,1}, \ldots, \cgonia_{p,g,1})
+\end{equation*}
+
+Then the model is described as
+
+\begin{equation}
+	\left\{
+	\begin{aligned}
+		(\hmactive^p_t)_{p=1}^N 
+		&\text{ \iid and } \sim \Pois_{\lambda t}
+		\qquad\indep\qquad
+		(\cgonia_{p,g,1})_{p,g}^{N,+\infty} \quad \text{ \iid and } \sim \Unf(\Sphere^d)
+		&
+		\\
+		 \btime^{p,g} &:= \inf \{ t : \hmactive^p_t \geq g \}
+		 \qquad\quad\qquad
+		 (\cgonia_{p,g,l})_{p,g,l}^{N,+\infty, \NumCampRelease} := \big(\rotation_l (\cgonia_{p,g,1}) \big)_{p,g,l}^{N,+\infty, \NumCampRelease} 
+		&
+		\\
+		\amba_t^p 
+		&= \amba_0^p 
+		- \int_0^t \frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(\amba_s^p - \camp_s^{q,g,l}) d s
+		+ \sigma^A B_t^p
+		&
+		\\
+		\camp_t^{p,g,l} 
+		&\qquad\text{does not exist} 
+		&\text{if} \quad t < \btime^{p,g}
+		\\
+		\camp_t^{p,g,l}
+		&= \amba_{\btime^{p,g}}^p + \int_{0}^t \1_{\geq \btime^{p,g}}(s)  \frac{\cdrift}{N}  \cgonia_{p,g,l} d s
+		+\sigma_C \quasibm_t^{p,g,l}
+		&\text{if} \quad t \geq \btime^{p,g}
+		\\
+		&= \amba_{\btime^{p,g}}^p + (t - \btime^{p,g})\frac{\cdrift}{N}  \rotation_l (\cgonia_{p,g,1}) d s 
+		+\sigma_C \quasibm_t^{p,g,l}
+			&
+	\end{aligned}
+	\right.
+\end{equation}\label{ch7:model:pulsing-waves}
+
+As in the case of the basic model, we can eventually relabel the molecules according to 
+
+\begin{equation*}
+	\hmactive_t := \sum_{p=1}^N \hmactive_t^p,
+	\qquad
+	\btime_m := \text{arrival times of $\hmactive_t$},
+	\qquad
+	(p,g)\ \rightsquigarrow\ m
+\end{equation*}
+
+Similarly to the case of the model \ref{ch2:model}, this is a piecewise SDE under the random probability $\PrbCond{\cdot}{(\cgonia_{m,l})_{m,l},\ (\btime_m)_m}$, and thus to obtain the existence and uniqueness of solutions for fixed initial conditions (recall, the conditions of \ref{ch2:cond:E-and-U-lipsch+subgrowth}), we only need to verify the local lipschitzianity and the sublinear growth (both in space for a fixed time $t$) of the drift.
+
+
+\begin{remark}
+	Now the dimension of the solution is given by:
+	\begin{equation*}
+		\NumParticles_t := N + \NumCampRelease\cdot\sum_{p=1}^N \hmactive_t^p = \overbrace{N}^{\# \text{amoebas}} + \overbrace{\NumCampRelease \hmactive_t}^{\# \text{cAMP}}
+	\end{equation*}
+	and the drift by:
+	\begin{align*}
+		&\drift_{p} (s,x) = - \frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(x^p - x^{q,g,l})
+		\\
+		&
+		\drift_{p,g,l} (s, x) = \1_{\geq \btime^{p,g}}(s)  \frac{\cdrift}{N}  \cgonia_{p,g,l} = \1_{\geq \btime^{p,g}}(s)  \frac{\cdrift}{N}  \rotation_l (\cgonia_{p,g,1}) 
+	\end{align*}
+\end{remark}
+
+\begin{lemma}\label{ch7:lemma:drift:lip-and-bound}
+	The function $\drift = \drift^{(N)}$ is Lipschitz in space with fixed time
+	\begin{equation*}
+		\normp{\infty}{\drift(s,x) - \drift(s,y)}
+		\leq\
+		\frac{\const_{\attraction,\NumCampRelease}}{N}
+		\hmactive_s\
+		\normp{\infty}{x-y}
+	\end{equation*}
+	where $\const_{\attraction,\NumCampRelease} >0$ is a constant dependent on $\attraction$ and $\NumCampRelease$.
+	Furthermore $\drift = \drift^{(N)}$ is bounded
+	
+	\begin{equation*}
+		\Norm{\drift(s,\cdot)}_\infty \leq 
+		\frac{1}{N}
+		\const_{\NumCampRelease, \attraction,\cdrift}\
+		(\hmactive_s + 1)
+	\end{equation*}
+	
+	and it grows therefore sublinearly in space with fixed time.
+\end{lemma}
+
+\begin{proof}
+	Let us see the Lipschitzianity first. Use the relabelling notation for the cAMP part with $(p,g) = m$. Let $l$ be the Lipschitz constant of $\attraction$. Then:
+	
+	\begin{align*}
+		\normp{\infty}{\drift(s,x) - \drift(s,y)} 
+		&= \max \Bigg\{
+		\max_{p\leq N}
+		\norm{\drift_p(s,x) - \drift_p(s,y)}_\infty,
+		\\
+		&\qquad
+		\max_{1 \leq m \leq \hmactive_s}
+		\max_{1 \leq l \leq \NumCampRelease}
+		\overbrace{
+			\norm{\1_{\geq \btime_m}(s)  \frac{\cdrift}{N}  \cgonia_{m,l} - \1_{\geq \btime_m}(s)  \frac{\cdrift}{N}  \cgonia_{m,l}}_\infty
+		}^{=0}
+		\Bigg\}
+		\\
+		&= \max_{p\leq N}\
+		\norm{\frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(x^p - x^{q,g,l}) - \frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(y^p - y^{q,g,l})}_\infty
+		\\
+		& \leq
+		\frac{1}{N}
+		\sum _{q = 1}^{N}
+		\sum _{l = 1}^{\NumCampRelease}
+		\sum_{g = 1}^{\hmactive_s^q}\
+		\max_{p\leq N}\
+		\norm{\attraction(x^p - x^{q,g,l}) - \attraction(y^p - y^{q,g,l})}_\infty
+		\\
+		& \leq
+		\frac{1}{N}
+		\sum _{q = 1}^{N}
+		\sum _{l = 1}^{\NumCampRelease}
+		\sum_{g = 1}^{\hmactive_s^q}\
+		\max_{p\leq N}\
+		l
+		\norm{(x^p - y^p) - ( x^{q,g,l}- y^{q,g,l})}_\infty
+		\\
+		&\leq
+		\frac{l}{N}
+		\sum _{q = 1}^{N}
+		\sum _{l = 1}^{\NumCampRelease}
+		\sum_{g = 1}^{\hmactive_s^q}\
+		\left(
+		\max_{p\leq N}\
+		\norm{(x^p - y^p)}_\infty + \norm{ ( x^{q,g,l}- y^{q,g,l})}_\infty
+		\right)
+		\\
+		&\leq
+		\frac{l}{N}
+		\sum _{q = 1}^{N}
+		\sum _{l = 1}^{\NumCampRelease}
+		\sum_{g = 1}^{\hmactive_s^q}\
+		\left(
+		\normp{\infty}{x - y} + \normp{\infty}{x - y} 
+		\right)
+		\leq
+		\frac{l\NumCampRelease2}{N}
+		\sum _{q = 1}^{N}
+		\hmactive_s^q\
+		\normp{\infty}{x - y}
+		\\
+		&=
+		\frac{\const_{\attraction,\NumCampRelease}}{N}
+		\hmactive_s\
+		\normp{\infty}{x - y}
+	\end{align*}
+	
+	Regarding the bound we have that
+	
+	\begin{align*}
+		\Norm{\drift(s,\cdot)}_\infty &=
+		\sup_x 
+		\left\{
+			\max_{p\leq N}
+			\norm{\drift_p(s,x)}_\infty,
+			\max_{1 \leq m \leq \hmactive_s}
+			\max_{1 \leq l \leq \NumCampRelease}
+				\norm{\1_{\geq \btime_m}(s)  \frac{\cdrift}{N}  \cgonia_{m,l}}_\infty
+		\right\}
+		\\
+		&\leq
+		\max 
+		\left\{
+		\sup_x\
+		\max_{p\leq N}
+		\norm{
+			\frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(x^p - x^{q,g,l}) 
+		}_\infty,
+		\frac{\cdrift}{N}
+		\right\}
+		\\
+		&\leq
+		\max 
+		\left\{
+		\frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} 
+		\sup_x\
+		\abs{
+			\attraction(x^p - x^{q,g,l})  
+		},
+		\frac{\cdrift}{N}
+		\right\}\
+		\\
+		&\leq\
+		\frac{1}{N}
+		\left(
+			\NumCampRelease \hmactive_s 
+			\Norm{ \attraction }_\infty
+			+
+			\cdrift
+		\right)\
+		\leq\
+		\frac{1}{N}
+		\const_{\NumCampRelease, \attraction}\
+		(\hmactive_s + \cdrift)
+		\leq
+			\frac{1}{N}
+			\const_{\NumCampRelease, \attraction,\cdrift}\
+			(\hmactive_s + 1)
+	\end{align*}
+\end{proof}
+
+\begin{remark}
+	Notice that now the system \ref{ch2:model} is just a specific case of the system \ref{ch7:model:pulsing-waves} with $\NumCampRelease=1$ and cAMP drift $\cdrift=0$.
+\end{remark}
+
+\subsection{Mean-field particles candidate}
+
+The mean-field particles candidates are derived similarly to the case of the basic model.
+Let us start with the amoebas' part:
+
+\begin{align*}
+	\mfdrift_p(t, x) 
+	:&= \ECond{\drift_p(t, \mfsol_t)}{ \mfsol_t^p} (x)\
+	= \ECond{\; 
+		\ECondTimes{
+			\drift_p(t, \mfsol_t)		
+		}{\mfamba_t^p=x, }
+		\;}{\mfamba_t^p=x}
+	\\
+	&= - \ECond{\; 
+		\ECondTimes{
+			\frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l})
+		}{\mfamba_t^p=x, }
+		\;}{\mfamba_t^p=x}
+	\\
+	&=
+	- \frac{1}{N}
+	\sum _{q = 1}^{N} 	
+	 \E{\; 
+	 	 \sum _{l = 1}^{\NumCampRelease} 
+		\sum_{g = 1}^{\hmactive_t^p} 
+		\ECondTimes{
+			\attraction(x - \mfcamp_t^{q,g,l}) 
+		}{}
+		\;}
+	\\
+	&= 
+	- \frac{1}{N}
+	\sum _{q = 1}^{N} 
+	\E{\; 
+		 \sum _{l = 1}^{\NumCampRelease} 
+		\sum_{g = 1}^{\hmactive_t^q} 
+		\left( \attraction \star \cdens_t^{\btime^{q,g},l} \right) (x)
+		\;}
+	=
+\end{align*}
+
+where $\cdens_t^{\btime^{q,g},l}$ is the density of the mean-field cAMP particle $\mfcamp_t^{q,g,l}$ released at the birth time $\btime^{q,g}$.
+Now recall that $\hmactive^q \sim \hmactive^1$ and thus also $\btime^{q,g} \sim \btime^{1,g}$, therefore
+
+\begin{align*}
+	&= 
+	- \frac{1}{N}\
+	\sum _{q = 1}^{N} 
+	\E{\; 
+		 \sum _{l = 1}^{\NumCampRelease}
+		\sum_{g = 1}^{\hmactive_t^1} 
+		\left( \attraction \star \cdens_t^{\btime^{1,g},l} \right) (x)
+		\;}
+	\:=\: 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\E{\; 
+		\sum_{g = 1}^{\hmactive_t^1} 
+		\left( \attraction \star \cdens_t^{\btime^{1,g},l} \right) (x)
+		\;}
+	\\
+	&=
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\E{\; 
+		\sum_{g = 1}^{\infty} 
+		\underbrace{
+			\overbrace{
+				\1_{g \leq \hmactive_t^1}
+			}^{
+				\1_{\btime^{1,g} \leq t}
+			}
+			\left( \attraction \star \cdens_t^{\btime^{1,g},l} \right) (x)
+		}_{\text{(coordinatewise)}\geq 0}
+		\;}\
+		= 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\sum_{g = 1}^{\infty}
+	\E{\; \1_{\btime^{1,g} \leq t}
+		\left( \attraction \star \cdens_t^{\btime^{1,g},l} \right) (x)
+		\;} 
+		\\
+&= 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\sum_{g = 1}^{\infty}
+	\int
+	\1_{\tau \leq t}
+	\left( \attraction \star \cdens_t^{\tau,l} \right) (x)
+	d \underbrace{\Prb ( \btime^{1,g} = \tau )}_{\Gma_{\lambda, g}}
+	\\
+	&= 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\sum_{g = 1}^{\infty}
+	\int_0^t
+	\left( \attraction \star \cdens_t^{\tau,l} \right) (x)
+	\frac{\lambda^g}{(g-1)!} x^{g-1} \; e^{ - \lambda x}
+	d \tau
+	\\
+	&= 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\int_0^t
+	\left( \attraction \star \cdens_t^\tau \right) (x)
+	\lambda
+	\underbrace{
+		\sum_{g = 1}^{\infty} \frac{(\lambda x)^{g-1}}{(g-1)!}
+	}_{e^{\lambda x}}
+	e^{ - \lambda x}
+	d \tau
+	\\
+	&= 
+	- \sum _{l = 1}^{\NumCampRelease}\
+	\lambda \int_0^t
+	\left( \attraction \star \cdens_t^{\tau,l} \right) (x)
+	d \tau
+	=
+	- \left( 
+	\attraction \star \int_0^t \sum _{l = 1}^{\NumCampRelease}\
+	\lambda \cdens_t^{\tau,l} d \tau
+	\right) (x) 
+	\quad
+	= \mfdrift_p (t, x) 
+	\equiv
+	\mfdrift_p (t, x)
+\end{align*}
+
+For the cAMP's part we can obtain quickly a result with these two observations:
+\begin{itemize}
+	\item Since $\cgonia_{p,g,1}$ is uniformly distributed on the sphere $\Sphere^d$, which has a central symmetry around its center $0\ni\R^d$ (\ie the sphere is invariant under the map $x \longmapsto -x$), we have that $\E{\cgonia_{p,g,1}}= (\text{center of mass of $\Sphere^d$}) =0$.
+	\item Since $\cgonia_{p,g,1}$ is uniformly distributed it is easy to prove that since every rotation $\rotation_l$ is deterministic we have that
+	\begin{equation*}
+		\E{\cgonia_{p,g,l}} = \E{\rotation_l(\cgonia_{p,g,1})} = \rotation_l \left(\E{\cgonia_{p,g,1}} \right) = \rotation_l (0) = 0
+	\end{equation*}
+\end{itemize}
+
+Recall that the random direction/angle $\cgonia_{p,g,1}$ and the birth time $\btime^{p,g}$ are independent by hypothesis.
+Then we have that
+
+\begin{align*}
+	\mfdrift_{p,g,l} (t, x)  
+	&=
+	\E{\drift_{p,g,l} (t, x) }
+	= 
+	\E{
+		\1_{\geq \btime^{p,g}}(t)  \frac{\cdrift}{N}  \cgonia_{p,g,l}
+	} 
+	\\
+	&= 
+	\E{
+		\1_{\geq \btime^{p,g}}(t)  \frac{\cdrift}{N}  \rotation_l (\cgonia_{p,g,1}) 
+	}
+	=
+	\frac{\cdrift}{N}  
+	\E{
+			\1_{\geq \btime^{p,g}}(t) 
+	}\
+	\overbrace{
+		\E{ \rotation_l (\cgonia_{p,g,1}) }
+	}^{=0} = 0 \equiv: \mfdrift_{p,g} (t, x)  
+\end{align*}
+
+Then the particles $\left(
+\camp_t^{p,g,l}
+\right)_{l =1}^\NumCampRelease$
+are \iid, and therefore we can observe that $\cdens^{\btime^{p,g},l} \equiv: \cdens^{\btime^{p,g}}$ are independent from $l$.
+Then we can further simplify the expression of the mean-field for the amoeba's part:
+
+\begin{equation*}
+	\mfdrift_p (t, x) = 
+	- \NumCampRelease\
+	\lambda \int_0^t
+	\left( \attraction \star \cdens_t^{\tau} \right) (x)
+	d \tau
+	=
+	- \left( 
+	\attraction \star \int_0^t \NumCampRelease
+	\lambda \cdens_t^{\tau} d \tau
+	\right) (x) 
+	\quad
+\end{equation*}
+
+Then we have that the mean-field of the pulsing wave model is exactly the mean-drift of the basic model (see \ref{ch3:MF-particles}) but scaled by a factor $\NumCampRelease$.
+This is true not only for the amoebas' part, but also for the cAMP part, because $\NumCampRelease\cdot 0 = 0$ (with the difference in dimension between the two models, because with the pulsing wave one we have $\NumCampRelease$ times more cAMP molecules).
+Then we can write exactly the same models that we set for the basic model at \ref{ch3:EFFECTIVE-EQS}, \ref{ch3:MF-particles} and \ref{ch3:integro-differential-system}, but scaled of a factor $\NumCampRelease$ and with one more index $l$ for the cAMP part:
+
+\begin{equation}\label{ch7:MF-PARTICLES}
+	\left\{
+	\begin{aligned}
+		\mfamba_t^0 &\sim \adens_0
+		\\
+		\mfamba_t^p &= 
+		- \int_0^t \left( 
+		\attraction \star \int_0^s \NumCampRelease\lambda \cdens_s^\tau 	d \tau
+		\right) (\mfamba_s^p) ds + \sigma_A B_t^p
+		\\
+		\mfcamp_t^{p,g,l} &= \mfamba_{\btime^{p,g}}^p + \sigma_\camp \quasibm_t^{p,g} &&\text{ from time }\btime^{p,g}
+	\end{aligned}
+	\right.
+\end{equation}
+
+and the respective effective equations are given by
+
+\begin{equation}\label{ch7:EFFECTIVE-EQUATIONS}
+	\left\{
+	\begin{aligned}
+		\adens(0, \cdot) &= \adens_0
+		\\
+		\partial_t \adens &= \nabla \left[ \left( \attraction
+		\star \int_0^t \NumCampRelease\lambda \cdens_t^\tau 	d \tau
+		\right)
+		\adens
+		\right]
+		+ \frac{d\sigma_\amba^2}{2} \bigtriangleup \adens	
+		\\
+		\cdens^\tau(t, \cdot) 
+		& \equiv 0
+		&&\text{if } t < \tau
+		\\
+		\cdens^\tau(\tau, \cdot) 
+		&= \adens(\tau, \cdot)
+		&&
+		\\
+		\partial_t \cdens^\tau
+		&= \frac{d\sigma_\camp^2}{2} \bigtriangleup \cdens^\tau
+		&&\text{if } t \geq \tau
+	\end{aligned}
+	\right.
+\end{equation}
+
+or, expressing the density of cAMP molecules analytically (with the heat kernel, exactly as in \ref{ch3:eq:eff-eq-camp-analytical-sol}) we have
+
+\begin{equation}\label{ch7:PIDE}
+	\left\{
+	\begin{aligned}
+		\adens(0, \cdot) &= \adens_0
+		\\
+		\partial_t \adens &=  \NumCampRelease\lambda \nabla \left[ \left( \int_0^t
+		\attraction \star \heatkernel_{t-\tau}^{\frac{d\sigma_\camp^2}{2}} \star \adens(\tau, \cdot) 
+		d \tau
+		\right)
+		\adens
+		\right]
+		+ \frac{d\sigma_\amba^2}{2} \bigtriangleup \adens
+	\end{aligned}
+	\right.
+\end{equation}
+
+We make exactly the same assumption as \ref{ch3:conditions-on-eff-equ-solutions} on the densities $\adens_t, \cdens_t$.
+It is easy to show that then the existence and uniqueness of solutions for the mean-field particles can be proven in the same way as for the basic model, and that we have a similar bound for the mean-field drift:
+
+\begin{lemma}\label{ch7:mfdrift-lip-and-bound}
+	The mean-field drift $\mfdrift(t,x)$ defined in \ref{ch3:MF-particles} coordinate-wise as
+	\begin{equation*}
+		\mfdrift_p(t,x) = 
+		- \left( 
+		\attraction \star \int_0^t \NumCampRelease \lambda \cdens_t^\tau 	d \tau
+		\right) (x)
+	\end{equation*}
+	is Lipschitz and bounded in space with bound
+	\begin{equation*}
+		\Norm{\mfdrift(t,x)}_\infty \leq 
+		\const_{\attraction, \lambda,\NumCampRelease} t
+	\end{equation*}
+	for a constant $\const_{\attraction, \lambda,\NumCampRelease} > 0$.
+\end{lemma}
+
+\begin{remark}\label{ch7:only-important-parameter-is-NumCampRelease}
+	Notice how the macroscopic description is completely independent from the rotations $\rotation_l$, from the angles $(\cgonia^{m,l})$ and from the constant $\cdrift$.
+	This means that the only determinant parameter for the macroscopic behaviour is given by $\NumCampRelease$, the number of molecules released at each birth time.
+\end{remark}
+
+\subsection{Convergence Condition}
+
+Notice that since also in the case of the pulsing waves model the amoebas $\amba_t^{(N)} = (\amba_t^1, \ldots, \amba_t^N)$ are exchangeable, the condition 
+
+\begin{equation*}
+	\empmeas_t^{(\amba),N} \xrightarrow{N\longrightarrow +\infty} \adens(t,\cdot)
+\end{equation*}
+
+can be proven with the proposition of Sznitman \ref{ch3:proposition:sznitman}, as for the basic model.
+Analogously the lemma \ref{ch3:proposition:sznitman} works smoothly as before, and so \ref{ch3:w-1-convergence-condition}.
+Then, to obtain the convergence condition above, it is enough to prove that
+
+\begin{equation}
+	\PrbOf{  
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t - \mfsol_t
+		} 
+		\geq
+		N^{-\cutparameter}
+	}
+	\leq\
+	\Fup(T)\
+	N^{-(\xi-\delta)}
+\end{equation}
+
+\section{Preliminaries for the Final Proof}
+
+\subsection{The Dini Derivation}
+
+The paths of the distance process
+
+\begin{equation*}
+	\normp{\infty}{ \sol_t - \mfsol_t}
+\end{equation*}
+
+for the pulsing wave model solution $\sol_t$ and its mean-field counterpart $\mfsol_t$ are $\Cspace^0$ and thus also \cadlag, therefore the lemma \ref{ch4:lemma:advance-after-sup} remains valid:
+
+	\begin{equation}
+	\diniu_T^+ \sup_{0 \leq t \leq T} \norm{\sol_t-\mfsol_t}_\infty
+	\leq
+	\max_{ s\in \{0,T\} } \left\{ 
+	\diniu^+_s \norm{\sol_s-\mfsol_s}_\infty
+	\right\}
+\end{equation}
+
+We have though to be slightly more careful regarding the lemma \ref{ch4:lemma:get-rid-of-integral}.
+By signing with $\drift^{(A)}, \mfdrift^{(A)}, B^{(A)}$ the amoeba's part of the drift, the mean-field drift and the \Bm respectively we obtain:
+
+\begin{align*}
+	\norm{\sol_t-\mfsol_t}_\infty 
+	&= \max \left\{
+	\norm{\amba_t^{(N)} - \mfamba_t^{(N)}}_\infty,
+	\norm{\camp_t^{(N)}  - \mfcamp_t^{(N)}}_\infty
+	\right\}
+	\\
+	&= \max \Bigg\{
+	\norm{
+		\amba_0^{(N)} 
+		+ \int_0^t \drift^{(A)} (s, \sol_s) d s
+		+ 
+		\sigma B_t^{(A)}
+		-
+		\left(
+		\mfamba_0^{(N)} 
+		+ \int_0^t \mfdrift^{(A)}(s, \mfsol_s^N) d s
+		+ 
+		\sigma B_t^{(A)}
+		\right)
+	}_\infty,
+	\\
+	&\qquad
+	\max_{1\leq m \leq \hmactive_t}
+	\max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)}  
+		+ (t - \btime^{m})\frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+		+ \quasibm_t^m
+		- (\mfamba_{\btime_{m}}^{\Parentof(m)}  + \quasibm_t^m)
+	}_\infty
+	\Bigg\}
+	\\
+	&=
+	\max \Bigg\{
+	\norm{
+		\int_0^t \drift^{(A)}(s, \sol_s) - \mfdrift^{(\amba)}(s, \mfsol_s) d s
+	}_\infty,	
+	\\
+	&\qquad
+	\max_{1\leq m \leq \hmactive_t}	
+	\max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m)}
+		+ (t - \btime^{m})\frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+	}_\infty
+	\Bigg\}
+\end{align*}
+
+Let us define
+
+\begin{align*}
+	&[\amba] := \left\{ \norm{
+		\int_0^t \drift^{(A)}(s, \sol_s) - \mfdrift^{(\amba)}(s, \mfsol_s) d s
+	}_\infty = \norm{\sol_t-\mfsol_t}_\infty \right\}
+	\qquad
+	\\
+	&
+	[\camp] := \left\{ \max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m)}
+		+ (t - \btime^{m}) \frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+	}_\infty = \norm{\sol_t-\mfsol_t}_\infty \right\}
+\end{align*}
+
+Then by recalling the form of the derivative of the infinity norm \ref{ch4:lemma:derive-infinity-norm} we can obtain that
+
+\begin{align*}
+	\diniu_t^+
+	\norm{\sol_t-\mfsol_t}_\infty 
+	&=
+	\1_{[\amba]}\
+	\diniu_t^+\
+	\norm{
+		\int_0^t \drift^{(A)}(s, \sol_s) - \mfdrift^{(\amba)}(s, \mfsol_s) d s
+	}_\infty + 
+	\\
+	&\qquad
+	+ 
+	\1_{[\camp]}\
+	\diniu_t^+\
+	\max_{1\leq m \leq \hmactive_t}	
+	\max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m)}
+		+ (t - \btime^{m}) \frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+	}_\infty
+\end{align*}
+
+It is quite easy to prove that the amoebas' part yields the same result as in the basic model case:
+
+\begin{equation*}
+	\diniu_t^+ \norm{
+		\int_0^t \drift^{(A)}(s, \sol_s) - \mfdrift^{(\amba)}(s, \mfsol_s) d s
+	}_\infty 
+	\leq
+	d \norm{
+		\drift^{(A)}(t, \sol_t) - \mfdrift^{(\amba)}(t, \mfsol_t)
+	}_\infty 
+\end{equation*}
+
+This because the only difference between this model and the previous one for the amoebas is the finite sum $\sum_{l =1}^{\NumCampRelease}$ and thus an analogous form of lemma \ref{ch4:only-one-amoeba-will-survive} for this distance is valid as well.
+We need though to take care also of the cAMP part this time.
+Let
+
+\begin{align*}
+	I_t &:= \left[
+	\amba_{\btime_{m}}^{\Parentof(m);i} 
+	- \mfamba_{\btime_{m}}^{\Parentof(m);i} 
+	+ (t - \btime^{m}) \frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+	\right]_{m,l}
+		 &\in (\R^d)^{\hmactive_t + \NumCampRelease}
+	\\	
+	I^{m,l;i}_t &:= 
+		\amba_{\btime_{m}}^{\Parentof(m);i} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m);i} 
+		+ (t - \btime^{m}) \frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+		 &\in \R
+\end{align*}
+
+Then by the derivative of the infinity norm \ref{ch4:lemma:derive-infinity-norm} we have that
+
+\begin{align*}
+	&\diniu_t^+
+	\max_{1\leq m \leq \hmactive_t}	
+	\max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m)}
+		+ (t - \btime^{m}) \frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+	}_\infty=
+	\\
+	&=
+	\sum_{1\leq i \leq d}
+	\sum_{1\leq m \leq \hmactive_t}
+	\sum_{1\leq l \leq \NumCampRelease}\
+	\1_{
+		\norm{I^{m,l;i}_t} = \norm{I_t}_\infty
+		}\
+	\diniu_t^+
+	I_{m,l;i}
+	\\
+	&=
+	\sum_{1\leq i \leq d}
+	\sum_{1\leq m \leq \hmactive_t}
+	\sum_{1\leq l \leq \NumCampRelease}\
+	\1_{
+		\norm{I^{m,l;i}_t} = \norm{I_t}_\infty
+	}\
+	\diniu_t^+
+	\left[
+	\amba_{\btime_{m}}^{\Parentof(m);i} 
+	- \mfamba_{\btime_{m}}^{\Parentof(m);i} 
+	+ (t - \btime^{m}) \frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+	\right]
+	=
+\end{align*}
+
+Notice, as in the basic model case, that if $t\neq \btime_m$ the term $\amba_{\btime_{m}}^{\Parentof(m);i} 
+- \mfamba_{\btime_{m}}^{\Parentof(m);i} $ is independent from $t$ and it is thus erased with the derivation.
+As for the basic model case, since $t= \btime_m$ happens with probability $0$, we simply remove from the space $\Omega$ the correspondent paths.
+Then we can write:
+
+\begin{equation*}
+	=
+	-
+	\sum_{1\leq i \leq d}
+	\sum_{1\leq m \leq \hmactive_t}
+	\sum_{1\leq l \leq \NumCampRelease}\	
+	\1_{
+		\norm{I^{m,l;i}_t} = \norm{I_t}_\infty
+	}\
+	\frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+\end{equation*}
+
+Again, as for the amoebas' part in the lemma \ref{ch4:only-one-amoeba-will-survive}, we want to get rid of $\sum_{1\leq m \leq \hmactive_t}$,  namely to show that only one addend for such sum survives \ie
+
+\begin{lemma}\label{ch7:only-one-camp-will-survive}
+	For all $t>0$ and for all $m \neq n$ we have that 
+	\begin{equation*}
+		\PrbOf{
+			\exists i,j,l,k.\:
+			I^{m,l;i}_t
+			=
+			I^{n,k;j}_t
+		} = 0
+	\end{equation*}
+\end{lemma}
+
+We sketch only the proof of such result, because we expect it to work.
+
+\begin{proof}[Sketch of a possible proof]
+	All the variables involved are continuous, thus their laws are non-atomic.
+	We expect that the condition $I^{m,l;i}_t
+	=
+	I^{n,k;j}_t$ requires that some quantities involved are the same on manifolds of dimension inferior to the whole configuration space, yielding the result.
+	We can reduce the complexity of the problem conditioning the probability with respect to the angles $\cgonia_{m,1}, \cgonia_{n,1}$.
+\end{proof}
+
+Then we can resume the whole proof as
+
+\begin{align*}
+	\diniu_t^+
+	\norm{\sol_t-\mfsol_t}_\infty 
+	&=
+	\1_{[\amba]}\
+	\diniu_t^+\
+	\norm{
+		\int_0^t \drift^{(A)}(s, \sol_s) - \mfdrift^{(\amba)}(s, \mfsol_s) ds
+	}_\infty + 
+	\\
+	&\qquad
+	+ 
+	\1_{[\camp]}\
+	\diniu_t^+\
+	\max_{1\leq m \leq \hmactive_t}	
+	\max_{1\leq l \leq \NumCampRelease}
+	\norm{
+		\amba_{\btime_{m}}^{\Parentof(m)} 
+		- \mfamba_{\btime_{m}}^{\Parentof(m)}
+		+ (t - \btime^{m}) \frac{\cdrift}{N}  \rotation_l (\cgonia_{m,1})
+	}_\infty
+	\\
+	&\leq
+	d \norm{
+		\drift^{(\amba)}(t, \sol_t) - \mfdrift^{(\amba)}(t, \mfsol_t)
+	}_\infty 
+	-
+	\sum_{1\leq i \leq d}
+	\sum_{1\leq l \leq \NumCampRelease}\
+	\frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+	\\
+	&\leq
+	d \norm{
+		\drift^{(A)}(t, \sol_t) - \mfdrift^{(\amba)}(t, \mfsol_t)
+	}_\infty 
+	+
+	\sum_{1\leq i \leq d}
+	\sum_{1\leq l \leq \NumCampRelease}\
+	\max_{m,l;i}
+	\norm{
+		\frac{\cdrift}{N}  \pi_i \left(\rotation_l (\cgonia_{m,1}) \right)
+	}
+	\\
+	&=
+	d \norm{
+		\drift^{(\amba)}(t, \sol_t) - \mfdrift^{(\amba)}(t, \mfsol_t)
+	}_\infty 
+	+
+	d\NumCampRelease\
+	\norm{
+		\drift^{(\camp)}(t, \sol_t) - \mfdrift^{(\camp)}(t, \mfsol_t)
+	}_\infty
+	\\
+	&\leq
+	\const_{d, \NumCampRelease} \norm{
+		\drift(t, \sol_t) - \mfdrift(t, \mfsol_t)
+	}_\infty
+\end{align*}
+
+where in the last passages $\drift^{(\camp)},\mfdrift^{(\camp)}$ are the correspondent drifts for the cAMP molecules.
+
+\subsection{Sketch of Proof for the Law of Large Numbers}
+
+Again $\attraction$ could be easily here generalized as in \ref{ch5:LLN}, but for the sake of clarity we stick to the more classic attraction.
+
+\begin{proposition}[Law of large numbers for the pulsing wave model]
+	
+	\label{ch7:LLN}
+ 	Consider the microscopic drift $\drift = \drift^{(N)}$ and the particles $\sol_t = \sol_t^{(N)}$ and the correspondent mean-field drift and particles $\mfdrift = \mfdrift^{(N)}, \mfsol_t=\mfsol_t^{(N)}$. 
+ 	Let $t\leq T$.
+ 	Then there exists $\overline{N},\const_\xi >0$ such that for all  $n\in \N$ there exists an increasing positive continuous function $\Fup_{n, \NumCampRelease}(t)$ in $t$ (independent from $N,\xi$) so that for all $N > \overline{N}$ we have that
+ 	\begin{equation*}
+ 		\PrbOf{
+ 			\norm{
+ 				\drift^{(N)}(t, \sol_t^{(N)}) - \mfdrift^{(N)}(t, \mfsol_t^{(N)})
+ 			}_\infty
+ 			\geq
+ 			(1+2\NumCampRelease)N^{-\xi}
+ 		}
+ 		\leq
+ 		\Fup_{n, \NumCampRelease}(T)
+ 		N^{-\const_\xi n +1}
+ 	\end{equation*}
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+	Notice that
+	\begin{align*}
+		(1+\NumCampRelease)N^{-\xi} 
+		&\leq 
+		\norm{
+			\drift^{(N)}(t, \sol_t^{(N)}) - \mfdrift^{(N)}(t, \mfsol_t^{(N)})
+		}_\infty
+		\\
+		&= 
+		\max 
+		\Bigg\{
+		\norm{
+			\left(
+			\frac{1}{N} \sum _{l = 1}^{\NumCampRelease} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+			-
+			\left( \attraction \star \int_0^t \NumCampRelease\lambda \cdens_t^\tau \right) (\mfamba_t^p)
+			\right)_{p}
+		}_\infty,
+		\\
+		&\qquad
+		\norm{
+			\left(
+			\1_{\geq \btime^{p,g}}(t)  \frac{\cdrift}{N}  \cgonia_{p,g,l} 
+			\right)_{p,g,l}
+		}_\infty
+		\Bigg\}
+		\\
+		&\leq
+		\sum _{l = 1}^{\NumCampRelease} 
+		\norm{
+			\left(
+			\frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+			-
+			\left( \attraction \star \int_0^t \lambda \cdens_t^\tau \right) (\mfamba_t^p)
+			\right)_{p}
+		}_\infty
+		+
+		\frac{\cdrift}{N}
+	\end{align*}
+	
+	With these consideration in mind and using the trivial principle \ref{app:pA-pB-less-than} we can then write
+	
+	\begin{align*}
+		&\PrbOf{
+			\norm{
+				\drift^{(N)}(t, \sol_t^{(N)}) - \mfdrift^{(N)}(t, \mfsol_t^{(N)})
+			}_\infty
+			\geq
+			(1+2\NumCampRelease)N^{-\xi}
+		}
+		\leq
+		\\
+		&\leq
+		\PrbOf{
+		\sum _{l = 1}^{\NumCampRelease} 
+		\norm{
+			\left(
+			\frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+			-
+			\left( \attraction \star \int_0^t \lambda \cdens_t^\tau \right) (\mfamba_t^p)
+			\right)_{p}
+		}_\infty
+		+
+		\frac{\cdrift}{N}\
+		\geq
+		(1+2\NumCampRelease)N^{-\xi}
+		}
+		\\
+		&\leq
+		\PrbOf{
+			\sum _{l = 1}^{\NumCampRelease} 
+			\norm{
+				\left(
+				\frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+				-
+				\left( \attraction \star \int_0^t \lambda \cdens_t^\tau \right) (\mfamba_t^p)
+				\right)_{p}
+			}_\infty
+			\geq
+			2\NumCampRelease N^{-\xi}
+		}
+		+
+		\PrbOf{
+			\frac{\cdrift}{N}\
+			\geq
+			N^{-\xi}
+		}
+		\leq
+	\end{align*}
+	
+	Now focus on the cAMP part and see that, since $\xi < \frac{1}{2}$, for $N$ big enough we have that
+	
+	\begin{align*}
+		\PrbOf{
+			\frac{\cdrift}{N}\
+			\geq
+			N^{-\xi}
+		} &= 
+		\PrbOf{
+			\cdrift\
+			\geq
+			N^{1-\xi}
+		} = 0
+	\end{align*}
+	
+	and therefore, again by \ref{app:pA-pB-less-than}, we can write that
+	
+	\begin{align*}
+		&\leq
+		\PrbOf{
+			\sum _{l = 1}^{\NumCampRelease} 
+			\norm{
+				\left(
+				\frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+				-
+				\left( \attraction \star \int_0^t \lambda \cdens_t^\tau \right) (\mfamba_t^p)
+				\right)_{p}
+			}_\infty
+			\geq
+			2\NumCampRelease N^{-\xi}
+		}
+		\\
+		&\leq
+		\sum _{l = 1}^{\NumCampRelease}\
+		\PrbOf{
+			\norm{
+				\left(
+				\frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_t^q} \attraction(\mfamba_t^p - \mfcamp_t^{q,g,l}) 
+				-
+				\left( \attraction \star \int_0^t \lambda \cdens_t^\tau \right) (\mfamba_t^p)
+				\right)_{p}
+			}_\infty
+			\geq
+			2N^{-\xi}
+		}
+		\leq
+	\end{align*}
+	
+	The addends have now the same shape as in \ref{ch5:LLN}.
+	Not only, the random variables involved have densities respecting the exact same conditions by hypothesis and their drifts for the amoebas are simply scaled by a factor $\NumCampRelease$ with respect to the basic model.
+	Thus, even though the statement \ref{ch5:LLN} cannot be directly used to obtain a bound for such addends (in \ref{ch5:LLN} by hypothesis we require that $\mfsol_t$ are the solution specifically to the mean-field basic model), the proof can be followed exactly as in the basic model case but scaled of $\NumCampRelease$, obtaining
+	
+	\begin{align*}
+		\leq
+		\sum _{l = 1}^{\NumCampRelease}\
+		\const_{n}
+		\Fup_{n}(T)
+		N^{-\const_\xi n +1}
+		=
+		\Fup_{n,\NumCampRelease}(T)
+		N^{-\const_\xi n + 1}
+	\end{align*}
+\end{proof}
+
+\section{Final Proof}
+
+We expect the condition 
+
+\begin{equation}\label{ch7:final-result}
+	\PrbOf{  
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t^{(N)} - \mfsol_t^{(N)}
+		} 
+		\geq
+		N^{-\cutparameter}
+	}
+	\leq\
+	\Fup(T)\
+	N^{-(\xi-\delta)}
+\end{equation}
+
+to be provable exactly as in chapter \ref{ch6}, even with the same symbol, with the only difference being that  the function $\Fup(T)$ is dependent also on $\NumCampRelease$.
+This because the lemmas for the Dini derivation still have the same form, and the law of large numbers has only a scaling for some constant, and we still have bounds for both the drift and the mean-field drift, thus all the proof concept holds on the exact same principles.
+
+\subsubsection{Stochastic Estimate with Groenwall}
+
+Define
+
+\begin{equation}
+	\auxProc_T^N := 1 \wedge \left( 
+	N^{\cutparameter}
+	\sup_{0 \leq t \leq T}
+	\normp{\infty}{
+		\sol_t^{(N)} - \mfsol_t^{(N)}
+	} \right)
+\end{equation}
+
+Exactly as before, we have that
+
+\begin{align*}
+	\PrbOf{  
+		\sup_{0 \leq t \leq T}
+		\normp{\infty}{
+			\sol_t^{(N)} - \mfsol_t^{(N)}
+		} 
+		\geq
+		N^{-\cutparameter}
+	}
+	\leq\
+	\ldots\
+	\leq\
+	\E{ 
+		\auxProc_T^N
+	} 
+\end{align*}
+
+Again, we will omit the superscript $(N)$.
+Consider $0 < t \leq T$ and have then, as previously:
+
+\begin{align*}
+	\diniu^+_t \auxProc_t^N 
+	&
+	\leq
+	\1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	N^{\cutparameter}d  \norm{\drift(t, \sol_t) - \drift(t, \mfsol_t)}_\infty 
+	+  
+	\1_{\{\diniu^+_t \auxProc_t^N >0 \}}\
+	N^{\cutparameter}d  \norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq
+\end{align*}
+
+Again we exploit the lipschitzianity of $\drift$ (\ref{ch7:lemma:drift:lip-and-bound}) but simply with a different constant with respect to the basic model case:
+
+\begin{align*}
+	\leq
+	d\
+	\frac{\const_{\attraction,\NumCampRelease}}{N}
+	\hmactive_t
+		\1_{\diniu^+_t \auxProc_t^N >0 }\
+		\cdot 
+		N^{\cutparameter}\
+		\norm{\sol_t - \mfsol_t}_\infty
+	+ N^{\cutparameter}\
+	d\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq
+\end{align*}
+
+As previously, we can infer that
+$
+		\1_{\diniu^+_t \auxProc_t^N >0 }\
+		\cdot 
+		N^{\cutparameter}\
+		\norm{\sol_t - \mfsol_t}_\infty
+	\leq
+		\auxProc_t^N 
+$ and therefore
+
+\begin{align*}
+	\diniu^+_t \auxProc_t^N 
+	&\leq
+	{\const_{\attraction,\NumCampRelease,d}}
+	\frac{\hmactive_t}{N}\
+	\auxProc_t^N 
+	+N^{\cutparameter}\
+	\const_d
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+\end{align*}
+
+Integrating over $[0,T]$ and choosing some $S > T$ we then obtain:
+
+\begin{equation*}
+	\auxProc_T^N = \auxProc_T^N - \auxProc_0^N 
+	\leq
+	\int_0^T 
+	{\const_{\attraction,\NumCampRelease,d}}\
+	\frac{\hmactive_T}{N}\
+	\auxProc_t^N dt
+	+ 
+	N^{\cutparameter}\
+	\const_d
+	\underbrace{
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+	}_{=:\Iu}
+\end{equation*}
+
+We should again prove that the term $\Iu$ is different from $0$ with probability $1$, but this should hold since $\mfdrift$ is simply $L$ scaled with respect to the basic model case, and $\drift$ is the sum of $\NumCampRelease$ processes distributed very similarly to the basic model case.
+We assume this holds, and by applying the Groenwall lemma in his form \ref{ch6:lemma-groenwall-generalized} we obtain:
+
+\begin{equation}\label{ch7:just-applied-Groenwall}
+	\begin{aligned}
+		\auxProc_T^N 
+		&\leq
+		N^{\cutparameter}\
+		\const_d
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+		\cdot
+		\exp \left(
+		T
+		\const_{\attraction,\NumCampRelease,d}\
+		\frac{\hmactive_T}{N}
+		\right)
+	\end{aligned}
+\end{equation}
+
+\subsubsection{Bound for the Average of the Estimate}
+
+Again we can now use the law of large numbers and the bounds on the drift $\drift$ and mean-field drift $\mfdrift$, which are essentially the same bounds as before, but with different constants. Define the set
+
+\begin{equation*}
+	\setB_t := \left\{
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty \leq 2N^{-\xi}
+	\right\}
+\end{equation*}
+
+for some $0 < \xi < \frac{1}{2}$.
+Then, for $N$ big enough, by the law of large numbers \ref{ch7:LLN} and exploiting the bounds from the lemmas \ref{ch7:lemma:drift:lip-and-bound} and \ref{ch7:mfdrift-lip-and-bound} we have that
+
+
+\begin{align*}
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+	&=
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty\
+	\1_{\setB_t
+	}
+	+
+	\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty\
+	\1_{\setB_t^c
+	}
+	\\
+	&\leq
+	2N^{-\xi}
+	+
+	\left(
+	\Norm{
+		\drift(t, \cdot)
+	}_{\Lpspace^\infty(\R^d)}
+	+
+	\Norm{
+		\mfdrift(t, \cdot)
+	}_{\Lpspace^\infty(\R^d)}	
+	\right)
+	\1_{\setB_t^c}
+	\\
+	&\leq
+		2N^{-\xi}
+		+
+		\left(
+			\frac{1}{N}
+			\const_{\NumCampRelease, \attraction}\
+			(\hmactive_t + \cdrift)
+			+
+			\const_{\attraction, \lambda,\NumCampRelease} t
+		\right)
+		\1_{\setB_t^c}
+		\\
+		&\leq
+			2N^{-\xi}
+			+
+			\const_{\attraction, \lambda,\NumCampRelease,\cdrift} 
+			\left(
+				\frac{\hmactive_t}{N}
+				+
+				1
+				+
+				t
+			\right)
+			\1_{\setB_t^c}\
+		\\
+		&\leq\
+			2N^{-\xi}
+			+
+			\const_{\attraction, \lambda,\NumCampRelease,\cdrift} 
+			\left(
+			\frac{\hmactive_S}{N}
+			+
+			1
+			+
+			S
+			\right)
+			\1_{\setB_t^c}
+\end{align*}
+
+Then, averaging on the inequality \ref{ch7:just-applied-Groenwall} we can calculate
+
+\begin{equation}
+	\begin{aligned}
+	\E{\auxProc_T^N}
+	&\leq 
+	\E{
+		N^{\cutparameter}\
+		\const_d
+		\int_0^S
+		\norm{\drift(t, \mfsol_t) - \mfdrift(t, \mfsol_t)}_\infty 
+		dt
+		\cdot
+		\exp \left(
+		T
+		\const_{\attraction,\NumCampRelease,d}\
+		\frac{\hmactive_T}{N}
+		\right)
+	}
+	\\
+	&\leq
+	N^{\cutparameter}\
+	\const_d
+	\E{
+		\int_0^S
+			\left[
+				2N^{-\xi}
+				+
+				\const_{\attraction, \lambda,\NumCampRelease,\cdrift,d} 
+				\left(
+				\frac{\hmactive_S}{N}
+				+
+				1
+				+
+				S
+				\right)
+				\1_{\setB_t^c}
+			\right]
+		dt
+		\cdot
+		\exp \left(
+			T
+			\const_{\attraction,\NumCampRelease,d}\
+			\frac{\hmactive_T}{N}
+		\right)
+	}
+	\\
+	&= 
+	\overbrace{
+		N^{-(\xi -\cutparameter)}\
+		\const_d
+		\E{
+			\exp \left(
+			T\
+			\const_{\attraction,\NumCampRelease,d}\
+			\frac{\hmactive_T}{N}\
+			\right)
+		}
+	}^{\text{Term }1}
+	\\
+	&\qquad
+	+ 
+	\underbrace{
+		N^{\cutparameter}\
+		\const_{\attraction, \lambda,\NumCampRelease,\cdrift,d}\
+		\E{
+			\frac{\hmactive_S}{N} 
+			\int_0^S
+			\1_{\setB_t^c}\
+			dt
+			\cdot
+			\exp \left(
+			T
+			\const_{\attraction,\NumCampRelease,d}\
+			\frac{\hmactive_T}{N}\
+			\right)
+		}
+	}_{\text{Term }2}	
+	+
+	\\
+	&\qquad
+	+ 
+	\underbrace{
+		N^{\cutparameter}\
+		\const_{\attraction, \lambda,\NumCampRelease,\cdrift,d}\
+		\left(
+		1+S
+		\right)\
+		\E{
+			\int_0^S
+			\1_{\setB_t^c}\
+			dt
+			\cdot
+			\exp \left(
+			T
+			\const_{\attraction,\NumCampRelease,d}\
+			\frac{\hmactive_T}{N}\
+			\right)
+		}
+	}_{\text{Term }3}
+	\end{aligned}
+\end{equation}
+
+And at this point the we are exactly at the same stage as in the equation \ref{ch6:3-terms before-estimates}:
+\begin{itemize}
+	\item Sure, we have different constants and different continuous increasing positive functions $\Fup(S)$ in $S$, but they are still constants and continuous increasing positive functions in $S$.
+	\item The processes 
+	\begin{equation*}
+			\exp \left(
+			T
+			\const\
+			\frac{\hmactive_T}{N}\
+			\right)
+		\quad
+			\text{ and }
+		\quad
+			\frac{\hmactive_S}{N}
+	\end{equation*}
+	under the integral $\E{}$ are the same as in \ref{ch6:3-terms before-estimates}, differing just for the constant $\const$.
+	\item The strongest difference is given by $\1_{\setB_t^c}$, which is the indicator function of the set tamed by \ref{ch7:LLN}, but this is anyway tamed with a law of the large numbers which differ from \ref{ch5:LLN} only by the choice of the constants, and not by the powers of $N$.
+\end{itemize}
+
+Then the proof goes on, from here on, exactly as in the section \ref{ch6:2nd-part-of-the-proof}, with different constants and a different function $\Fup(T)$.
+And thus the proof is concluded.

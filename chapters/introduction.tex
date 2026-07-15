@@ -1,0 +1,189 @@
+\epigraph{
+	\textit{
+		If nature were not beautiful it would not be worth knowing, and life would not be worth living.
+	}
+}{
+	H.P., \cite{science-and-hypothesis}
+}
+
+
+This master's thesis' aim is to analyze mathematically the phenomenon of \emph{chemotaxis}, \ie the movement of an organism in response to a chemical stimulus.
+This is a mechanism used by a considerable amount of microorganisms (various bacteria and amoebas as well as some eukaryots) to search for nutrients and escape toxins, but also by cells of a multicellular living beings for more complex tasks (\eg leukocytes rely on it to find infections in the body \cite{chemotaxis-leukocytes}).
+Naturally, the study of this process has wide applications in medicine, since the variation of the chemotactical behaviour of various human cells can help the onset of a number of illnesses \cite{ct-diseases}, but also because many drugs act by altering the chemotactic behaviour of specific agents \cite[Conclusions and perspectives]{cancer-medicine-chemotaxis}.
+There is considerable research on this theme on a cellular level (how does the microorganism perceive the chemical stimulus? Which receptors are responsible for it? \cite{ct-chemical-mechanisms}), but we are interested to inquire about the behaviour of a population of microorganisms: what happens when all these corpuscles start to follow a specific chemical stimulus? Can we predict what we will observe about the spatial distribution of the group, for example through the lenses of a microscope? 
+
+%[[put here pictures of some papers through the lenses of a microscope)]]
+
+When examining mathematically the phenomenon on such a scale, there are two main points of view:
+one can see the population macroscopically, as a continuum, representing it therefore with a density $\adens$, or can see it microscopically, \ie as a finite group of individuals $\{\amba^1, \ldots, \amba^N\}$.
+Of course it would be optimal that the two descriptions somehow match, meaning that if we construct some empirical density from $\{\amba^1, \ldots, \amba^N\}$, this is in some way close to $\adens$, meaning that one can mathematically derive the macroscopic system from the microscopic one.
+For this procedure, which is often seen as adding insights and validity to a macroscopic description, is common to speak of \emph{propagation of chaos} and of \emph{effective equations} of the microscopic model.
+This was the topic of Cañizares García in her PhD thesis \cite{ana}, who derived the classical macroscopic model for chemotaxis, the \emph{Keller-Segel} equation, from a microscopic model for the amoeba \emph{Dictyostelium Discoideum}.
+The master's thesis focuses on studying what happens if one would construct a more "microscopic" system than the one of \cite{ana}, where the molecules of the chemical stimuli are taken into account as a different population of individuals spawned at random times.
+
+
+\section{Chemotaxis...}
+
+In Ancient Greek "τάξις" means "order" or "arrangement", but in biology it is used to indicate the movement of an organism in response to an external stimulus.
+Depending on the type of such triggers the phenomenon is classified into different subcategories, \eg \emph{phototaxis} or \emph{thermotaxis}.
+The τάξις can be \emph{positive}, meaning directed towards the stimulus, or \emph{negative}, away from it.
+\emph{Chemotaxis} (from the Ancient Greek "χημεία", meaning "chemistry" - or more precisely "transmutation") is the specific case where the reason of the movement is some chemical substance.
+Many lifeforms rely on this mechanism for their survival, the most simple examples being unicellular organisms searching for nutrients (\eg the bacterium \emph{Escherichia coli} follows sources of sugar, \cite{ct-ecoli-glucose}) or fleeing toxins (\eg \emph{Escherichia coli} being repelled by acetate, \cite{negative-chemotaxis}).
+More evolved paradigms can be observed in multicellular organisms: white blood cells are able to find infections by following formyl peptides, that is molecular byproducts of many bacteria \cite{ct-immune-system}.
+The phenomenon is even more interesting when the \emph{chemotaxin}, the substance triggering the reaction, seems to be released as a form of signaling.
+Many kinds of growth are controlled in this way: the axons of neurons develop following extra-cellular signaling substances \cite{ct-axons-neurons}, as it is the case for the sprouting of new capillaries \emph{angiogenesis}.
+The latter example is particularly relevant in medicine because many tumors secrete the corresponding chemotaxin VEGF (Vascular Endothelial Growth Factor), stimulating the proliferation of blood vessels in their direction and effectively hacking the body machinery to steal nutrients \cite{ct-cancer-angiogenesis}.
+Other important examples from medicine can be found in \cite{ct-diseases}.
+
+\subsection{...and Dictyostelium Discoideum}
+
+In order to study a phenomena occurring so frequently and in so many forms, it is necessary to find a case free of great complications and which can be observed in a controlled environment: the amoeba \emph{Dictyostelium discoideum} is perfect for such a role.
+This organism proliferates till there are available nutrients.
+When these finish, the cells first disperse, searching for other food resources, but if after a while these are not found, some individuals start to secrete cAMP (3',5'-cyclic adenosine monophosphate) waves in quick pulses.
+Such substance act as a chemical signal, triggering the amoebas who come in contact to it to direct their movement towards its higher concentration and to release other cAMP themselves.
+This chemotactical mechanism aggregates the microorganisms into many \emph{slugs}, each formed by several thousands members; these lumps then migrate to the appropriate spot thermotactically to undergo the last metamorphosis: they produce \emph{fruiting bodies} which then release spores and die.
+The spores become then new individuals, and the life cycle is closed
+\footnote[1]{Since sometimes an image is worth a thousand words, I advise you to take a look at the informal short documentary \cite{ze-frank}.}.
+
+%[[here image of the life cycle of disctyostelium discoideum]]
+
+The \emph{Dictyostelium discoideum} is fairly easy to cultivate in a lab \cite[Chapter 4]{dd-in-lab}, in some stages of its life is haploid (\ie has a single copy of its DNA) which allows for easy genetic manipulation, and its genome (which is approximately 34MB of data) is completely mapped and available to the public \cite{dd-bioinfo-lj}.
+At the same time it is an eukaryote and presents complex behaviours, such as cell differentiation and apoptosis (programmed cell death) in the non-unicellular phases, thermotaxis in its slug phase \cite{thermotaxis-dd}.
+And, more relevant to us, it is regarded as one of the basic example for eukaryotic chemotaxis \cite{chemotaxis-cancer-and-simpler-models}.
+
+\section{Previous Models}
+
+\subsection{The Classic Approach: Keller-Segel}
+
+The macroscopic \emph{classic mathematical model for chemotaxis}, namely the Keller-Segel system of equations, was given in 1970 in \cite{keller-segel} (a more beginner friendly and recent source to read about it is \cite{guide-pdes-chemotaxis}), even though an heuristic microscopic derivation had already been given by Patlak in 1953 \cite{patlak}.
+In the specific case in which the chemotaxin molecules diffuse much faster than the organism reacting to them (as it is the case for the aforementioned amoeba), one can derive from the general case this parabolic-elliptic system of equations \cite{keller-segel-reduced}:
+
+\begin{equation}\label{intro:keller-segel-ana}
+	\left\{
+	\begin{aligned}
+		\partial_t \adens &= - \chi \nabla (\adens \nabla \cdens) + \bigtriangleup \adens
+		\\
+		-\bigtriangleup \cdens &= \adens.
+	\end{aligned}
+	\right.
+\end{equation}
+
+Here $\adens$ represents the density of the microorganisms, $\cdens$ of the chemotaxin and $\chi$ is a constant called \emph{chemosensitivity}, which measures how much the cells are reacting to the chemical stimuli.
+Solving the system \label{intro:keller-segel-ana} for $\cdens$ and setting $\cutoffSinAttraction:=\frac{x}{2\pi \abs{x}^2}$ we obtain
+
+\begin{equation}\label{intro:keller-segel-ana-1-equation}
+	\partial_t \adens = \chi \nabla ( (\cutoffSinAttraction \star \adens) \adens) + \bigtriangleup \adens.
+\end{equation}
+
+\subsection{The PhD Thesis of Cañizares García}
+
+In \cite{ana} the author derived the set of equations \ref{intro:keller-segel-ana} from a microscopic model previously seen in numerical approximation of solutions of Keller-Segel \cite{numerics-keller-segel} as well as in other derivation of it \cite{keller-segel-dd-derivation-previously}.
+The microscopic system describes $N$ amoebas with their positions $\{\amba^1, \ldots, \amba^N\}\in\R^2$ and encodes their attraction via cAMP with a Coulomb-like potential $\potential$.
+In equations we have
+
+\begin{equation}
+		\forall p \in \{1, \ldots, N\}
+		\qquad 
+		\amba_t^p = \amba_0^p - \int_0^t \frac{\chi}{N} \sum_{q\neq p} \cutoffSinAttraction (\amba_s^p - \amba_s^q) ds + \sqrt{2} B_t^p,
+		\qquad
+		\amba_0^p \sim \adens_0
+		,
+\end{equation}
+
+where $B^p: \R_+ \longrightarrow \R^2$ are \iid (independent and identically distributed) \Bm (Brownian motion(s)), and at time $t=0$ the microorganisms $\amba_0^p$ are \iid according to the given density $\adens_0$.
+From this system of SDEs (stochastic differential equations) she derived the Keller-Segel equations in their parabolic-elliptic form \ref{intro:keller-segel-ana-1-equation}.
+This means that she proved, under the appropriate conditions, that the empirical measure
+
+\begin{equation*}
+	\empmeas_t^{\amba,(N)}:= \frac{1}{N}\sum_{p=1}^N \delta_{\amba_t^p}
+\end{equation*}
+
+converges to $\adens_t$ as a \rv (random variable(s)) with values in $\PrbMeas(\R^2)$ (the space of probability measures in $\R^2$), where $\adens_t$ is the solution to \ref{intro:keller-segel-ana-1-equation} with initial condition $\adens_{t=0} = \adens_0$.
+Her technique involved the usage of a mesoscopic model given by the \iid \emph{mean-field particles}
+
+\begin{equation}\label{intro:ana-mesoscopic}
+	\forall p \in \{1, \ldots, N\}
+	\qquad
+	\mfamba_t^p = \mfamba_0^p - \int_0^t \frac{\chi}{N} (\cutoffSinAttraction \star \adens_s )(\mfamba_s^p) ds + \sqrt{2} B_t^p,
+	\qquad
+	\mfamba_0^p \sim \adens_0
+	,
+\end{equation}
+
+coupled (\ie with the same \abbr{B.m.}) with the original ones.
+She used the fact that the expression \ref{intro:keller-segel-ana-1-equation} is the \emph{Kolmogorov forward equation} (Fokker-Planck) of \ref{intro:ana-mesoscopic} to obtain the convergence of the aforementioned $\PrbMeas(\R^2)$-valued \rv by showing that the probability of $(\amba^p)_p$ and $(\mfamba^p)_p$ being far tends to $0$ as $N$ grows to infinity.
+More precisely, in \cite[Theorem 2.1]{ana} she could prove a degree of convergence of this probability to $0$ faster than $N^{-\gamma}$ for every $\gamma > 0$.
+
+
+\section{Chemotaxin in the Microscopic Description}
+
+The focus of this master's thesis is to modify the microscopic model used by Cañizares García to encode the cAMP as a different population of particles $\camp^m$ being \emph{created} at Poisson-distributed times $\btime_m$ by the amoebas and wiggling of \abbr{B.m.}, and see which consequences does this have on the macroscopic description.
+Which equation describes the model on a large scale? Which interpretation can we give to the result? Can we obtain in this way the Keller-Segel equation \ref{intro:keller-segel-ana-1-equation}?
+
+One would expect this different microscopic framework to not yield exactly \ref{intro:keller-segel-ana-1-equation}, because the cAMP molecules $\camp^m$, encoded as in our model, do not have a diffusion coefficient (and release frequency) which is inherently much higher than the one of the amoebas.
+And in fact, as we will see, this expectation will prove to be true.
+Still, one could guess that, in some limit case where we let the diffusion coefficient of $\camp^m$ and the Poisson parameter $\lambda$ (encoding the spawning frequency) tend to infinity, the law \ref{intro:keller-segel-ana-1-equation} appears, or something close to it.
+This hypothesis is not formally confirmed, but we expect that this is the case and we give a glimpse of how one might prove it.
+
+\subsection{Outline}
+
+\paragraph{Chapter \ref{ch2}} In this chapter we define the microscopic model with $N$ amoebas $\amba^p$ and creation of chemotaxin molecules $\camp^m$.
+The creation of particles happens via Poisson-distributed spawning process $(\hmactive_t^p)_{p=1}^N$, and at each spawning time $\btime_m$ only one particle $\camp^m$ is released.
+Such $\camp^m$ moves purely of \Bm with diffusion $\sigma_\camp$ and attracts the amoebas with a \emph{Gaussian-like} potential $\potential$.
+Furthermore, we guarantee in this section the existence and uniqueness of a solution for this system of almost-SDEs.
+
+\paragraph{Chapter \ref{ch3}} Here we explain what it means formally that a macroscopic model is derived by a microscopic one and we construct a valuable candidate for the first one.
+In order to do so we first calculate the mean-field of the microscopic description $\sol_t = ( (\amba_t^p)_p, (\camp_t^m)_m)$ and we consider the set of \iid particles $\mfsol_t = ( (\mfamba_t^p)_p, (\mfcamp_t^m)_m)$ evolving under its influence (we call them \emph{mean-field particles} or \emph{mesoscopic system}).
+Then we use the Kolmogorov's forward equation of $\mfsol_t$ as the candidate macroscopic equation, of which we sign the solution as $\adens(t,\cdot) = \adens_t$.
+Furthermore, this chapter shows that a sufficient condition to obtain that $\adens_t$ is the effective description of the model is that $\sol_t$ and $\mfsol_t$ remain close with a high probability, namely proposition \ref{ch3:best-condition-convergence} (same argument as in \cite{ana}).
+In the final part we hint at possible ways to formally derive a macroscopic description also for the chemotaxin particles $\camp^m$.
+
+\paragraph{Chapter \ref{ch4} and \ref{ch5}} These chapters lay the ground for the final proof of the derivation (\ie the proposition \ref{ch6:final-result}).
+Chapter \ref{ch4} defines the Dini derivative $\diniu_t^+$ and yields a simple formula for the Dini derivation (with respect to time) of the distance between the microscopic and the mesoscopic description, \ie for $\diniu_t^+ \norm{\sol_t -\mfsol_t}_\infty$.
+Chapter \ref{ch5} will prove a law of large numbers for the mean-field particles via a "divide et impera" strategy.
+Both chapters develop tools which can be applied in more general settings than the one of this microscopic model.
+
+\paragraph{Chapter \ref{ch6}} This section contains the proof of the final result \ref{ch6:final-result}:
+
+\begin{proposition*}
+	Let $\sol_t^{(N)}$ be the solution to the microscopic model \ref{ch2:model} and let $\mfsol_t^{(N)}$ be the solution to the mean-field model \ref{ch3:MF-particles}, each with $N$ amoebas.
+	Let $T > 0$ and let $0< \delta <\xi <\frac{1}{2}$.
+	Then there exists an $\overline{N}>0$ and an increasing continuous function $\Fup: \R_+ \longrightarrow \R_+$ independent from $\overline{N},N$ such that for every $N > \overline{N}$ we have that
+	\begin{equation*}
+		\PrbOf{  
+			\sup_{0 \leq t \leq T}
+			\normp{\infty}{
+				\sol_t^{(N)} - \mfsol_t^{(N)}
+			} 
+			\geq
+			N^{-\cutparameter}
+		}
+		\leq\
+		\Fup(T)\
+		N^{-(\xi-\delta)}.
+	\end{equation*}
+\end{proposition*}
+From this proposition it follows (by lemma \ref{ch3:best-condition-convergence}) that \ref{ch3:EFFECTIVE-EQS} are the effective equations of the microscopic model considered.
+
+\paragraph{Chapter \ref{ch7}} Here we expand the model treated in chapter \ref{ch2}: per each random time $\btime_m$ we have $\NumCampRelease$ chemotaxin molecules released in radial directions with a constant drift $\frac{\cdrift}{N}$.
+Then we derive the effective equations \ref{ch7:EFFECTIVE-EQUATIONS} for this system, which are essentially the same as for the simple model, but with an addend of the equation scaled by a factor $\NumCampRelease$:
+
+\begin{equation}
+	\left\{
+	\begin{aligned}
+		\adens(0, \cdot) &= \adens_0
+		\\
+		\partial_t \adens &=  \NumCampRelease\lambda \nabla \left[ \left( \int_0^t
+		\attraction \star \heatkernel_{t-\tau}^{\frac{d\sigma_\camp^2}{2}} \star \adens(\tau, \cdot) 
+		d \tau
+		\right)
+		\adens
+		\right]
+		+ \frac{d\sigma_\amba^2}{2} \bigtriangleup \adens.
+	\end{aligned}
+	\right.
+\end{equation}
+
+
+\paragraph{Conclusion} In this last chapter we discuss and interpret the effective equations of our microscopic model, and we compare them with the Keller-Segel model.
+Finally, we illustrate the many directions in which one might develop further the research on this topic.

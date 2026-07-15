@@ -1,0 +1,66 @@
+\newcommand{\potential}{v}								% the potential of \attraction
+\newcommand{\attraction}{V}								% the nabla of the potential, thus the attraction
+
+\newcommand{\genAttraction}{V_{G}}				% generalised attraction symbol, the sum of the attraction in the classical sense and the singular cut-off one
+\newcommand{\cutoffSinPot}{v_\curlywedge}				% singular cut-off attraction-potential
+\newcommand{\cutoffSinAttraction}{V_\curlywedge}				% singular cut-off attraction
+
+\newcommand{\hmactive}{M}								% how many molecules have been generated
+\newcommand{\btime}{T}									% birth time of the cAMP
+\newcommand{\Parentof}{P}								% parenting function in the casual parenting model
+
+\newcommand{\amba}{A}
+\newcommand{\camp}{C}
+\newcommand{\quasibm}{Q}									% the quasi-BM of the cAMP
+\newcommand{\sol}{X}										% the solution vector representing all amoebas and camps
+\newcommand{\NumParticles}{D}							% number of particles (cAMP + amoebas) present at time t
+
+\newcommand{\empmeas}{\mu}						% empirical measure general symbol
+\newcommand{\adens}{a}									% effective density of the amoebas
+\newcommand{\cdens}{c}									% effective density of the cAMP molecules
+\newcommand{\heatkernel}{\Phi}
+
+\newcommand{\mfamba}{\overline{\amba}}					% mean-field amoeba
+\newcommand{\mfcamp}{\overline{\camp}}					% mean-field camp					
+\newcommand{\mfsol}{\overline{\sol}}						% mean-field solution
+\newcommand{\mfdrift}{\overline{\drift}}					% mean-field drift
+\newcommand{\mfdiffusion}{\overline{\diffusion}}					% mean-field diffusion
+\newcommand{\mfspawnpos}{P}								% spawning position of the mean-field camp
+
+\newcommand{\PrbCondTimes}[2]
+	{\PrbCond{#1}{#2\;(\btime^{p,g})_{p,g}}}				% cond. prob. with fixed birthtimes
+\newcommand{\ECondTimes}[2]
+	{\ECond{#1}{#2\;(\btime^{p,g})_{p,g}}}				% cond. expec. with fixed birthtimes
+
+\newcommand{\diniu}{\overline{D}}						% dini upper derivative (right or left?)
+\newcommand{\dinil}{\underline{D}}						% dini lower derivative (right or left?)
+\newcommand{\SkoroF}{\mathbb{D}_F}						% cadlag functions with a finite number of discontinuouities on each intervla [0,T]
+\newcommand{\SkoroFUp}{\mathbb{D}_F^\barwedge}				% functions g in \SkoroF such that g(t-) \leq g(t+)
+
+
+%% Abbreviations of PreCondTimes and ECondTimes (or others, if necessary) for long proofs
+\newcommand{\PrbTFoot}[2]{\widetilde{\mathbb{P}}_{#1} \left( #2\right)}
+\newcommand{\ETFoot}[2]{\widetilde{\mathbb{E}}_{#1} \left[ \; #2 \; \right]}
+
+\newcommand{\dens}{\text{dens}}				% dens script for the constant of the first LLN
+
+\newcommand{\Zrv}{Z}		% the Z random variable (Z_t^p) used in the 2nd law of large numbers
+
+%% Appendix, the formal definition
+\newcommand{\Conf}{\text{Conf}}			% the configuration space
+
+%% final proof
+\newcommand{\cutparameter}{\delta}								% the parameter we use to cut the difference
+\newcommand{\auxProc}{J}												% the auxiliary process of the last proof
+\newcommand{\setB}{\mathcal{B}}									% set for the law of large numbers
+
+
+%% expanded models
+\newcommand{\NumCampRelease}{L}				% number of molecules released at each birth time
+\newcommand{\cdrift}{v_\camp}									% number of molecules released at each birth time
+\newcommand{\cgonia}{\widehat{\Theta}}							% cAMP angle of initial velocity
+\newcommand{\rotation}{R}
+
+
+%% appendix space of solutions
+\newcommand{\confCamp}{\R_{\text{camp}}}

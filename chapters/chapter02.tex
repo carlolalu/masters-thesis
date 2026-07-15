@@ -1,0 +1,605 @@
+\label{ch2}
+
+This chapter will define a microscopic model for the Dictyostelium discoideum individuals (and its chemotaxin particles) and prove that it has a solution.
+A key difference with the real situation will be that the amoeba will release a single cAMP with no initial velocity for each spawning moment.
+The second important difference is that the release of cAMP will be regulated by a Poisson process, thus ignoring the fact that in reality the amoebas should respond to each trace of cAMP with the release of a chemical cry of more chemotaxin.
+Recall that the space is throughout the whole master thesis $\R^d$ with $d\in\{2,3\}$.
+In general, it is advised to take a look to the section \ref{app:notation} in the appendix before reading further: it will avoid the reader misunderstandings regarding the usage of specific notation for the particles, their superscripts, the norms, the generic positive constants and increasing positive continuous functions (and other amenities).
+
+\section{The Heuristics and the Definition}
+
+In words we can describe this design in this way:
+\begin{enumerate}
+\item There is a fixed number $N$ of amoebas, each subjected to its own Brownian motion with constant diffusion coefficient $\sigma_\amba$
+\item Each amoeba at time $t=0$ is in the same random position $\adens_0 \in \Lpspace^1 \cup \Lpspace^\infty$.
+\item Each amoeba $\amba^p$ is attracted to the cAMP molecules with a potential $\potential: \R^d \longrightarrow \R$.
+We require that $-\nabla \potential =:\attraction$ is Lebesgue-integrable (\ie $\in \Lpspace^1$), essentialy bounded (\ie $\in \Lpspace^\infty$), $\Cspace^\infty$ and globally Lipschitz.
+One could think of $-\potential$ as a $d$-dimensional Gaussian to keep in mind something more concrete.
+\item Each amoeba $\amba^p$ spawns cAMP molecules $\camp^{p,g}$ (p=parent, g=generation) with a Poisson process $\hmactive^p$ of parameter $\lambda$ independent of $p$.
+\item Each cAMP molecule is born at the position of its parent and is subjected from that time on to its own Brownian motion with constant diffusion coefficient $\sigma_\camp$.
+\item All the Brownian motions for each particle are independent from each others.
+\end{enumerate}
+
+Let us see all of this in equations. Let $N\in\N$ be the number of amoebas, and fix $N$ independent Poisson processes $(\hmactive^p)_{i=1}^N$ of parameter $\lambda$.
+Define for each parent $p \in \{1,\ldots,N\}$ and each generation $g \in \N$, the stopping time
+
+\begin{equation}
+\btime^{p,g} := \inf \{ t : \hmactive^p_t \geq g \}
+\end{equation}
+
+\ie the $\Gma_{g, \lambda}$ distributed \emph{spawning} or \emph{birth time} of the $\camp^{p,g}$ cAMP molecule.
+Consider a countable collection of independent Brownian motions 
+
+\begin{equation}
+\{B^{A,p}, B^{C,p,g}\}_{1\leq p\leq N,g\in\N} =:\{B^p, B^{p,g}\}_{p,g}
+\end{equation}
+
+\ie $N$ of them for the amoebas and a countable amount for the cAMP molecules.
+Now we need an important passage to accurately define the Brownian movement of the cAMP particles.
+In fact each of these molucules moves only after spawning, and thus such movement must be calibrated for starting after this moment, and not before.
+
+\begin{definition}
+Let $T$ be a stopping time and $B$ a Brownian motion.
+Consider the process
+\begin{equation}
+B_t^{(T)} := B_{T+t} - B_T
+\end{equation}
+which is a \Bm (see for example \citep[Theorem 2.20]{le-gall}).
+Then the \emph{Quasi Brownian Motion} $\quasibm_t^{B,T}$ is defined as
+\begin{equation}
+\quasibm_t^{B,T} :=
+\left\{
+\begin{aligned}
+& 0 
+& t<T
+\\
+& B_{t-T}^{(T)} = B_{t} - B_{T}
+& t \geq T
+\end{aligned}
+\right.
+\end{equation}
+\end{definition}\label{ch2:def:quasi-bm}
+
+which can informally be written as "$B_{t-T}^{(T)}\1_{t-T\geq 0}$".
+Then in our case, since $\forall p,g$ a unique \Bm and birth time is identified, we can write
+
+\begin{equation}
+\quasibm_t^{p,g} := \quasibm_t^{B^{p,g}, T^{p,g}}
+= "B_{t-\btime^{p,g}}^{p,g,(\btime^{p,g})}\1_{t-\btime^{p,g}\geq 0}"
+\end{equation}
+
+which is lighter on notation.
+With these independent processes we can now finally write down the model as the set of Poisson processes and stochastic differential equations
+
+\begin{equation}\label{ch2:model}
+\left\{
+\begin{aligned}
+(\hmactive^p_t)_{p=1}^N 
+&\text{ \iid and } \sim \Pois_{\lambda t}
+&
+\\
+\btime^{p,g} 
+&:= \inf \{ t : \hmactive^p_t \geq g \}
+&
+\\
+\amba_t^p 
+&= \adens_0
+- \int_0^t \frac{1}{N} \sum _{q = 1}^{N} \sum_{g = 1}^{\hmactive_s^q} \attraction(\amba_s^p - \camp_s^{q,g}) d s
++ 
+\overbrace{\sigma^A B_t^p}^{\int_0^t \sigma_A d B_s^p}
+&
+\\
+\camp_t^{p,g} 
+&\qquad\text{does not exist} 
+&\text{if} \quad t < \btime^{p,g}
+\\
+\camp_t^{p,g}
+&= \amba_{\btime^{p,g}}^p + \underbrace{\sigma_C \quasibm_t^{p,g}}_{\int_0^t \sigma_C Q_s^{p,g}} 
+&\text{if} \quad t \geq \btime^{p,g}
+\end{aligned}
+\right.
+\end{equation}
+
+with $\attraction \in \Lpspace^1(\R^d) \cap \Lpspace^\infty(\R^d) \cap \Cspace^\infty(\R^d)$, globally Lipschitz and $\adens_0 \in \Lpspace^1(\R^d) \cup \Lpspace^\infty(\R^d)$.
+
+\paragraph{Observations} One can immediately notice that not even the dimension of the system \ref{ch2:model} is deterministic: the particles $\camp_t^{p,g}$ are spawning at the stochastic time $\btime^{p,g}$, increasing at each of these instants the number of particles involved (\ie the system is piecewise defined in time, according to stochastic times).
+This, together with the fact that the Poisson processes $\hmactive^p$ cannot be represented with a SDE and that the $Q_t^{p,g}$ are not proper Brownian motions, makes this system formally not a system of SDEs, even though the equations involved are indeed differential and stochastic.
+
+\subsection{Alternative Formulation}
+
+We can build a mathematically handier version of the previous model.
+Since the Poisson processes $M^p$s determining the spawning times of particles are independent for each amoeba, we have that
+
+\begin{equation}
+\hmactive_t := \sum_{p=1}^N \hmactive_t^p
+\end{equation}
+
+is $\Pois(N t \lambda)$-distributed. Therefore the correspondent birth times
+
+\begin{equation}
+\btime_m := \inf \{ t : \hmactive_t \geq m\}
+\end{equation}
+
+are $\Gma(m, N\lambda)$-distributed.
+Consider these as spawning times and re-indicise the cAMP particles consequently (\ie $\camp^m$ is the $m$-th spawned molecule, born at time $\btime_m$).
+Then which amoeba $\amba^p$ is spawning $\camp^m$?
+
+\begin{definition}
+Define the random function $\Parentof : \N \longrightarrow \{1, \ldots, N\}$ as
+\begin{equation}
+\Parentof(m) := \{ p\; : \; A^p \text{ is the parent of } \camp^m \}
+\end{equation}
+This function is called \emph{parenting function}, and for each $m\in\N$ the random variable $\Parentof(m)$ is uniformly distirbuted on the amoebas $\{1, \ldots, N\}$.
+\end{definition}
+
+\begin{proof}
+\begin{align*}
+\Prb (\Parentof(m) = p) 
+&=\
+\Prb (\exists g \in \N. \btime_m = \btime^{p,g} )
+\
+= \sum_{g=1}^{\infty} \Prb (\btime_m = \btime^{p,g})
+\
+= \sum_{g=1}^{\infty} \Prb (\hmactive_{\btime^{p,g}} = m)
+\\
+&= \sum_{g=1}^{\infty} \Prb (\hmactive_{\btime^{p,g}}^p = g, \sum_{k\neq p} \hmactive_{\btime^{p,g}}^k = m - g)
+\\
+&= \sum_{g=1}^{\infty} \Prb (g = g, \sum_{k\neq p} \hmactive_{\btime^{p,g}}^k = m - g)
+\\
+&= \sum_{g=1}^{\infty} \int 
+	\PrbCond{
+		\sum_{k\neq p} \hmactive_{\btime^{p,g}}^k = m - g
+	}{\btime^{p,g} = s}
+	d\PrbOf{\btime^{p,g} = s}
+\\
+&= \sum_{g=1}^{\infty} \int \Pois_{(N-1)s\lambda}(\{ m-g\})\1_{m-g \geq 0} 
+	\underbrace{d\Prb(\btime^{p,g} = s)}_{:=\Zhi(p,g,s) ds}
+\end{align*}
+
+And since $\Zhi(p,g,s)ds=d\Gma_{g,\lambda} (s)$, it is independent from $p$, we have that $\Prb (\Parentof(m) = p) = \const_m$ and thus uniformly distributed on $\{1,\ldots,N\}$.
+\end{proof}
+
+Then we can reformulate the model \ref{ch2:model} as:
+
+\begin{equation}\label{ch2:model-reformulation}
+\left\{
+\begin{aligned}
+(\hmactive^p_t)_{p=1}^N 
+&\text{ \iid and } \sim \Pois_{\lambda t}
+,\: \hmactive_t := \sum_{p=1}^N \hmactive_t^p
+&
+\\
+\btime_m
+&:= \inf \{ t : \hmactive_t \geq m \}
+&
+\\
+\amba_t^p 
+&= \adens_0 
+- \int_0^t \frac{1}{N} \sum _{m = 1}^{\hmactive_s} \attraction(\amba_s^p - \camp_s^m) d s
++ 
+\overbrace{\sigma^A B_t^p}^{\int_0^t \sigma_A d B_s^p}
+&
+\\
+\camp_t^m 
+&\qquad\text{does not exist} 
+&if \quad t < \btime^m
+\\
+\camp_t^m
+&= \amba_{\btime^m}^{\Parentof(m)} + \underbrace{\sigma_C \quasibm_t^m}_{\int_0^t \sigma_C Q_s^m}
+&if \quad t \geq \btime^m
+\end{aligned}
+\right.
+\end{equation}
+
+This makes the equations simpler and let us arrange the spawning time chronologically, a feature which is important to show that the system has a solution.
+
+\section{Existence and Uniqueness}
+
+The best chance we have to prove existence and uniqueness of solutions for the system \ref{ch2:model} is to find a way to see it (or parts of it) as proper SDEs and use the theorems of such framework to reach the goal.
+
+\subsection{The SDEs Framework}\label{ch2:section:sde-framework}
+
+An SDE is an expression of the form:
+
+\begin{equation}
+\left\{
+\begin{aligned}
+d X_t &= \drift(t, X_t) dt + \diffusion(t, X_t) d B_t	\\
+X_0 &\sim \rho_0
+\end{aligned}
+\right.
+\end{equation}\label{ch2:eq:general-sde}
+
+which is a more conceptual notation to formally mean
+
+\begin{equation}
+X_t = \rho_0 + \int_0^t \drift(t, X_t) \,dt + \int_0^t \diffusion(t, X_t) \,d B_t
+\end{equation}\label{ch2:eq:general-sde-integral-form}
+
+where $\drift \in \R^n$, $\diffusion \in \R^{n \times m}$ are given vectorial and matricial functions respectively (the given initial distribution $\rho_0$ is optional).
+They are called \emph{drift} and \emph{diffusion} (or \emph{volatility}) respectively.
+We sign such SDE as a $E(\drift,\diffusion)$.
+\begin{definition}
+A solution for $E(\drift,\diffusion)$ consists of
+\begin{itemize}
+\item a complete filtered space $(\Omega, \Flt, (\Flt_t)_t, \Prb) $
+\item an $m$-dimensional $(\Flt_t)_t$-Brownian motion $B = (B^1, \ldots, B^m)$
+\item an $(\Flt_t)_t$-adapted $n$-dimensional process $X_t$ with $\Cspace^0$ sample paths
+\end{itemize}
+such that they satisfy the equation $E(\drift,\diffusion)$.
+If furthermore $X_0 = x$ we say that $X$ solves $E_x(\drift,\diffusion)$.
+\end{definition}
+
+To ensure existence (strong existence, meaning that we can find a solution on each filtered probability space endowed with a Brownian motion) and uniqueness (path uniqueness, meaning that having two solutions $X_t, Y_t$ with the same initial conditions, they are indistinguishable, \ie $\PrbOf{ \forall	t. X_t = Y_t }=1 $) of solutions for $E(\drift, \diffusion)$ we need to require conditions on $\drift, \diffusion$. There are two main results:
+\begin{itemize}
+\item \autocite[Thm 8.3]{le-gall}: If the two coefficients are Lipschitz (eventually only locally) in space and continuous in time, then there is existence and uniqueness of solutions for $E(\drift, \diffusion)$:
+\begin{equation*}\label{ch2:cond:E-and-U-lipsch+c-0-in-time}
+\left\{
+\begin{aligned}
+\forall t .( \normp{\infty}{\drift(t, x)-\drift(t,y)} &< L_\drift \normp{\infty}{x-y} &\text{ and } \normp{\infty}{\diffusion(t, x)-\diffusion(t,y)} &< L_\diffusion \normp{\infty}{x-y}) \\
+\drift &\in \Cspace^0 &\text{ and }\diffusion &\in \Cspace^0
+\end{aligned}
+\right.
+\end{equation*}
+\item \autocite[Thm 9.4]{baldi}: If the two coefficients are Lipschitz in space (as before) and have sublinear growth in space, then there is existence and uniqueness of solutions for $E(\drift, \diffusion)$:
+\begin{equation*}\label{ch2:cond:E-and-U-lipsch+subgrowth}
+\left\{
+\begin{aligned}
+&\forall t .(\normp{\infty}{\drift(t, x)-\drift(t,y)} < L_\drift \normp{\infty}{x-y}
+&\:\text{ and }\:
+&\normp{\infty}{\diffusion(t, x)-\diffusion(t,y)} < L_\diffusion \normp{\infty}{x-y}) 
+\\
+&\forall t .\normp{\infty}{\drift(t, x)} < M_b(1 + \normp{\infty}{x}) 
+&\:\text{ and }\:
+&\normp{\infty}{\diffusion(t, x)} < M_\diffusion (1 + \normp{\infty}{x})
+\end{aligned}
+\right.
+\end{equation*}
+\end{itemize}
+
+\subsection{Reducing the Model to the SDE Framework}
+
+\subsubsection{Heuristic}
+
+The system \ref{ch2:model} is not a proper SDE because of technical oddities:
+\begin{itemize}
+\item An hypothetical vector $\sol_t := (\amba_t^1,\ldots, \amba_t^N, \camp_t^{p,g} \text{ already spawned at time }t)$ would have a dimension changing (growing, in particular) as the time flows.
+And it grows up to infinity.
+\item Not only it would be changing with the time, but it would be a \emph{stochastic} dimension.
+\item If we were to write the equations for $\sol$ in a similar way to the one in $\ref{ch2:eq:general-sde}$ we would have a drift term $\drift = \drift(t, \sol_t, (\hmactive_t^p)_p)$ depending also on the Poisson-distributed processes $(\hmactive_t^p)_p$, making it "too much stochastical" to be treated as in \ref{ch2:eq:general-sde}.
+\end{itemize}
+
+All these oddities originate from the fact that our system depends on $N$ sequences $(\btime^{p,g})_{g}$ of \emph{random} birth times (or equivalently from the Poisson processes generating them, \ie $(\hmactive_t^p)_t$).
+We can notice that, while the movement of amoebas $\amba^p$ and cAMP molecules $\camp^{p,g}$ depends on them, such sequences do not depend on $\amba^p, \camp^{p,g}$.
+Then heuristically we can imagine to fix these sequences to an arbitrary value $(\tau^{p,g})_{p,g} = (\btime^{p,g})_{p,g}$ (obtaining an equivalent $(\mu_t^p)_{p,t}=(\hmactive_t^p)_{t,p}$), and inquire if this system has a solution for it:
+
+\begin{equation}
+\left\{
+\begin{aligned}
+\amba_t^p 
+&= \amba_0^p 
++ \int_0^t 
+	\overbrace{
+		- \frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\mu_s^p} \attraction(\amba_s^p - \camp_s^{p,g})
+	}^{=:\drift_p(s, \sol_s, (\mu_s^p)_p)=:\drift_p(s, \sol_s)} 
+d s
++ 
+\overbrace{\sigma^A}^{=:\diffusion_p(s,\sol_s)} B_t^p
+&
+\\
+\camp_t^{p,g} 
+&\qquad\text{does not exist} 
+&if \quad t < \tau^{p,g}
+\\
+\camp_t^{p,g}
+&= \amba_{\tau^{p,g}}^p + \underbrace{\sigma_C}_{=:\diffusion_{p,g}(s,\sol_s)} \quasibm_t^{p,g}
+&if \quad t \geq \tau^{p,g}
+\end{aligned}
+\right.
+\end{equation}\label{ch2:system:heuristic-fixed-times}
+
+This solves the problem because $(\tau^{p,g})_{p,g}$ is deterministic.
+Since the value is arbitrary, if we find a solution $(\sol, B)_{(\tau^{p,g})_{p,g}}$ for \ref{ch2:system:heuristic-fixed-times}, then we can assemble all these components into a global solution $(\sol, B)$.
+
+This is formally explained by defining defining a solution for the system \ref{ch2:model} as a triple $((\hmactive^p)_p, \sol = (\amba, \camp), B)$ such that under the conditional probability measure
+
+\begin{equation}
+\overline{\Prb} : = \PrbCondTimes{\cdot} = \quad\PrbCond{\cdot}{(\hmactive^p)_{1\leq p\leq N, t\in\R_+}}
+\end{equation}
+
+the couple $(\sol,B)$ solves \ref{ch2:model}.
+But we can notice that even in this way we need to operate piecewise in time to avoid a non-constant dimension (dictated by the number of particles, which is growing), \ie define the solution as one which on each interval where the dimension is constant, solves the system locally.
+
+\subsubsection{Local Solutions}
+
+Consider the reformulation \ref{ch2:model-reformulation} and its birth times, which are chronologically ordered
+
+\begin{equation}
+\btime_0:=0 < \btime_1 < \btime_2 < \ldots < \btime_m < \ldots
+\end{equation}
+
+Define the correspondent intervals
+
+\begin{equation}
+I_0 := [0,\btime_1], I_1:=[\btime_1,\btime_2], \ldots , I_m:= [\btime_1,\btime_{m+1}],\ldots
+\end{equation}
+
+On each interval $I_m$ the system can be described as this:
+
+\begin{equation}
+\left\{
+\begin{aligned}
+t &\in I_m = [\btime_m,\btime_{m+1}]
+&
+\\
+\amba_t^p 
+&= \amba_{\btime_m}^p 
+- \int_{\btime_m}^t 
+	\frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\hmactive_s^p} \attraction(\amba_s^p - \camp_s^{p,g})
+d s + \sigma^A B_t^p
+&
+\\
+\camp_t^{p,g} 
+&= \camp_{\btime^{p,g}}^{p,g} + \sigma_C \quasibm_t^{p,g}
+&\text{if} \quad \btime^{p,g} < \btime_m
+\\
+\camp_t^{p,g}
+&= \amba_{\btime^{p,g}}^p + \sigma_C \quasibm_t^{p,g}
+&\text{when} \quad \btime^{p,g} = \btime_m
+\end{aligned}
+\right.
+\end{equation}\label{ch2:system:local-model}
+
+\begin{remark}
+We need to observe that only in $I_m \smallsetminus \{\btime_{m+1}\}$ the number of particles (and thus the dimension) is constant, so why can we claim that the model \ref{ch2:model} is described efficiently by \ref{ch2:system:local-model} efficiently on $I_m$?
+Since the $\{\btime_{m+1}\}$ has Lebesgue-measure $0$ the trajectory of the particles already spawned in $I_m \smallsetminus \{\btime_{m+1}\}$ is not influenced in $I_m$ by $\camp^{m+1}$.
+Then we can ignore its existence to determine the trajectories of the other particles in $I_m$ and have thus a constant dimension on such interval.
+\end{remark}
+
+Now the only passage that we need in order to describe \ref{ch2:system:local-model} as a proper SDE is that of transforming the quasi-Brownian motions $\quasibm^{p,g}$ into proper Brownian motions.
+This is easily done by shifting the system in time from $I_m$ to $I_m-\btime_m=[0, \btime_{m+1}-\btime_m]$, obtaining:
+
+\begin{equation}
+\left\{
+\begin{aligned}
+t &\in I_m - \btime_m = [0, \btime_{m+1}-\btime_m]
+&
+\\
+\amba_t^p 
+&= \amba_{\btime_m}^p
+	+ \int_0^t 
+		\overbrace{
+			- \frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\hmactive_s^p} \attraction(\amba_s^p - \camp_s^{p,g})
+		}^{\drift_p}
+	d s
+	+ 
+	\overbrace{\sigma^A}^{\diffusion_p} 
+	\overbrace{(B_{t + \btime_m}^p - B_{\btime_m}^p)}
+		^{
+			=:\overline{B}_t^p \text{ (\Bm in $t$)}
+		}
+&
+\\
+\camp_t^{p,g} 
+&= \camp_{\btime^{p,g}}^{p,g} + \sigma_C \quasibm_{\btime_m + t}^{p,g} = \camp_{\btime^{p,g}}^{p,g} + \sigma_C
+	\overbrace{(\quasibm_{t + \btime_m}^{p,g} - \quasibm_t^{p,g})}
+	^{
+		\scriptsize{
+			\begin{gathered}
+				\\
+				=:\overline{B}_t^{p,g} \text{ (\Bm in $t$)}
+				\\
+				= (B_{t + \btime_m}^{p,g} - B_{\btime_m}^{p,g})
+			\end{gathered}
+		}	
+	}
+&\text{if} \quad \btime^{p,g} < \btime_m
+\\
+\camp_t^{p,g}
+&= \amba_{\btime^{p,g}}^p + \sigma_C \quasibm_{\btime_m + t}^{p,g}
+	= \amba_{\btime^{p,g}}^p + \underbrace{\sigma_C}_{\diffusion_{p,g}} 
+		+ \underbrace{B_t^{p,g}}_{=:\overline{B}_t^{p,g}}
+&\text{when} \quad \btime^{p,g} = \btime_m
+\end{aligned}
+\right.
+\end{equation}\label{ch2:system:local-model-shifted-to-0}
+
+Suppose that the initial conditions $\amba_{\btime_m}^p,\camp_{\btime_m}^{p,g}$ are given and that such equations in \ref{ch2:system:local-model-shifted-to-0} have a solution $({}^m Y_t, \overline{B}_t)$ on $I_m - \btime_m$.
+Define then on $I_m$ the processes
+
+\begin{align*}
+{}^{m}\sol_t := {}^m Y_{t-\btime_m}
+\qquad
+& B_t^{\star} := \overline{B}_{t-\btime_m}^{\star}
+\end{align*}
+
+Then it is straightforward to verify that $({}^{m}\sol_t,B_t^{\star})$ fullfilles the equations on $I_m$, \ie \ref{ch2:system:local-model}, with the correspondent initial conditions.
+
+\subsubsection{Global Solutions}
+
+\begin{definition}\label{ch2:def:solution-model}
+A solution to \ref{ch2:model} is a triple $((\hmactive^p)_{1\leq p \leq N}, \sol = (\amba, \camp), B)$ such that:
+\begin{itemize}
+\item $(\hmactive^p)_{1\leq p\leq N}$ are Poisson processes of parameter $\lambda$ and do not depend on $(\sol, B)$
+\item Considering the random measure $\PrbCondTimes{\cdot}{}$ and the interval $I_m := [\btime_m, \btime_{m+1}]$ we have that the couple $(\sol = (\amba, \camp), B)$ on $I_m \setminus \{ \btime_{m+1}\} = [\btime_m, \btime_{m+1})$ takes the form $({}^m\sol := (\amba, \camp^1, \ldots, \camp^m), {}^mB := (B^A, \quasibm^1, \ldots, \quasibm^m))$ and such couple $({}^m\sol, {}^mB)$ solves the local system \ref{ch2:system:local-model} on the whole interval $I_m$.
+\end{itemize}
+\end{definition}
+
+In order for this to be a valid definition we should specify a global codomain for the processes $\sol, B$ and we should verify that $\PrbCondTimes{\cdot}{}$ is a \emph{regular} random probability measure, so that the SDEs considered remain valid.
+This is hinted in the appendix at \ref{app:formal-def-solution}.
+
+\begin{remark}
+\begin{enumerate}
+\item In the interval $I_m$ the number of particles is
+\begin{equation}
+\NumParticles_t := N + \sum_{p=1}^N \hmactive_t^p = \overbrace{N}^{\# \text{amoebas}} + \overbrace{\hmactive_t}^{\# \text{cAMP}}
+\end{equation}
+thus the dimension of the system is $\NumParticles_t \cdot d$, where $d$ is the dimension in which we are considering the particles ($2$ or $3$).
+\label{ch2:dimension-system}
+\item Since by definition the particle $\camp^{m+1}$ spawns on the point $\amba_{\btime_{m+1}}^p$ for some $p$, the solution ${}^{m+1}\sol$ on the interval $I_{m+1}$ is glued with continuity with the solution ${}^{m}\sol$ on $I_{m}$ for all the already existing particles.
+Furthermore, this continuity property remains true even regarding the spawning position of $\camp^{m+1}$, meaning that such particle spawns on $\amba_{\btime_{m+1}}^{\Parentof(m+1)}$.
+This can be visualised as the property that at each birth time $\btime_m$ the path of one of the amoebas bifurcates.
+\label{ch2:system-continuous-glueing}
+\item Glueing the local solutions we might ask if for each particle its diffusion is \emph{globally} still a \Bm, or a quasi-\Bm (under the measure $\PrbCondTimes{}{}$).
+The question depends essentially on this: \invquest given two independent \Bm $B^1$ and $B^2$ and a stopping time $T$, is it true that the process
+\begin{equation*}
+B^{T,1,2}_t := B_{t \wedge T} ^1 + \1_{t\geq T} (B_t^2 - B_T^2)
+\end{equation*}
+is also Brownian motion?
+It is easy to verify that the answer is affirmative (use \eg \autocite[Proposition 2.3]{le-gall} and discard the non-continuous sample-paths), and that thus for each particle we have a global \Bm or quasi-\Bm as a diffusion, \ie the expressions $B^p$ and $\quasibm^{p,g}$ still make sense globally.
+\end{enumerate}
+\end{remark}
+
+
+
+Let us sign the coordinates of space as 
+
+\begin{align*}
+x &:= (x^1, \ldots, x^N, x^{1,1}, x^{1,2}, \ldots, x^{p,1},\ldots, x^{p,g},x^{p,g+1},\ldots, x^{N,1}, \ldots)
+\\
+	&\ = (a^1, \ldots, a^N, c^{1,1}, \ldots, c^{p,g}, \ldots) 
+\end{align*}
+
+Then we can notice that all the systems considered (the model \ref{ch2:model}, its local version \ref{ch2:system:local-model} and its local shifted-in-time version \ref{ch2:system:local-model-shifted-to-0}) share the same expression for the functions which would represent the drift and the diffusion in an SDE
+
+\begin{equation}
+\left\{
+\begin{aligned}
+\drift_k(t,x, (\hmactive^k_t)_k) &:= \drift_k(t,x) := - \frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\hmactive_t^p} \attraction(x^k - x^{p,g})
+	&& 1\leq k \leq N
+\\
+\drift_{p,g}(t,x) &:= 0
+	&& \text{if } \exists (p,g)
+\\
+\diffusion_p(t,x) &:= \sigma_A
+	&& 1\leq p \leq N
+\\
+\diffusion_{p,g}(t,x) &:= \sigma_C
+	&& \text{if } \exists (p,g)
+\end{aligned}
+\right.
+\end{equation}\label{ch2:def:drift-&-diffusion}
+
+At first sight it would seem that these expressions would require to be manipulated in order to become the drift and the diffusion of \ref{ch2:system:local-model-shifted-to-0}, because of the time translation of $\btime_m$.
+But the time dependence is given only by the random value $\hmactive_s^p$, which is fixed under $\PrbCondTimes{\cdot}{}$, giving us thus the exact same definition for the drift and diffusion throughout all systems.
+
+\begin{remark}\label{ch2:rmk:notation-indices-drift}
+	Notice that $\drift_p(t,x),\: \drift_{p,g}(t,x)\:\in \R^d$.
+	To avoid ambiguity between such $d$-dimensional components of the drift and its $1$ dimensional ones, we sign as 
+	\begin{equation*}
+		\drift_{p;i}(t,x),\: \drift_{p,g;i}(t,x)
+	\end{equation*}
+	the $i$-th coordinate of the $d$-dimensional component for the functions $\drift_p(t,x),\: \drift_{p,g}(t,x)\:\in \R^d$ respectively.
+\end{remark}
+
+\subsection{Existence and Uniqueness for the Model}
+
+Now that we have reduced our model to a collection of conditional, piecewise-in-time defined SDE, it is enough to find a solution inductively for each $I_m$ under $\PrbCondTimes{\cdot}{}$, \ie a unique solution for \ref{ch2:system:local-model-shifted-to-0} under such random probability measure.
+Since the case $m=1$ has essentialy the same expression for the drift and diffusion as the arbitrary case $m$, we consider only the latter one.
+
+In order to prove local existence and uniqueness we must watch at the drift and diffusion of the system (\ref{ch2:def:drift-&-diffusion}).
+The diffusion coefficients are constant, and thus respect all the conditions required in \ref{ch2:cond:E-and-U-lipsch+subgrowth}.
+The same is true for the drift of the cAMP.
+This is not the case for the drift in the case of amoebas though: since the processes $\hmactive^p_t$ are \cadlag\footnotemark[1], then also the coordinate functions $\drift_p(t, x)$ are \cadlag, \ie not $\Cspace^0$ in time.
+We need thus to use the result \ref{ch2:cond:E-and-U-lipsch+subgrowth}.
+
+\footnotetext[1]{From the French expression "\textit{continue à droite, limite à gauche}", meaning "right continuous with left limits".}
+
+\begin{lemma}\label{ch2:lemma:lipsch-of-drift}
+The drift function $\drift(t, x, (\hmactive^p)_p)$ defined coordinate-wise in \ref{ch2:def:drift-&-diffusion} as
+\begin{equation*}
+\drift(t,x) := \drift(t,x, (\hmactive^p_t)_t) := 
+\left\{
+\begin{aligned}
+&\drift_k(t,x) := -\frac{1}{N} \sum _{p = 1}^{N} \sum_{g = 1}^{\hmactive_t^p} \attraction(x^k - x^{p,g})
+\\
+&\drift_{p,g}(t,x) := 0
+\end{aligned}
+\right.
+\end{equation*}
+is such that:
+\begin{enumerate}
+\item it is Lipschitz continuous in space with fixed time:
+\begin{equation}
+\forall t \in \R_+.\ \normp{\infty}{ \drift(t,x) - \drift(t,y)}
+\leq \const_\attraction \frac{\hmactive_t}{N}\
+\normp{\infty}{x-y}
+\end{equation}
+where $\const_\attraction$ is a constant depending on the Lipschitz constant of $\attraction$.
+\item There is a constant $\const_{\attraction}>0$ such that
+\begin{equation*}
+\Normp{\infty}{ \drift(t,\cdot)}\
+\leq\
+\const_{\attraction}\
+\frac{\hmactive_t}{N}
+\end{equation*}
+\ie it is bounded, hence in particular it grows sublinearly in space.
+\end{enumerate}
+\end{lemma}
+
+\begin{remark}
+Since we work in a finite Banach space all norms are equivalent, thus for these properties we could choose any of them.
+Still, the Lipschitz constant of $\drift$ with the infinity norm will play a more relevant role later, so for that instance we decided to specify it.
+\end{remark}
+
+\begin{proof}
+Fix $t,x,y$ and let $l$ be the Lipschitz constant of $\attraction$. Then
+
+\begin{equation*}
+\begin{aligned}
+	\normp{\infty}{ \drift(t, x) - \drift(t, y) }
+	&= \max_{k\in\{1,\ldots,N\}} \normp{\infty}{ \drift_k(t, x) - \drift_k(t, y) }
+	\\
+	&= \max_{k\in\{1,\ldots,N\}} \normp{\infty}{
+			\frac{1}{N} \sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p} \attraction(x^k - x^{p,g}) 
+			- \frac{1}{N} \sum_{p=1}^{N} \sum _{g = 1} ^{\hmactive_t^p} \attraction(y^k - y^{p,g}) 
+		}
+	\\
+	& \leq \frac{1}{N} \max_{k\in\{1,\ldots,N\}}
+			\sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p}
+			\underbrace{\normp{\infty}{ \attraction(x^k - x^{p,g}) - \attraction(y^k - y^{p,g}) }}
+			_{\leq l \normp{\infty}{(x^k - x^{p,g}) - (y^k - y^{p,g})} }
+	\\
+	& \leq \frac{l}{N} \max_{k\in\{1,\ldots,N\}}
+		\sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p}
+			\big(
+			\normp{\infty}{x^k - y^k } + \normp{\infty}{ x^{p,g} - y^{p,g}}
+			\big)
+	\\
+	& = \frac{l}{N} \sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p}
+	\big(
+		\max_{k\in\{1,\ldots,N\}} \normp{\infty}{x^k - y^k} + \normp{\infty}{x^{p,g} - y^{p,g}}
+	\big)
+	\\
+	& \leq \frac{l}{N} \sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p}
+	\big(
+		\normp{\infty}{x - y } + \normp{\infty}{ x - y}
+	\big) 
+	\\
+	&= \frac{2l}{N} \sum_{p=1}^{N} \hmactive_t^p \normp{\infty}{x - y }\
+	=\
+	\frac{\const_\attraction}{N} \sum_{p=1}^{N} \hmactive_t^p \normp{\infty}{x - y }
+\end{aligned}
+\end{equation*}
+
+where $\const_\attraction := 2l$. Thus the Lipschitzianity has been proved.
+The drift $\drift$ is bounded:
+\begin{equation*}
+\begin{aligned}
+\Normp{\infty}{\drift(t,x)}\
+	& \leq \frac{l}{N} \max_{k\in\{1,\ldots,N\}}
+		\sum_{p=1}^{N} \sum_{g = 1}^{\hmactive_t^p}
+		\underbrace{\Normp{\infty}{\attraction(x^k - x^{p,g})}}
+			_{\leq \cdot \Normp{\infty}{ \attraction}}
+	\\
+	&
+	\leq \frac{l \sum_{p=1}^{N} \hmactive_t^p \Normp{\infty}{\attraction}}{N}
+	= 
+	\const_{\attraction}\
+	\frac{\hmactive_t}{N}
+\end{aligned}
+\end{equation*}
+\end{proof}
+
+Therefore the conditions for the pathwise uniqueness and the strong existence of solutions of \ref{ch2:cond:E-and-U-lipsch+subgrowth} are fullfilled, and thus the system \ref{ch2:system:local-model} has the properties of pathwise uniqueness and strong existence of solutions, \ie under $\PrbCondTimes{\cdot}{}$ on each interval $I_m = [\btime_m, \btime_{m+1}]$ there is a unique solution on each filtered probability space endowed with a \Bm .
+To be precise, the solution is unique for each initial condition $x_m$ for the local solution ${}^m \sol$, but since $\forall m \geq 2$ all the initial conditions are determined by the previous local solution ${}^{m+1}\sol$, then there is a global solution to \ref{ch2:model} which is unique for each initial condition $(a_1, \ldots, a_N)$.

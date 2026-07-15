@@ -1,0 +1,173 @@
+\label{app:notation}
+
+\subsection{Common Sets and Measures}
+
+In this work it will adopted the convention that the set of natural numbers $\N$ starts with the number $1$.
+If we want to include the $0$ we will write $\N_0$, therefore
+
+\begin{equation*}
+	\N = \{1, \ldots\}, 
+	\quad
+	\N_0 = \{0,1,\ldots\}
+\end{equation*}
+
+Whenever we have a measure $\mu$ on a space, to indicate a property $P(x)$ valid almost everywhere with respect to $\mu$ we write 
+
+\begin{equation*}
+	\forall^{\mu}x.\
+		P(x)
+\end{equation*}
+
+The Lebesgue measure is signed as $\lebsge$.
+
+\subsection{Norms}
+
+For the great majority of cases we must take into consideration some function
+
+\begin{align*}
+	f: \R_+ \times \R^m 	&\longrightarrow		\R^n
+	\\
+	(t, x) 						&\longmapsto				f(t,x)
+\end{align*}
+
+and consider some kind of norm $\Normp{}{f(t,x)}$.
+We adopt the subsequent convention, where $f_i$ are the components of $f$:
+
+\begin{equation*}
+	\left\{
+	\begin{aligned}
+		\normp{\infty}{f(t,x)} &:= \max_{1 \leq i \leq n} \normp{}{f_i(t,x)}		&& \text{where $x,t$ are fixed}
+		\\
+		\Normp{\infty}{f(t,x)} &:=  \max_{1 \leq i \leq n} \Normp{\Lpspace^\infty(\R^m)}{f_i(t,\cdot)}			&& \text{where $t$ is fixed}
+	\end{aligned}
+	\right.
+\end{equation*}
+
+In the cases where it is needed to consider the supremum also on some time interval $[s_1,s_2]$ this will be explicitly written down:
+
+\begin{equation*}
+	\sup_{s_1 \leq t \leq s_2} \Normp{\infty}{f(t,x)} = \sup_{s_1 \leq t \leq s_2} \max_{1 \leq i \leq n} \Normp{\Lpspace^\infty(\R^m)}{f_i(t,\cdot)}
+\end{equation*}
+
+In some cases where the $\Lpspace^1$-norm appears together with the $\Lpspace^\infty$-norm, for symmetry, the latter one will be also signed as $\Normp{\Lpspace^\infty}{\cdot}$.
+
+
+\subsection{Generic Positive Constants and Increasing Continuous Functions}
+
+We will indicate generic constants with the symbol $\const$, and a subscript will indicate on which mathematical objects such constants depend:
+
+\begin{equation*}
+	\const_{x,y,z}:= \: \text{generic const $>0$ dependent on $x,y,z$}
+\end{equation*}
+
+Sometimes we will operate on a fixed time $t$, considering certain quantities as constants $\const_{t,y}$, but then it will be necessary to consider an object of the type
+
+\begin{equation*}
+	\sup_{t \in [0,T]} \const_{t,y}
+\end{equation*}
+
+and show that this is bounded.
+Of course here the problem arises because $[0,T]$ is an infinite set, and thus the sup might be $+\infty$.
+In such situation it is usually necessary to show that the function $f_y(t) := \const_{t,y} $ is increasing and continuous on $\R$ so that we can affirm
+
+\begin{equation*}
+		\sup_{t \in [0,T]} \const_{t,y} = \sup \const_{T,y} < +\infty
+\end{equation*}
+
+Similarly is the case when we want to bound quantities on finite sets in $\N$ with the value assumed in the upper extremum: 
+
+\begin{equation*}
+	\logQuest{
+		\sup_{0\leq q \leq Q} \const_{q} \leq \const_Q 
+	}
+\end{equation*}
+
+or do both things at the same time, where the constant might depend on some further objects $a,b,c$:
+
+\begin{equation*}
+	\logQuest{
+		\sup_{t \in [0,T]} \sup_{0\leq q \leq Q} \const_{q,t,a,b,c} \leq \const_{Q,T,a,b,c}  < +\infty
+	}
+\end{equation*}
+
+In all these cases it is good solution to show that for every choice of $a,b,c$ the function $f_{a,b,c}(q,t) := \const_{q,t,a,b,c}$ is increasing in both $t$ and $q$ and it is continuous in $t$.
+For this reasons we indicate with 
+
+\begin{equation*}
+	\Fup_{a,b,c} (t,q)
+\end{equation*}
+
+a generic positive function dependent from $a,b,c$, \emph{increasing} in each of its arguments and continuous (it is trivially $\Cspace^0$ on $q$ if we endow $\{1,\ldots, Q\}$ with the discrete topology).
+
+\subsection{System, Drift and Diffusion}
+
+\subsubsection{Components}
+
+The drift $\drift$ and diffusion $\diffusion$ of the systems taken into account are defined per-particle, and each particle is $d$-dimensional, \eg the expression 
+
+\begin{equation*}
+	\drift_{p}(t, \sol_t)
+\end{equation*}
+
+indicates the drift in $\R^d$ for the particle $\amba_t^p$.
+If we want to pin down then the second component of the drift defined for such $\amba_t^p$, the temptation is to then write
+
+\begin{equation*}
+	\drift_{p,2}(t, \sol_t)
+\end{equation*}
+
+This create ambiguity though, because the cAMP molecule (and the drift that they feel) are identified with a double index $p,g$, and thus the notation above might indicate the drift to which the cAMP molecule $\camp^{p,2}$ is subjected.
+For this reason the components of the drift and the diffusion will be written as 
+
+\begin{equation*}
+	<\text{$d$-dimensional particle}>; <1-\text{dimensional component of the $d$-dimensional vector}>
+\end{equation*}
+
+\ie if we indicate with $\pi_i: \R^d \longrightarrow \R$ the projection on the $i$-th component, the expressions
+
+\begin{gather*}
+	\drift_{p; i}(t, \sol_t) : = \pi_i ( \drift_{p}(t, \sol_t) )
+	\\
+	\drift_{p,g; i}(t, \sol_t) := \pi_i ( \drift_{p,g}(t, \sol_t) )
+\end{gather*}
+
+indicate the $i$-th $1$-dimensional component of the drift for the amoeba $\amba^p$ and of the drift for the cAMP molecule $\camp^{p,g}$.
+If necessary, the same notation will be used on stochastic processes $\amba_t^{p} = ( \amba_t^{p;i} )_{i =1}^d$. 
+
+\subsubsection{Superscript}
+
+Starting from \ref{ch3} it will be important in many occasions to keep in mind the amount of amoebas considered in the system for many mathematical objects.
+In such case the number of amoebas involved is signed a superscript with parenthesis, \eg $\drift_{p}^{(N)}(t, \sol_t)$ is the drift for $\amba^p$ where the model has $N$ amoebas.
+
+This shall not create ambiguity, in the case in which we want to sign the components of a multivariate stochastic process $\sol_t^{(N)}$: they shall be $\sol_t^{(N),p}$ and  $\sol_t^{(N),p,g}$ for the $d$-dimensional position of the amoebas and the cAMP respectively. The $1$ dimensional coordinates will then be $\sol_t^{(N),p;i}$ and  $\sol_t^{(N),p,g;i}$ with $1 \leq i \leq d$.
+
+A few non-ambiguous exception are present, the most notable one being the auxiliary process of the final proof: $\auxProc_t^N$.
+
+\subsection{Conditional Expectations and Probabilities}
+
+Mainly in the proofs of the laws of large numbers we will need to do long calculations with conditional expectations and probabilities.
+For this reason the subsequent less heavy notation has been adopted: a tilde above $\E{\cdot}, \Prb$ will indicate conditioning with respect to $ (\btime^{p,g})_{p,g}$, and a subscript $k$ will indicate a conditioning with respect to the $k$-th amoeba (usually $\mfamba^k$, but depending on the context it could be also $\amba^k$):
+
+\begin{align*}
+	\ETFoot{}{\cdot}&:=\ECondTimes{\cdot}{}			& 			\PrbTFoot{}{\cdot}&:= \PrbCondTimes{\cdot}{}
+	\\
+	\ETFoot{k}{\cdot}&:=\ECondTimes{\cdot}{\text{$k$-th amoeba},	}			&				\PrbTFoot{k}{\cdot}&:= \PrbCondTimes{\cdot}{\text{$k$-th amoeba }, }
+	\\
+	\EFoot{k}{\cdot}&:=\ECond{\cdot}{\text{$k$-th amoeba}}				&				\PrbFoot{k}{\cdot}&:=\PrbCond{\cdot}{\text{$k$-th amoeba}}
+\end{align*}
+
+Furthermore, a subscript $\ast$ will mean ambiguity in the presence of the subscript:
+
+\begin{align*}
+	\EFoot{\ast}{} &:=  \: \text{either of }	\EFoot{}{\cdot}, \EFoot{k}{\cdot}				&		\PrbFoot{\ast}{\cdot}&:= \: \text{either of }	\PrbFoot{}{\cdot}, \PrbFoot{k}{\cdot}		
+	\\
+	\ETFoot{\ast}{} &:=  \: \text{either of }	\ETFoot{}{\cdot}, \ETFoot{k}{\cdot}			&		\PrbTFoot{\ast}{\cdot}&:= \: \text{either of }	\PrbTFoot{}{\cdot}, \PrbTFoot{k}{\cdot}		
+\end{align*}
+
+
+\subsection{Cyrillic Variables}
+
+The cyrillic letters $\Ch$, $\Zhi, \Bh$ and $\Iu$ are used in this master thesis for mathematical objects that need to be temporarily addressed (\eg in proofs), for which thus we do not want to use greek or latin letters which would be useful in other places.
+Do not feel intimidated by them: $\Ch$ is pronounced as the sound "tsch" in German, $\Zhi$ as the "j" in the french word "bonjour" and $\Iu$ as the english word "you".
+And $\Bh$ is just a "b".
+
